@@ -152,7 +152,7 @@ const Index = () => {
                     onClick={() => window.location.reload()}
                     className="border-destructive/20 hover:bg-destructive/10"
                   >
-                    Retry
+                    Retry...
                   </Button>
                 </div>
               ) : (

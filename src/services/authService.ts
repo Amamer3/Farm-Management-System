@@ -1,7 +1,25 @@
 import { User, LoginCredentials, RegisterData, UserRole } from "@/types/auth"
 import { parseApiError, storage, withTimeout, retryWithBackoff, isRetryableError, ErrorType } from "@/utils/errorHandler"
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
+// Get API base URL from environment variable
+// Must be set in .env file or production environment variables
+// Examples:
+//   Development: VITE_API_BASE_URL=/api
+//   Production: VITE_API_BASE_URL=https://farm-management-server.onrender.com/api
+function getApiBaseUrl(): string {
+  const envUrl = import.meta.env.VITE_API_BASE_URL
+  if (!envUrl) {
+    throw new Error('VITE_API_BASE_URL environment variable is not set. Please configure it in your .env file or production environment.')
+  }
+  // If it's a full URL, ensure it ends with /api
+  if (envUrl.startsWith('http')) {
+    return envUrl.endsWith('/api') ? envUrl : `${envUrl.replace(/\/$/, '')}/api`
+  }
+  // If it's a relative path, use as-is
+  return envUrl
+}
+
+const API_BASE_URL = getApiBaseUrl()
 const AUTH_STORAGE_KEY = "auth"
 const TOKEN_STORAGE_KEY = "token"
 const REFRESH_TOKEN_STORAGE_KEY = "refresh_token"
@@ -231,14 +249,30 @@ class AuthService {
     const config: RequestInit = {
       ...options,
       headers,
+      // Add CORS and credentials for production cross-origin requests
+      mode: 'cors',
+      credentials: 'omit', // Don't send cookies, but allow CORS
+      // For same-origin requests, credentials can be 'same-origin'
+      ...(url.startsWith('/') || new URL(url, window.location.origin).origin === window.location.origin
+        ? { credentials: 'same-origin' as RequestCredentials }
+        : { credentials: 'omit' as RequestCredentials }),
     }
     
-    // Debug: Verify Authorization header is set
-    if (!isAuthEndpoint) {
-      const authHeader = (config.headers as Record<string, string>)?.['Authorization']
-      console.log('Request headers:', {
-        hasAuthHeader: !!authHeader,
-        authHeaderPreview: authHeader ? `${authHeader.substring(0, 30)}...` : 'none'
+    // Debug: Log request details in development
+    if (import.meta.env.DEV) {
+      if (!isAuthEndpoint) {
+        const authHeader = (config.headers as Record<string, string>)?.['Authorization']
+        console.log('Request headers:', {
+          hasAuthHeader: !!authHeader,
+          authHeaderPreview: authHeader ? `${authHeader.substring(0, 30)}...` : 'none'
+        })
+      }
+      console.log('[API Request]', {
+        url,
+        method: config.method || 'GET',
+        mode: config.mode,
+        credentials: config.credentials,
+        hasAuth: !isAuthEndpoint && !!finalToken
       })
     }
 
@@ -257,6 +291,18 @@ class AuthService {
           }
         } catch {
           errorData.message = response.statusText || `HTTP ${response.status}`
+        }
+
+        // Enhanced error logging for production debugging
+        if (import.meta.env.PROD) {
+          console.error('[API Error]', {
+            url,
+            status: response.status,
+            statusText: response.statusText,
+            endpoint,
+            errorData,
+            apiBaseUrl: API_BASE_URL
+          })
         }
 
         const errorMessage = errorData.message || errorData.error?.message || errorData.error || `HTTP ${response.status}`
@@ -418,6 +464,8 @@ class AuthService {
           const url = `${API_BASE_URL}/auth/refresh-token`
           return fetch(url, {
           method: 'POST',
+            mode: 'cors',
+            credentials: 'omit',
             headers: {
               'Content-Type': 'application/json',
             },
@@ -805,6 +853,8 @@ class AuthService {
     const url = `${API_BASE_URL}/auth/profile/avatar`
     const response = await fetch(url, {
       method: 'POST',
+      mode: 'cors',
+      credentials: 'omit',
       headers: {
         'Authorization': `Bearer ${token}`,
         // Don't set Content-Type - let browser set it with boundary for multipart/form-data
@@ -855,6 +905,8 @@ class AuthService {
     const url = `${API_BASE_URL}/auth/profile/avatar`
     const response = await fetch(url, {
       method: 'DELETE',
+      mode: 'cors',
+      credentials: 'omit',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',

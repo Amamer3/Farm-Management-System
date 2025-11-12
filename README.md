@@ -441,4 +441,4 @@ For issues, questions, or contributions, please open an issue on the GitHub repo
 
 ---
 
-**Built with ❤️ for modern poultry farm management**
+**Built for modern poultry farm management**

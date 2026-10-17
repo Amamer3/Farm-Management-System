@@ -2,24 +2,92 @@ import { useState } from "react"
 import { AppHeader } from "@/components/layout/AppHeader"
 import { AppSidebar } from "@/components/layout/AppSidebar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button" 
 import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { ProductionChart } from "@/components/dashboard/ProductionChart"
-import { FileText, Download, Calendar, TrendingUp, BarChart3, PieChart, AlertTriangle } from "lucide-react"
-import { useProductionReport, useHealthReport, useFeedConsumptionReport, useDashboardStats } from "@/hooks/useApiData"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { FileText, Download, TrendingUp, BarChart3, PieChart, AlertTriangle } from "lucide-react"
+import { useProductionReport, useHealthReport, useFinancialReport, useLedgerEntries, useDashboardStats, useReportActions, useReportTemplates, useRecentReports } from "@/hooks/useApiData"
+
+const REPORT_TYPES = [
+  { value: "production", label: "Production" },
+  { value: "health", label: "Health" },
+  { value: "feed", label: "Feed Consumption" },
+  { value: "financial", label: "Financial" },
+  { value: "overview", label: "Overview" },
+] as const
+
+const PERIOD_OPTIONS = [
+  { value: "7d", label: "Last 7 days" },
+  { value: "30d", label: "Last 30 days" },
+  { value: "90d", label: "Last 90 days" },
+  { value: "1y", label: "Last year" },
+] as const
+
+function periodToDateRange(period: string) {
+  const dateTo = new Date()
+  const dateFrom = new Date()
+  switch (period) {
+    case "7d":
+      dateFrom.setDate(dateFrom.getDate() - 7)
+      break
+    case "90d":
+      dateFrom.setDate(dateFrom.getDate() - 90)
+      break
+    case "1y":
+      dateFrom.setFullYear(dateFrom.getFullYear() - 1)
+      break
+    case "30d":
+    default:
+      dateFrom.setDate(dateFrom.getDate() - 30)
+      break
+  }
+  return {
+    dateFrom: dateFrom.toISOString().slice(0, 10),
+    dateTo: dateTo.toISOString().slice(0, 10),
+    period,
+  }
+}
 
 export default function Reports() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [filters, setFilters] = useState({ type: '', period: '', status: '' })
+  const [filters] = useState({ type: '', period: '', status: '' })
+  const [generateOpen, setGenerateOpen] = useState(false)
+  const [reportForm, setReportForm] = useState({
+    type: "production",
+    period: "30d",
+    format: "pdf" as "pdf" | "excel" | "csv",
+  })
   
   // API hooks
-  const { data: productionData, loading: productionLoading, error: productionError } = useProductionReport(filters.period || '30d')
+  const { data: productionData, loading: productionLoading, error: productionError, refetch: refetchProduction } = useProductionReport(filters.period || '30d')
   const { data: healthData, loading: healthLoading, error: healthError } = useHealthReport(filters.period || '30d')
-  const { data: feedData, loading: feedLoading, error: feedError } = useFeedConsumptionReport(filters.period || '30d')
-  const { data: dashboardStats, loading: statsLoading, error: statsError } = useDashboardStats()
+  const { data: financialData, loading: financialLoading, error: financialError } = useFinancialReport(filters.period || '30d')
+  const { data: ledgerData, loading: ledgerLoading } = useLedgerEntries()
+  const ledger = Array.isArray(ledgerData) ? ledgerData : []
+  const financial = (financialData || {}) as any
+  const { data: dashboardStats, loading: statsLoading, error: statsError, refetch: refetchStats } = useDashboardStats()
+  const { data: templatesData, loading: templatesLoading } = useReportTemplates()
+  const { data: recentData, loading: recentLoading, refetch: refetchRecent } = useRecentReports()
+  const { generateReport, loading: generating, exportReport } = useReportActions()
+
+  const handleGenerateReport = async () => {
+    const result = await generateReport(
+      reportForm.type,
+      periodToDateRange(reportForm.period),
+      reportForm.format
+    )
+    if (result) {
+      setGenerateOpen(false)
+      refetchStats()
+      refetchRecent()
+      if (reportForm.type === "production") refetchProduction()
+    }
+  }
 
   // Extract nested data from API responses
   const productionReport = productionData && typeof productionData === 'object' && 'data' in productionData 
@@ -28,29 +96,38 @@ export default function Reports() {
   const healthReport = healthData && typeof healthData === 'object' && 'data' in healthData 
     ? (healthData as any).data 
     : healthData
-  const feedReport = feedData && typeof feedData === 'object' && 'data' in feedData 
-    ? (feedData as any).data 
-    : feedData
   const stats = dashboardStats && typeof dashboardStats === 'object' && 'data' in dashboardStats
     ? (dashboardStats as any).data
     : dashboardStats
 
   // Transform production dailyData for ProductionChart
-  const productionChartData = productionReport?.dailyData 
-    ? productionReport.dailyData.map((item: any) => ({
-        day: item.date ? new Date(item.date).toLocaleDateString('en-US', { weekday: 'short' }) : item.date,
-        eggs: item.quantity || 0,
-        target: undefined // API doesn't provide target, can be added later
+  const rawDaily = Array.isArray(productionReport?.dailyData)
+    ? productionReport.dailyData
+    : Array.isArray((productionReport as any)?.daily)
+    ? (productionReport as any).daily
+    : []
+
+  const productionChartData = rawDaily.length > 0
+    ? rawDaily.map((item: any) => ({
+        day: item.date
+          ? new Date(item.date).toLocaleDateString('en-US', { weekday: 'short' })
+          : item.day || item.label || '',
+        eggs: item.quantity ?? item.eggs ?? item.total ?? 0,
+        target: item.target,
       }))
     : undefined
 
-  // Debug logging in development
-  if (import.meta.env.DEV) {
-    if (productionData) console.log('[Reports] Production data:', productionData, 'Extracted:', productionReport)
-    if (healthData) console.log('[Reports] Health data:', healthData, 'Extracted:', healthReport)
-    if (feedData) console.log('[Reports] Feed data:', feedData, 'Extracted:', feedReport)
-    if (dashboardStats) console.log('[Reports] Dashboard stats:', dashboardStats, 'Extracted:', stats)
-  }
+  const reportTemplates = Array.isArray(templatesData)
+    ? templatesData
+    : Array.isArray((templatesData as any)?.data)
+    ? (templatesData as any).data
+    : []
+
+  const recentReports = Array.isArray(recentData)
+    ? recentData
+    : Array.isArray((recentData as any)?.data)
+    ? (recentData as any).data
+    : []
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -86,14 +163,14 @@ export default function Reports() {
               <h1 className="responsive-title text-foreground pt-10">Reports & Analytics</h1>
               <p className="responsive-subtitle">Generate insights and track farm performance</p>
             </div>
-            <Button className="gap-2 w-full sm:w-auto">
+            <Button className="gap-2 w-full sm:w-auto" onClick={() => setGenerateOpen(true)}>
               <FileText className="w-4 h-4" />
               Generate Report
             </Button>
           </div>
 
           {/* Loading State */}
-          {(productionLoading || healthLoading || feedLoading || statsLoading) && (
+          {(productionLoading || healthLoading || financialLoading || statsLoading) && (
             <div className="flex items-center justify-center py-8">
               <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
               <span className="ml-2 text-muted-foreground">Loading reports data...</span>
@@ -101,14 +178,14 @@ export default function Reports() {
           )}
 
           {/* Error State */}
-          {(productionError || healthError || feedError || statsError) && !productionLoading && !healthLoading && !feedLoading && !statsLoading && (
+          {(productionError || healthError || financialError || statsError) && !productionLoading && !healthLoading && !financialLoading && !statsLoading && (
             <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-destructive mt-0.5" />
                 <div className="flex-1">
                   <h3 className="font-semibold text-destructive mb-1">Unable to load reports data</h3>
                   <p className="text-sm text-muted-foreground">
-                    {productionError || healthError || feedError || statsError || 'An error occurred while loading data. Please try again.'}
+                    {productionError || healthError || financialError || statsError || 'An error occurred while loading data. Please try again.'}
                   </p>
                 </div>
               </div>
@@ -190,11 +267,44 @@ export default function Reports() {
                   <CardDescription>Manage automated report generation</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
+                  {templatesLoading ? (
+                    <div className="flex items-center justify-center py-6">
+                      <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                    </div>
+                  ) : reportTemplates.length > 0 ? (
+                    <div className="space-y-3">
+                      {reportTemplates.map((template: any) => (
+                        <div
+                          key={template.id || template.name}
+                          className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-lg border"
+                        >
+                          <div className="min-w-0">
+                            <p className="font-medium text-sm">{template.name}</p>
+                            <p className="text-xs text-muted-foreground">{template.description}</p>
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="shrink-0"
+                            onClick={() => {
+                              setReportForm((prev) => ({
+                                ...prev,
+                                type: template.type || "overview",
+                                format: (template.format === "excel" || template.format === "csv" ? template.format : "pdf") as "pdf" | "excel" | "csv",
+                              }))
+                              setGenerateOpen(true)
+                            }}
+                          >
+                            Use template
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
                     <p className="text-sm text-muted-foreground text-center py-4">
                       No report templates available. Report templates will be displayed here when configured.
                     </p>
-                  </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
@@ -285,15 +395,35 @@ export default function Reports() {
                         <CardDescription className="responsive-subtitle">Generate production reports</CardDescription>
                       </CardHeader>
                       <CardContent className="responsive-card-content responsive-spacing">
-                        <Button className="w-full justify-start gap-2">
+                        <Button
+                          className="w-full justify-start gap-2"
+                          onClick={() => {
+                            setReportForm({ type: "production", period: "7d", format: "pdf" })
+                            setGenerateOpen(true)
+                          }}
+                        >
                           <FileText className="w-4 h-4" />
                           Daily Production Report
                         </Button>
-                        <Button variant="outline" className="w-full justify-start gap-2">
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start gap-2"
+                          onClick={() => {
+                            setReportForm({ type: "production", period: "7d", format: "pdf" })
+                            setGenerateOpen(true)
+                          }}
+                        >
                           <BarChart3 className="w-4 h-4" />
                           Weekly Performance Summary
                         </Button>
-                        <Button variant="outline" className="w-full justify-start gap-2">
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start gap-2"
+                          onClick={() => {
+                            setReportForm({ type: "production", period: "30d", format: "pdf" })
+                            setGenerateOpen(true)
+                          }}
+                        >
                           <TrendingUp className="w-4 h-4" />
                           Monthly Trend Analysis
                         </Button>
@@ -432,17 +562,17 @@ export default function Reports() {
             </TabsContent>
 
             <TabsContent value="financial" className="space-y-6">
-              {feedLoading ? (
+              {(financialLoading || ledgerLoading) ? (
                 <div className="flex items-center justify-center py-8">
                   <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                  <span className="ml-2 text-muted-foreground">Loading feed consumption data...</span>
+                  <span className="ml-2 text-muted-foreground">Loading ledger...</span>
                 </div>
-              ) : feedError ? (
+              ) : financialError ? (
                 <Card>
                   <CardContent className="py-8">
                     <div className="flex items-center gap-3 text-destructive">
                       <AlertTriangle className="h-5 w-5" />
-                      <p>{feedError}</p>
+                      <p>{financialError}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -450,99 +580,54 @@ export default function Reports() {
                 <>
                   <Card>
                     <CardHeader>
-                      <CardTitle>Feed Consumption Analysis</CardTitle>
-                      <CardDescription>
-                        {feedReport?.period ? `Feed consumption for ${feedReport.period}` : 'Cost analysis and feed efficiency tracking'}
-                      </CardDescription>
+                      <CardTitle>Farm ledger</CardTitle>
+                      <CardDescription>Money in from egg and animal sales, and money out from feed and medicine purchases</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="grid gap-4 md:grid-cols-3 mb-6">
                         <div>
-                          <p className="text-sm text-muted-foreground">Total Consumption</p>
-                          <p className="text-2xl font-bold">{feedReport?.totalConsumption?.toLocaleString() ?? 0} kg</p>
+                          <p className="text-sm text-muted-foreground">Revenue this month</p>
+                          <p className="text-2xl font-bold">₵{Number(financial.totalRevenue || 0).toLocaleString()}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground">Average Daily</p>
-                          <p className="text-2xl font-bold">{feedReport?.averageDaily?.toLocaleString() ?? 0} kg</p>
+                          <p className="text-sm text-muted-foreground">Expenses this month</p>
+                          <p className="text-2xl font-bold">₵{Number(financial.totalExpenses || 0).toLocaleString()}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground">Feed Efficiency</p>
-                          <p className="text-2xl font-bold">{feedReport?.feedEfficiency?.toFixed(2) ?? 0}</p>
+                          <p className="text-sm text-muted-foreground">Net</p>
+                          <p className="text-2xl font-bold">₵{Number(financial.netProfit || 0).toLocaleString()}</p>
                         </div>
                       </div>
-
-                      {feedReport?.costAnalysis && (
-                        <div className="pt-4 border-t">
-                          <h4 className="font-semibold mb-3">Cost Analysis</h4>
-                          <div className="grid gap-4 md:grid-cols-3">
-                            <div>
-                              <p className="text-sm text-muted-foreground">Total Cost</p>
-                              <p className="text-xl font-bold">₵{feedReport.costAnalysis.totalCost?.toLocaleString() ?? 0}</p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-muted-foreground">Cost Per Egg</p>
-                              <p className="text-xl font-bold">₵{feedReport.costAnalysis.costPerEgg?.toFixed(2) ?? 0}</p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-muted-foreground">Cost Per Bird</p>
-                              <p className="text-xl font-bold">₵{feedReport.costAnalysis.costPerBird?.toFixed(2) ?? 0}</p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Date</TableHead>
+                            <TableHead>Direction</TableHead>
+                            <TableHead>Category</TableHead>
+                            <TableHead>Amount</TableHead>
+                            <TableHead>Description</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {ledger.length > 0 ? ledger.map((entry: any) => (
+                            <TableRow key={entry.id}>
+                              <TableCell>{entry.occurredAt}</TableCell>
+                              <TableCell className="capitalize">{entry.direction === "in" ? "In" : "Out"}</TableCell>
+                              <TableCell>{String(entry.category || "").replace(/_/g, " ")}</TableCell>
+                              <TableCell>₵{Number(entry.amount || 0).toLocaleString()}</TableCell>
+                              <TableCell>{entry.description || "—"}</TableCell>
+                            </TableRow>
+                          )) : (
+                            <TableRow>
+                              <TableCell colSpan={5} className="text-center text-muted-foreground py-6">
+                                No ledger entries yet. A feed purchase or a sale will appear here.
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      </Table>
                     </CardContent>
                   </Card>
-
-                  {feedReport?.byFeedType && feedReport.byFeedType.length > 0 && (
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Consumption by Feed Type</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2">
-                          {feedReport.byFeedType.map((item: any, index: number) => (
-                            <div key={index} className="flex items-center justify-between p-2 rounded border">
-                              <span className="text-sm font-medium">{item.type || item.name || 'Unknown'}</span>
-                              <div className="flex items-center gap-4">
-                                <span className="text-sm text-muted-foreground">{item.consumption || item.quantity || 0} kg</span>
-                                {item.cost && (
-                                  <span className="text-sm font-semibold">₵{item.cost.toLocaleString()}</span>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-
-                  {feedReport?.dailyConsumption && feedReport.dailyConsumption.length > 0 && (
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Daily Consumption Trend</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2 max-h-64 overflow-y-auto">
-                          {feedReport.dailyConsumption.slice(0, 10).map((item: any, index: number) => (
-                            <div key={index} className="flex items-center justify-between p-2 rounded border">
-                              <span className="text-sm">
-                                {item.date ? new Date(item.date).toLocaleDateString() : 'N/A'}
-                              </span>
-                              <span className="text-sm font-semibold">{item.consumption || item.quantity || 0} kg</span>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-
-                  {(!feedReport || (feedReport?.byFeedType?.length === 0 && feedReport?.dailyConsumption?.length === 0)) && (
-                    <Card>
-                      <CardContent className="py-8 text-center text-muted-foreground">
-                        <p>No feed consumption data available for this period.</p>
-                      </CardContent>
-                    </Card>
-                  )}
                 </>
               )}
             </TabsContent>
@@ -555,15 +640,135 @@ export default function Reports() {
               <CardDescription>Download or view recently generated reports</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              {recentLoading ? (
+                <div className="flex items-center justify-center py-6">
+                  <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : recentReports.length > 0 ? (
+                <div className="space-y-3">
+                  {recentReports.map((report: any) => (
+                    <div
+                      key={report.id}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-lg border"
+                    >
+                      <div className="min-w-0">
+                        <p className="font-medium text-sm capitalize">{report.type} report</p>
+                        <p className="text-xs text-muted-foreground">
+                          {report.createdAt ? new Date(report.createdAt).toLocaleString() : "Unknown date"}
+                          {report.status ? ` · ${report.status}` : ""}
+                        </p>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="gap-2 shrink-0"
+                        disabled={generating}
+                        onClick={() => exportReport(report.id, "pdf")}
+                      >
+                        <Download className="w-4 h-4" />
+                        Download
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
                 <p className="text-sm text-muted-foreground text-center py-4">
                   No recent reports available. Generated reports will be displayed here.
                 </p>
-              </div>
+              )}
             </CardContent>
           </Card>
         </main>
       </div>
+
+      <Dialog open={generateOpen} onOpenChange={setGenerateOpen}>
+        <DialogContent className="w-[95vw] max-w-[425px] max-h-[90vh] overflow-y-auto mx-2 sm:mx-auto">
+          <DialogHeader>
+            <DialogTitle>Generate Report</DialogTitle>
+            <DialogDescription>
+              Choose the report type, time period, and export format.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="report-type">Report type</Label>
+              <Select
+                value={reportForm.type}
+                onValueChange={(value) => setReportForm((prev) => ({ ...prev, type: value }))}
+              >
+                <SelectTrigger id="report-type">
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {REPORT_TYPES.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="report-period">Time period</Label>
+              <Select
+                value={reportForm.period}
+                onValueChange={(value) => setReportForm((prev) => ({ ...prev, period: value }))}
+              >
+                <SelectTrigger id="report-period">
+                  <SelectValue placeholder="Select period" />
+                </SelectTrigger>
+                <SelectContent>
+                  {PERIOD_OPTIONS.map((period) => (
+                    <SelectItem key={period.value} value={period.value}>
+                      {period.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="report-format">Format</Label>
+              <Select
+                value={reportForm.format}
+                onValueChange={(value: "pdf" | "excel" | "csv") =>
+                  setReportForm((prev) => ({ ...prev, format: value }))
+                }
+              >
+                <SelectTrigger id="report-format">
+                  <SelectValue placeholder="Select format" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pdf">PDF</SelectItem>
+                  <SelectItem value="excel">Excel</SelectItem>
+                  <SelectItem value="csv">CSV</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setGenerateOpen(false)} disabled={generating}>
+              Cancel
+            </Button>
+            <Button onClick={handleGenerateReport} disabled={generating} className="gap-2">
+              {generating ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4" />
+                  Generate
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

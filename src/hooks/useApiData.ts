@@ -426,19 +426,51 @@ export function useFeedConsumptionReport(period: string = '30d') {
   return useApiData<FeedConsumptionReport>('reports', 'getFeedConsumptionReport', period)
 }
 
+export function useFinancialReport(period: string = '30d') {
+  return useApiData<any>('reports', 'getFinancialReport', period)
+}
+
+export function useStockMovements(itemKind: string) {
+  return useApiData<any[]>('inventory', 'list', itemKind, false)
+}
+
+export function useLedgerEntries() {
+  return useApiData<any[]>('finance', 'entries', undefined, false)
+}
+
+export function useReportTemplates() {
+  return useApiData<any[]>('reports', 'getReportTemplates')
+}
+
+export function useRecentReports() {
+  return useApiData<any[]>('reports', 'getRecentReports')
+}
+
 export function useReportActions() {
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
 
-  const generateReport = async (type: string, filters: any) => {
+  const generateReport = async (type: string, filters: any, format: string = 'pdf') => {
     try {
       setLoading(true)
-      const result = await dataServices.reports.generateReport(type, filters)
+      const result = await dataServices.reports.generateReport(type, filters, format)
+      const report: any = result && typeof result === 'object' && 'data' in result
+        ? (result as any).data
+        : result
+
+      if (report?.id) {
+        await dataServices.reports.downloadExport(
+          report.id,
+          (format as 'pdf' | 'excel' | 'csv') || 'pdf'
+        )
+      }
+
       toast({
         title: 'Success',
-        description: 'Report generated successfully'
+        description: `Report downloaded as ${format.toUpperCase()}`
       })
-      return result
+
+      return report
     } catch (err) {
       const errorMessage = getUserFriendlyMessage(err)
       const appError = parseApiError(err)
@@ -458,12 +490,12 @@ export function useReportActions() {
   const exportReport = async (reportId: string, format: 'pdf' | 'excel' | 'csv') => {
     try {
       setLoading(true)
-      const result = await dataServices.reports.exportReport(reportId, format)
+      await dataServices.reports.downloadExport(reportId, format)
       toast({
         title: 'Success',
         description: `Report exported as ${format.toUpperCase()}`
       })
-      return result
+      return true
     } catch (err) {
       const errorMessage = getUserFriendlyMessage(err)
       const appError = parseApiError(err)
@@ -494,6 +526,16 @@ export function useUser(userId: string) {
 
 export function useUserStats() {
   return useApiData<UserStats>('users', 'getUserStats')
+}
+
+export function useUserActivityLogs() {
+  return useApiData<Array<{
+    id: string
+    user: string
+    action: string
+    timestamp: string
+    details: string
+  }>>('users', 'getUserActivityLogs')
 }
 
 export function useUserActions() {

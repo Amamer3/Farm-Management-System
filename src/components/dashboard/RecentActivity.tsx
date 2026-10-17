@@ -21,17 +21,16 @@ const iconMap: Record<string, typeof Egg> = {
 }
 
 export function RecentActivity({ activities }: RecentActivityProps) {
-  // Ensure activities is always an array, never null or undefined
   const activityList = Array.isArray(activities) ? activities : []
   
   return (
-    <div className="chart-container">
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-foreground mb-1">Recent Activity</h3>
+    <div className="chart-container min-w-0 self-start">
+      <div className="mb-4">
+        <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">Recent Activity</h3>
         <p className="text-sm text-muted-foreground">Latest farm operations</p>
       </div>
       
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         {activityList.length > 0 ? (
           activityList.map((activity) => {
             const Icon = iconMap[activity.type] || AlertTriangle
@@ -39,30 +38,30 @@ export function RecentActivity({ activities }: RecentActivityProps) {
             return (
               <div 
                 key={activity.id} 
-                className="group relative overflow-hidden flex items-start gap-3 p-4 rounded-xl border bg-card hover:shadow-md transition-all duration-300"
+                className="group relative overflow-hidden flex items-start gap-2.5 sm:gap-3 p-3 sm:p-4 rounded-xl border bg-card hover:shadow-md transition-all duration-300"
               >
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm transition-transform duration-300 group-hover:scale-110 ${
+                <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shrink-0 shadow-sm transition-transform duration-300 group-hover:scale-110 ${
                   activity.status === 'success' 
                     ? 'bg-green-500/10 text-green-600 dark:text-green-400' 
                     : activity.status === 'error' 
                     ? 'bg-red-500/10 text-red-600 dark:text-red-400' 
                     : 'bg-orange-500/10 text-orange-600 dark:text-orange-400'
                 }`}>
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground leading-relaxed mb-2">
+                  <p className="text-sm font-medium text-foreground leading-snug mb-1.5 break-words">
                     {activity.message}
                   </p>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <div className="flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground">{activity.time}</span>
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <Clock className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                      <span className="text-xs text-muted-foreground truncate">{activity.time}</span>
                     </div>
                     <Badge 
                       variant="secondary" 
-                      className={`text-xs font-medium ${
+                      className={`text-xs font-medium shrink-0 ${
                         activity.status === 'success' 
                           ? 'bg-green-500/10 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800' 
                           : activity.status === 'error'
@@ -78,7 +77,7 @@ export function RecentActivity({ activities }: RecentActivityProps) {
             )
           })
         ) : (
-          <div className="rounded-xl border bg-card p-8 text-center">
+          <div className="rounded-xl border border-dashed bg-card p-6 text-center">
             <p className="text-sm text-muted-foreground">No recent activity</p>
             <p className="text-xs text-muted-foreground mt-1">Activity will appear here as operations are performed</p>
           </div>
@@ -86,7 +85,7 @@ export function RecentActivity({ activities }: RecentActivityProps) {
       </div>
       
       {activityList.length > 0 && (
-        <div className="mt-6 pt-4 border-t border-border">
+        <div className="mt-4 pt-3 border-t border-border">
           <button className="text-sm font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1 group">
             View all activity
             <span className="group-hover:translate-x-1 transition-transform">→</span>

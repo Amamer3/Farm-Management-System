@@ -50,7 +50,7 @@ interface AuthResponse {
 type AuthEvent = 'login' | 'logout' | 'token_refresh' | 'session_expired' | 'permission_denied'
 
 class AuthService {
-  private refreshTimeout?: NodeJS.Timeout
+  private refreshTimeout?: ReturnType<typeof setTimeout>
   private isRefreshing = false
   private failedQueue: Array<{ resolve: (value: any) => void; reject: (reason?: any) => void }> = []
   private initializing = false
@@ -193,6 +193,7 @@ class AuthService {
     // For auth endpoints (login, register, refresh), don't require token
     const isAuthEndpoint = endpoint.startsWith('/auth/login') || 
                            endpoint.startsWith('/auth/register') || 
+                           endpoint.startsWith('/auth/setup') ||
                            endpoint.startsWith('/auth/refresh-token')
 
     // For non-auth endpoints, we must have a token
@@ -206,16 +207,6 @@ class AuthService {
         this.emit('session_expired')
         throw new Error('Authentication required. Please log in again.')
       }
-    }
-
-    // Debug: Log token status for non-auth endpoints
-    if (!isAuthEndpoint) {
-      console.log('API Request:', {
-        endpoint,
-        hasToken: !!finalToken,
-        tokenLength: finalToken?.length || 0,
-        tokenPreview: finalToken ? `${finalToken.substring(0, 20)}...` : 'none'
-      })
     }
 
     // Build headers object, ensuring Authorization is set if we have a token
@@ -256,24 +247,6 @@ class AuthService {
       ...(url.startsWith('/') || new URL(url, window.location.origin).origin === window.location.origin
         ? { credentials: 'same-origin' as RequestCredentials }
         : { credentials: 'omit' as RequestCredentials }),
-    }
-    
-    // Debug: Log request details in development
-    if (import.meta.env.DEV) {
-      if (!isAuthEndpoint) {
-        const authHeader = (config.headers as Record<string, string>)?.['Authorization']
-        console.log('Request headers:', {
-          hasAuthHeader: !!authHeader,
-          authHeaderPreview: authHeader ? `${authHeader.substring(0, 30)}...` : 'none'
-        })
-      }
-      console.log('[API Request]', {
-        url,
-        method: config.method || 'GET',
-        mode: config.mode,
-        credentials: config.credentials,
-        hasAuth: !isAuthEndpoint && !!finalToken
-      })
     }
 
     try {
@@ -364,7 +337,8 @@ class AuthService {
         const isInvalidCredentials = /invalid|incorrect|wrong|password/i.test(errorMessage)
         const isUserNotFound = /not found|does not exist/i.test(errorMessage)
 
-        if (isAuthEndpoint && (response.status === 401 || response.status === 404 || isInvalidCredentials || isUserNotFound)) {
+        const isPublicSetup = endpoint.startsWith('/auth/setup')
+        if (isAuthEndpoint && !isPublicSetup && (response.status === 401 || response.status === 404 || isInvalidCredentials || isUserNotFound)) {
           let msg = 'Invalid email or password.'
           if (isUserNotFound) msg = 'No account found with this email.'
           const error = new Error(msg)
@@ -604,6 +578,28 @@ class AuthService {
     }
   }
 
+  async setupFarm(data: {
+    name: string
+    email: string
+    password: string
+    farmName: string
+    location: string
+    enterprises: string[]
+    crops: string[]
+  }): Promise<User> {
+    const response = await this.makeRequest<AuthResponse>('/auth/setup', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+
+    const user = this.transformUserResponse(response)
+    this.setTokens(response.data.token, response.data.refreshToken || response.data.refresh_token || '')
+    storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user))
+    this.lastLoginTime = Date.now()
+    this.emit('login')
+    return user
+  }
+
   async register(data: RegisterData): Promise<User> {
     const response = await this.makeRequest<AuthResponse>('/auth/register', {
       method: 'POST',
@@ -753,11 +749,6 @@ class AuthService {
     try {
       const response = await this.makeRequest<any>('/auth/profile')
       
-      // Debug logging in development
-      if (import.meta.env.DEV) {
-        console.log('[getProfile] Raw API response:', response)
-      }
-      
       // Handle different response formats
       let profileData: any
       if (response && typeof response === 'object') {
@@ -770,12 +761,6 @@ class AuthService {
         }
       } else {
         profileData = response
-      }
-      
-      // Debug logging
-      if (import.meta.env.DEV) {
-        console.log('[getProfile] Extracted profileData:', profileData)
-        console.log('[getProfile] Avatar value:', profileData.avatar)
       }
       
       // Transform and normalize the profile data (core User fields)
@@ -793,12 +778,6 @@ class AuthService {
         department: profileData.department || undefined,
         farmId: profileData.farmId || undefined,
         isActive: profileData.isActive,
-      }
-      
-      // Debug logging
-      if (import.meta.env.DEV) {
-        console.log('[getProfile] Final extendedUser:', extendedUser)
-        console.log('[getProfile] Final avatar:', extendedUser.avatar)
       }
       
       // Store the extended user data (including additional fields)
@@ -894,6 +873,52 @@ class AuthService {
     }
     
     return { avatar: avatarUrl }
+  }
+
+  /** Download a binary file (CSV/PDF/Excel) from an authenticated API endpoint. */
+  async downloadFile(endpoint: string, fallbackFilename: string): Promise<void> {
+    const token = this.getToken()
+    if (!token) {
+      throw new Error('Authentication required')
+    }
+
+    const url = endpoint.startsWith('http')
+      ? endpoint
+      : `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`
+
+    const response = await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'omit',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    if (!response.ok) {
+      let message = `Download failed (${response.status})`
+      try {
+        const err = await response.json()
+        message = err?.error?.message || err?.message || message
+      } catch {
+        // ignore non-JSON error bodies
+      }
+      throw new Error(message)
+    }
+
+    const blob = await response.blob()
+    const disposition = response.headers.get('Content-Disposition') || ''
+    const match = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/i)
+    const filename = match?.[1]?.replace(/['"]/g, '') || fallbackFilename
+
+    const objectUrl = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = objectUrl
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(objectUrl)
   }
 
   async deleteAvatar(): Promise<void> {

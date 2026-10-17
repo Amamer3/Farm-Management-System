@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Plus, Search, Package, AlertTriangle, TrendingDown, Truck } from "lucide-react"
-import { useFeedInventory, useFeedStats, useFeedActions } from "@/hooks/useApiData"
+import { useFeedInventory, useFeedStats, useFeedActions, useStockMovements } from "@/hooks/useApiData"
 
 export default function FeedInventory() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -22,6 +22,8 @@ export default function FeedInventory() {
   const { data: feedData, loading: feedLoading, error: feedError, refetch: refetchFeed } = useFeedInventory(filters)
   const { data: feedStats, loading: statsLoading, error: statsError } = useFeedStats()
   const { addFeedItem, updateFeedStock, loading: actionLoading } = useFeedActions()
+  const { data: movementData } = useStockMovements("feed")
+  const movements = Array.isArray(movementData) ? movementData : []
   
   // Edit dialog state
   const [editFeedDialogOpen, setEditFeedDialogOpen] = useState(false)
@@ -338,6 +340,43 @@ export default function FeedInventory() {
                         </TableCell>
                       </TableRow>
                     ) : null}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-lg sm:text-xl">Stock movements</CardTitle>
+              <CardDescription className="text-sm">Receipts, usage, and adjustments for this farm</CardDescription>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6">
+              <div className="-mx-4 sm:mx-0 overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Kind</TableHead>
+                      <TableHead>Quantity</TableHead>
+                      <TableHead>Unit cost</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {movements.length > 0 ? movements.map((move: any) => (
+                      <TableRow key={move.id}>
+                        <TableCell>{move.occurredAt}</TableCell>
+                        <TableCell className="capitalize">{move.kind}</TableCell>
+                        <TableCell>{move.quantity} {move.unit}</TableCell>
+                        <TableCell>{move.unitCost ? `₵${Number(move.unitCost).toLocaleString()}` : "—"}</TableCell>
+                      </TableRow>
+                    )) : (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center py-6 text-muted-foreground">
+                          No stock movements yet. Adding feed records a receipt.
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </div>

@@ -1,4 +1,4 @@
-# 🐔 Eggcellent Farm Management System
+# Agrocyms
 
 A comprehensive, modern web application for managing poultry farm operations. Built with React, TypeScript, and a beautiful, responsive UI, this system helps farmers track birds, eggs, feed, medicine, and generate detailed reports and analytics.
 
@@ -112,7 +112,7 @@ Create a `.env` file in the root directory:
 
 ```env
 VITE_API_BASE_URL=http://localhost:3000/api
-VITE_APP_NAME=Eggcellent Farm Management
+VITE_APP_NAME=Agrocyms
 ```
 
 4. **Start the development server**

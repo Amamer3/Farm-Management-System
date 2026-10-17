@@ -7,8 +7,10 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
 import { Plus, Search, Syringe, Shield, AlertTriangle, Calendar } from "lucide-react"
-import { useMedicineInventory, useMedicineStats, useMedicineActions, useTreatmentHistory } from "@/hooks/useApiData"
+import { useMedicineInventory, useMedicineStats, useMedicineActions, useTreatmentHistory, useStockMovements } from "@/hooks/useApiData"
 
 export default function Medicine() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -17,8 +19,12 @@ export default function Medicine() {
   // API hooks
   const { data: medicineData, loading: medicineLoading, error: medicineError, refetch: refetchMedicine } = useMedicineInventory(filters)
   const { data: medicineStats, loading: statsLoading, error: statsError } = useMedicineStats()
-  const { addMedicine, loading: actionLoading } = useMedicineActions()
+  const { addMedicine, recordTreatment, loading: actionLoading } = useMedicineActions()
   const { data: treatmentHistory, loading: treatmentLoading, error: treatmentError, refetch: refetchTreatments } = useTreatmentHistory()
+  const { data: movementData, refetch: refetchMovements } = useStockMovements("medicine")
+  const movements = Array.isArray(movementData) ? movementData : []
+  const [useOpen, setUseOpen] = useState(false)
+  const [useForm, setUseForm] = useState({ medicineId: "", name: "", birdGroup: "", dosage: "", quantity: "", administeredBy: "" })
   
   // Handle nested API response structure for medicine data
   // API response: {success: true, data: {data: [], total: 0, pagination: {...}}}
@@ -294,7 +300,17 @@ export default function Medicine() {
                         <TableCell>
                           <div className="flex gap-2">
                             <Button variant="ghost" size="sm">Edit</Button>
-                            <Button variant="ghost" size="sm">Use</Button>
+                            <Button variant="ghost" size="sm" onClick={() => {
+                              setUseForm({
+                                medicineId: medicine.id,
+                                name: medicine.name,
+                                birdGroup: "",
+                                dosage: "",
+                                quantity: "",
+                                administeredBy: "",
+                              })
+                              setUseOpen(true)
+                            }}>Use</Button>
                           </div>
                         </TableCell>
                       </TableRow>
@@ -409,8 +425,90 @@ export default function Medicine() {
               </Table>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Stock movements</CardTitle>
+              <CardDescription>Receipts and doses taken from this farm’s medicine stock</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Kind</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead>Notes</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {movements.length > 0 ? movements.map((move: any) => (
+                    <TableRow key={move.id}>
+                      <TableCell>{move.occurredAt}</TableCell>
+                      <TableCell className="capitalize">{move.kind}</TableCell>
+                      <TableCell>{move.quantity} {move.unit}</TableCell>
+                      <TableCell>{move.notes || "—"}</TableCell>
+                    </TableRow>
+                  )) : (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center py-6 text-muted-foreground">
+                        No medicine movements yet.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </main>
       </div>
+
+      <Dialog open={useOpen} onOpenChange={setUseOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Use {useForm.name || "medicine"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="birdGroup">Group or animal</Label>
+              <Input id="birdGroup" value={useForm.birdGroup} onChange={(e) => setUseForm({ ...useForm, birdGroup: e.target.value })} placeholder="Pen A or tag" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="dosage">Dosage</Label>
+              <Input id="dosage" value={useForm.dosage} onChange={(e) => setUseForm({ ...useForm, dosage: e.target.value })} placeholder="2 ml" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="qty">Quantity taken from stock</Label>
+              <Input id="qty" type="number" min="0" step="0.01" value={useForm.quantity} onChange={(e) => setUseForm({ ...useForm, quantity: e.target.value })} placeholder="1" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="by">Administered by</Label>
+              <Input id="by" value={useForm.administeredBy} onChange={(e) => setUseForm({ ...useForm, administeredBy: e.target.value })} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setUseOpen(false)}>Cancel</Button>
+            <Button disabled={actionLoading} onClick={async () => {
+              const qty = parseFloat(useForm.quantity)
+              const ok = await recordTreatment({
+                medicineId: useForm.medicineId,
+                birdGroup: useForm.birdGroup,
+                dosage: useForm.dosage || useForm.quantity,
+                administeredBy: useForm.administeredBy,
+                date: new Date().toISOString().slice(0, 10),
+                reason: "Treatment",
+                ...(Number.isFinite(qty) && qty > 0 ? { quantity: qty } : {}),
+              })
+              if (ok) {
+                setUseOpen(false)
+                refetchTreatments()
+                refetchMedicine()
+                refetchMovements()
+              }
+            }}>{actionLoading ? "Saving..." : "Record use"}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

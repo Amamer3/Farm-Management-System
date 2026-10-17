@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
-import { useNavigate, useSearchParams } from "react-router-dom"
-import { Bird, Loader2, AlertCircle, Eye, EyeOff } from "lucide-react"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
+import { Loader2, AlertCircle, Eye, EyeOff } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -155,15 +155,17 @@ export function AuthPage() {
       <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
         {/* Left: Branding */}
         <div className="text-center lg:text-left space-y-8">
-          <div className="flex items-center justify-center lg:justify-start gap-3">
-            <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-lg">
-              <Bird className="w-8 h-8 text-primary-foreground" />
-            </div>
+          <Link to="/" className="flex items-center justify-center lg:justify-start gap-3">
+            <img
+              src="/Agrocyms%20logo.png"
+              alt="Agrocyms"
+              className="h-20 w-20 object-contain bg-transparent"
+            />
             <div>
-              <h1 className="text-3xl font-bold text-foreground">The Poultry Project</h1>
-              <p className="text-sm text-muted-foreground">Smart Poultry Management</p>
+              <h1 className="text-3xl font-bold text-foreground">Agrocyms</h1>
+              <p className="text-sm text-muted-foreground">Farm management</p>
             </div>
-          </div>
+          </Link>
 
           <div className="space-y-4">
             <h2 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
@@ -172,7 +174,7 @@ export function AuthPage() {
               <span className="text-primary">Like Clockwork</span>
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed max-w-lg mx-auto lg:mx-0">
-              Track every egg, manage feed, monitor health, and grow your business with real-time insights and automated workflows.
+              Track livestock, manage feed and health, and grow your business with real-time insights across poultry and herd enterprises.
             </p>
           </div>
         </div>
@@ -198,6 +200,12 @@ export function AuthPage() {
                 </Alert>
               )}
               <LoginForm isRedirecting={isRedirecting} />
+              <p className="mt-6 text-center text-sm text-muted-foreground">
+                New farm?{" "}
+                <Link to="/get-started" className="font-medium text-primary hover:underline">
+                  Get started
+                </Link>
+              </p>
             </CardContent>
           </Card>
         </div>

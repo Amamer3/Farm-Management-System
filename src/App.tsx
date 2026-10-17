@@ -18,7 +18,12 @@ import Reports from "./pages/Reports";
 import Statistics from "./pages/Statistics";
 import UserManagement from "./pages/UserManagement";
 import Profile from "./pages/Profile";
+import FarmSettings from "./pages/FarmSettings";
+import Livestock from "./pages/Livestock";
+import Landing from "./pages/Landing";
+import GetStarted from "./pages/GetStarted";
 import NotFound from "./pages/NotFound";
+import { FarmProvider } from "./contexts/FarmContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,8 +46,10 @@ function AppContent() {
   if (!isAuthenticated) {
     return (
       <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/get-started" element={<GetStarted />} />
         <Route path="/login" element={<AuthPage />} />
-        <Route path="*" element={<AuthPage />} />
+        <Route path="*" element={<Landing />} />
       </Routes>
     );
   }
@@ -113,6 +120,65 @@ function AppContent() {
               <Profile />
             </ProtectedRoute>
           } />
+          <Route path="/farm" element={
+            <ProtectedRoute requiredPage="/farm">
+              <FarmSettings />
+            </ProtectedRoute>
+          } />
+          <Route path="/ruminants" element={
+            <ProtectedRoute requiredPage="/ruminants">
+              <Livestock config={{
+                enterprise: "small_ruminants",
+                module: "ruminants",
+                title: "Small ruminants",
+                housingKind: "paddock",
+                species: [{ value: "goat", label: "Goat" }, { value: "sheep", label: "Sheep" }],
+                events: [
+                  { value: "birth", label: "Birth" },
+                  { value: "weaning", label: "Weaning" },
+                  { value: "weight", label: "Weight" },
+                  { value: "sale", label: "Sale" },
+                  { value: "mortality", label: "Mortality" },
+                ],
+              }} />
+            </ProtectedRoute>
+          } />
+          <Route path="/pigs" element={
+            <ProtectedRoute requiredPage="/pigs">
+              <Livestock config={{
+                enterprise: "pigs",
+                module: "pigs",
+                title: "Pigs",
+                housingKind: "sty",
+                species: [{ value: "pig", label: "Pig" }],
+                events: [
+                  { value: "farrowing", label: "Farrowing" },
+                  { value: "weaning", label: "Weaning" },
+                  { value: "weight", label: "Weight" },
+                  { value: "sale", label: "Sale" },
+                  { value: "mortality", label: "Mortality" },
+                ],
+              }} />
+            </ProtectedRoute>
+          } />
+          <Route path="/cattle" element={
+            <ProtectedRoute requiredPage="/cattle">
+              <Livestock config={{
+                enterprise: "cattle",
+                module: "cattle",
+                title: "Cattle",
+                housingKind: "kraal",
+                species: [{ value: "cattle", label: "Cattle" }],
+                events: [
+                  { value: "calving", label: "Calving" },
+                  { value: "milk", label: "Milk" },
+                  { value: "weight", label: "Weight" },
+                  { value: "sale", label: "Sale" },
+                  { value: "mortality", label: "Mortality" },
+                ],
+              }} />
+            </ProtectedRoute>
+          } />
         </>
       ) : (
         // Redirect all routes to login when not authenticated
@@ -130,12 +196,14 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <UserRoleProvider>
-          <TooltipProvider>
-            <AuthErrorHandler />
-            <Toaster />
-            <Sonner />
-            <AppContent /> 
-          </TooltipProvider>
+          <FarmProvider>
+            <TooltipProvider>
+              <AuthErrorHandler />
+              <Toaster />
+              <Sonner />
+              <AppContent />
+            </TooltipProvider>
+          </FarmProvider>
         </UserRoleProvider>
       </BrowserRouter>
     </QueryClientProvider>

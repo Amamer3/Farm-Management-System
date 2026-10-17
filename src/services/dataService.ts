@@ -72,19 +72,6 @@ class BaseApiService {
       // Only pass custom headers if they exist, authService will merge them properly
       ...(options.headers && { headers: options.headers }),
     })
-    
-      // Debug logging in development
-      if (import.meta.env.DEV) {
-        console.log(`[API Response] ${endpoint}:`, {
-          type: Array.isArray(response) ? 'array' : typeof response,
-          keys: typeof response === 'object' && response !== null ? Object.keys(response) : null,
-          preview: Array.isArray(response) 
-            ? `Array(${response.length})` 
-            : typeof response === 'object' && response !== null
-            ? JSON.stringify(response).substring(0, 200)
-            : response
-        })
-      }
       
       // Robust API response unwrapping - handle multiple response formats
       if (response === null || response === undefined) {
@@ -178,23 +165,8 @@ class BaseApiService {
       }
     
       // If none of the above, return the response as-is (might be direct object)
-      const finalResponse = response as T
-      
-      // Debug logging in development
-      if (import.meta.env.DEV) {
-        console.log(`[API Unwrapped] ${endpoint}:`, {
-          type: Array.isArray(finalResponse) ? 'array' : typeof finalResponse,
-          preview: Array.isArray(finalResponse)
-            ? `Array(${finalResponse.length})`
-            : typeof finalResponse === 'object' && finalResponse !== null
-            ? JSON.stringify(finalResponse).substring(0, 200)
-            : finalResponse
-        })
-      }
-      
-      return finalResponse
+      return response as T
     } catch (error) {
-      // Enhanced error logging
       if (import.meta.env.DEV) {
         console.error(`[API Error] ${endpoint}:`, error)
       }
@@ -228,6 +200,13 @@ class BaseApiService {
   // Helper: DELETE
   protected delete<T>(endpoint: string): Promise<T> {
     return this.request<T>(endpoint, { method: 'DELETE' })
+  }
+
+  protected patch<T>(endpoint: string, data?: any): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'PATCH',
+      body: data ? JSON.stringify(data) : undefined,
+    })
   }
 }
 
@@ -279,10 +258,14 @@ export class EggService extends BaseApiService {
     date: string
     shift: string
     pen: string
-    gradeA: number
-    gradeB: number
-    cracked: number
-    collectedBy: string
+    gradeA?: number
+    gradeB?: number
+    cracked?: number
+    quantity?: number
+    grade?: string
+    collectedBy?: string
+    collector?: string
+    saleAmount?: number
     notes?: string
   }) {
     return this.post('/eggs', data)
@@ -354,6 +337,18 @@ export class FeedService extends BaseApiService {
   }
 }
 
+export class InventoryService extends BaseApiService {
+  list(itemKind?: string) {
+    return this.get<any[]>('/inventory/movements', itemKind ? { itemKind } : undefined)
+  }
+}
+
+export class FinanceService extends BaseApiService {
+  entries() {
+    return this.get<any[]>('/finance/entries')
+  }
+}
+
 export class MedicineService extends BaseApiService {
   getMedicineInventory(filters?: { type?: string; status?: string; search?: string }) {
     return this.get('/medicine', filters)
@@ -376,6 +371,7 @@ export class MedicineService extends BaseApiService {
     medicineId: string
     birdGroup: string
     dosage: string
+    quantity?: number
     administeredBy: string
     date: string
     reason: string
@@ -520,12 +516,28 @@ export class ReportsService extends BaseApiService {
     return this.get('/reports/financial', { period })
   }
 
-  generateReport(type: string, filters: any) {
-    return this.post('/reports/generate', { type, filters })
+  getReportTemplates() {
+    return this.get('/reports/templates')
+  }
+
+  getRecentReports() {
+    return this.get('/reports/recent')
+  }
+
+  generateReport(type: string, filters: any, format: string = 'pdf') {
+    return this.post('/reports/generate', { type, filters, format })
   }
 
   exportReport(reportId: string, format: 'pdf' | 'excel' | 'csv') {
     return this.get(`/reports/${reportId}/export`, { format })
+  }
+
+  async downloadExport(reportId: string, format: 'pdf' | 'excel' | 'csv') {
+    const ext = format === 'excel' ? 'xlsx' : format
+    await authService.downloadFile(
+      `/reports/${reportId}/export?format=${format}`,
+      `report_${reportId}.${ext}`
+    )
   }
 }
 
@@ -540,6 +552,10 @@ export class UsersService extends BaseApiService {
 
   getUserStats() {
     return this.get('/users/stats')
+  }
+
+  getUserActivityLogs() {
+    return this.get('/users/activity')
   }
 
   addUser(userData: any) {
@@ -577,9 +593,42 @@ export class DashboardService extends BaseApiService {
 // Export Instances
 // ──────────────────────────────────────────────────────────────────────────────
 
+export class FarmService extends BaseApiService {
+  current() {
+    return this.get<any>('/farms/current')
+  }
+  update(data: { name?: string; location?: string; enabledEnterprises?: string[]; crops?: string[]; logo?: string | null }) {
+    return this.patch<any>('/farms/current', data)
+  }
+  groups(params?: { enterprise?: string; species?: string }) {
+    return this.get<any[]>('/animal-groups', params)
+  }
+  createGroup(data: Record<string, unknown>) {
+    return this.post('/animal-groups', data)
+  }
+  animals(params?: { enterprise?: string; species?: string }) {
+    return this.get<any[]>('/animals', params)
+  }
+  createAnimal(data: Record<string, unknown>) {
+    return this.post('/animals', data)
+  }
+  events(module: 'ruminants' | 'pigs' | 'cattle', params?: Record<string, string>) {
+    return this.get<any[]>(`/${module}/events`, params)
+  }
+  createEvent(module: 'ruminants' | 'pigs' | 'cattle', data: Record<string, unknown>) {
+    return this.post(`/${module}/events`, data)
+  }
+  stats(module: 'ruminants' | 'pigs' | 'cattle') {
+    return this.get<any>(`/${module}/stats`)
+  }
+}
+
+export const farmService = new FarmService()
 export const birdsService = new BirdsService()
 export const eggService = new EggService()
 export const feedService = new FeedService()
+export const inventoryService = new InventoryService()
+export const financeService = new FinanceService()
 export const medicineService = new MedicineService()
 export const statisticsService = new StatisticsService()
 export const reportsService = new ReportsService()
@@ -591,6 +640,8 @@ export default {
   birds: birdsService,
   eggs: eggService,
   feed: feedService,
+  inventory: inventoryService,
+  finance: financeService,
   medicine: medicineService,
   statistics: statisticsService,
   reports: reportsService,

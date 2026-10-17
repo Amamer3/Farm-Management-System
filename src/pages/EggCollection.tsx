@@ -30,6 +30,7 @@ export default function EggCollection() {
     grade: "",
     avgWeight: "",
     collector: "",
+    saleAmount: "",
     notes: ""
   })
 
@@ -83,6 +84,7 @@ export default function EggCollection() {
     quantity: item.quantity ?? item.collected ?? 0,
     grade: item.grade || item.quality || 'A',
     avgWeight: item.avgWeight || item.weight || '',
+    saleAmount: item.saleAmount ?? null,
     collector: item.collector || item.collectedBy || '',
     notes: item.notes || '',
     broken: item.broken || 0,
@@ -266,13 +268,14 @@ export default function EggCollection() {
                         <TableHead className="whitespace-nowrap">Quantity</TableHead>
                         <TableHead className="whitespace-nowrap">Grade</TableHead>
                         <TableHead className="whitespace-nowrap">Avg Weight</TableHead>
+                        <TableHead className="whitespace-nowrap">Sale (GHS)</TableHead>
                         <TableHead className="whitespace-nowrap">Collector</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {collectionLoading ? (
                         <TableRow>
-                          <TableCell colSpan={8} className="text-center py-8">
+                          <TableCell colSpan={9} className="text-center py-8">
                             <div className="flex items-center justify-center">
                               <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mr-2" />
                               Loading collections...
@@ -295,12 +298,13 @@ export default function EggCollection() {
                               </Badge>
                             </TableCell>
                             <TableCell className="whitespace-nowrap">{record.avgWeight || 'N/A'}</TableCell>
+                            <TableCell className="whitespace-nowrap">{record.saleAmount != null && record.saleAmount !== "" ? `₵${Number(record.saleAmount).toLocaleString()}` : "—"}</TableCell>
                             <TableCell className="whitespace-nowrap">{record.collector || 'N/A'}</TableCell>
                           </TableRow>
                         ))
                       ) : (
                         <TableRow>
-                          <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                          <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                             {collectionError || statsError 
                               ? 'Error loading collections. Please try again.'
                               : 'No egg collections found. Try adjusting your filters or record a new collection.'}
@@ -420,6 +424,21 @@ export default function EggCollection() {
               </div>
             </div>
             <div className="space-y-2">
+              <Label htmlFor="saleAmount" className="text-sm font-medium">
+                Sale amount (GHS)
+              </Label>
+              <Input
+                id="saleAmount"
+                type="number"
+                min="0"
+                step="0.01"
+                value={newCollection.saleAmount}
+                onChange={(e) => setNewCollection({...newCollection, saleAmount: e.target.value})}
+                placeholder="Leave blank if not sold"
+                className="w-full"
+              />
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="collector" className="text-sm font-medium">
                 Collector Name
               </Label>
@@ -454,9 +473,12 @@ export default function EggCollection() {
             </Button>
             <Button 
               onClick={async () => {
+                const sale = parseFloat(newCollection.saleAmount)
+                const { saleAmount: _ignored, ...collection } = newCollection
                 const success = await recordCollection({
-                  ...newCollection,
-                  quantity: parseInt(newCollection.quantity)
+                  ...collection,
+                  quantity: parseInt(newCollection.quantity),
+                  ...(Number.isFinite(sale) && sale > 0 ? { saleAmount: sale } : {}),
                 })
                 if (success) {
                   setRecordCollectionDialogOpen(false)
@@ -468,6 +490,7 @@ export default function EggCollection() {
                     grade: "",
                     avgWeight: "",
                     collector: "",
+                    saleAmount: "",
                     notes: ""
                   })
                   refetchCollections()

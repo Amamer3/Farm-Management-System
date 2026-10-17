@@ -13,7 +13,7 @@ import { useUserRole } from '@/contexts/UserRoleContext';
 import { AppSidebar } from '@/components/layout/AppSidebar';
 import { AppHeader } from '@/components/layout/AppHeader';
 import { Users, UserPlus, Settings, Activity, DollarSign, Eye, EyeOff, Trash2, Edit, Shield } from 'lucide-react';
-import { useUsers, useUserStats, useUserActions } from '@/hooks/useApiData';
+import { useUsers, useUserStats, useUserActions, useUserActivityLogs } from '@/hooks/useApiData';
 
 interface User {
   id: string;
@@ -48,7 +48,9 @@ const UserManagement: React.FC = () => {
   // API hooks
   const { data: usersData, loading: usersLoading, error: usersError, refetch: refetchUsers } = useUsers(filters);
   const { data: userStats, loading: statsLoading, error: statsError } = useUserStats();
+  const { data: activityLogs, loading: activityLoading, error: activityError } = useUserActivityLogs();
   const { addUser: addUserApi, updateUser: updateUserApi, deleteUser: deleteUserApi, loading: actionLoading } = useUserActions();
+  const [activeTab, setActiveTab] = useState('users');
 
   // Normalize users data - handle both array and object responses
   // Note: BaseApiService now unwraps { success, data } responses, so usersData should be the data part
@@ -326,7 +328,7 @@ const UserManagement: React.FC = () => {
               )}
             </div>
 
-            <Tabs defaultValue="users" className="space-y-4 sm:space-y-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
               <div className="overflow-x-auto -mx-2 sm:mx-0">
                 <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:w-auto lg:grid-cols-none lg:flex min-w-max">
                   <TabsTrigger value="users" className="text-xs sm:text-sm whitespace-nowrap">Users</TabsTrigger>
@@ -475,11 +477,37 @@ const UserManagement: React.FC = () => {
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            <TableRow>
-                              <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
-                                Activity logs will be available when the API endpoint is implemented.
-                              </TableCell>
-                            </TableRow>
+                            {activityLoading && (
+                              <TableRow>
+                                <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                                  Loading activity logs...
+                                </TableCell>
+                              </TableRow>
+                            )}
+                            {!activityLoading && activityError && (
+                              <TableRow>
+                                <TableCell colSpan={4} className="text-center py-8 text-destructive">
+                                  {activityError}
+                                </TableCell>
+                              </TableRow>
+                            )}
+                            {!activityLoading && !activityError && (!activityLogs || activityLogs.length === 0) && (
+                              <TableRow>
+                                <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                                  No activity logs yet.
+                                </TableCell>
+                              </TableRow>
+                            )}
+                            {!activityLoading && !activityError && activityLogs?.map((log) => (
+                              <TableRow key={log.id}>
+                                <TableCell className="font-medium whitespace-nowrap">{log.user}</TableCell>
+                                <TableCell className="whitespace-nowrap">{log.action}</TableCell>
+                                <TableCell className="whitespace-nowrap text-muted-foreground">
+                                  {log.timestamp ? new Date(log.timestamp).toLocaleString() : '—'}
+                                </TableCell>
+                                <TableCell className="max-w-xs truncate" title={log.details}>{log.details}</TableCell>
+                              </TableRow>
+                            ))}
                           </TableBody>
                           </Table>
                         </div>
@@ -585,7 +613,7 @@ const UserManagement: React.FC = () => {
 
           {/* Add User Dialog */}
           <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
-            <DialogContent className="sm:max-w-[425px] max-w-[95vw] max-h-[90vh] overflow-y-auto">
+            <DialogContent className="sm:max-w-[425px] max-w-[95vw] max-h-[90vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
               <DialogHeader>
                 <DialogTitle>Add New User</DialogTitle>
                 <DialogDescription>
@@ -659,7 +687,7 @@ const UserManagement: React.FC = () => {
 
           {/* Edit User Dialog */}
           <Dialog open={isEditUserOpen} onOpenChange={setIsEditUserOpen}>
-            <DialogContent className="sm:max-w-[425px] max-w-[95vw] max-h-[90vh] overflow-y-auto">
+            <DialogContent className="sm:max-w-[425px] max-w-[95vw] max-h-[90vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
               <DialogHeader>
                 <DialogTitle>Edit User</DialogTitle>
                 <DialogDescription>

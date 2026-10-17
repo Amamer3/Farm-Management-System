@@ -53,8 +53,8 @@ const rolePermissions: Record<UserRole, string[]> = {
 
 const pageAccess: Record<UserRole, string[]> = {
   Admin: ["/", "/birds", "/feed", "/eggs", "/medicine", "/reports", "/users", "/settings", "/profile"],
-  Manager: ["/", "/birds", "/feed", "/eggs", "/medicine", "/reports", "/users", "/profile"],
-  Worker: ["/", "/eggs", "/birds", "/feed", "/profile"],
+  Manager: ["/", "/birds", "/feed", "/eggs", "/medicine", "/reports", "/users", "/profile", "/ruminants", "/pigs", "/cattle", "/farm"],
+  Worker: ["/", "/eggs", "/birds", "/feed", "/profile", "/ruminants", "/pigs", "/cattle"],
 }
 
 // ──────────────────────────────────────────────────────────────────────────────

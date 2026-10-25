@@ -1,5 +1,9 @@
+import type { Metadata } from "next"
 import { ProtectedPage } from "@/components/ProtectedPage";
 import Livestock from "@/views/Livestock";
+import { createPrivateMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = createPrivateMetadata("Cattle", "/cattle")
 
 export default function CattlePage() {
   return (

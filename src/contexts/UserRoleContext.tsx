@@ -169,7 +169,7 @@ export function UserRoleProvider({ children }: { children: ReactNode }) {
         return
       }
 
-      // No stored user - try to initialize from token
+      // No stored user - try to restore the HTTP-only cookie session
       try {
         const freshUser = await authService.initializeAuth()
         if (isMounted && !hasLoggedInRef.current) {

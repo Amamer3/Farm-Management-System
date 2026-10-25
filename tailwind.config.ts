@@ -19,7 +19,8 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				inter: ['Inter', 'sans-serif'],
+				inter: ['var(--font-inter)', 'Inter', 'sans-serif'],
+				manrope: ['var(--font-manrope)', 'Manrope', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

@@ -1,51 +1,45 @@
-import type { Metadata } from "next";
-import { Providers } from "./providers";
-import { getAppDescription, getAppName, getAppTitle, getLogoPath, getTwitterHandle } from "@/lib/env";
-import "../index.css";
+import type { Metadata, Viewport } from "next"
+import { Inter, Manrope } from "next/font/google"
+import { Providers } from "./providers"
+import { JsonLd } from "@/components/seo/JsonLd"
+import { organizationJsonLd, rootMetadata, softwareJsonLd, websiteJsonLd } from "@/lib/seo"
+import "../index.css"
 
-const appName = getAppName(); 
-const appTitle = getAppTitle();
-const appDescription = getAppDescription();
-const logoPath = getLogoPath();
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+})
 
-export const metadata: Metadata = {
-  title: appTitle,
-  description: appDescription,
-  authors: [{ name: appName }],
-  icons: {
-    icon: logoPath,
-  },
-  openGraph: {
-    title: appTitle,
-    description: appDescription,
-    type: "website",
-    images: [logoPath],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: getTwitterHandle(),
-    images: [logoPath],
-  },
-};
+const manrope = Manrope({
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-manrope",
+  display: "swap",
+})
+
+export const metadata: Metadata = rootMetadata()
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#173528" },
+    { media: "(prefers-color-scheme: dark)", color: "#173528" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${manrope.variable}`} suppressHydrationWarning>
+      <body className="font-inter antialiased" suppressHydrationWarning>
+        <JsonLd data={[organizationJsonLd(), websiteJsonLd(), softwareJsonLd()]} />
         <Providers>{children}</Providers>
       </body>
     </html>
-  );
+  )
 }

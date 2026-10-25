@@ -51,8 +51,7 @@ class BaseApiService {
     retryOn401 = true
   ): Promise<T> {
     try {
-    // Let AuthService handle everything: token, refresh, 401 retry, queue
-    // Don't set headers here - let authService.makeRequest handle Authorization header
+    // AuthService sends HTTP-only cookies and retries after a cookie refresh.
     const response = await authService.makeRequest<any>(endpoint, {
       ...options,
       // Only pass custom headers if they exist, authService will merge them properly

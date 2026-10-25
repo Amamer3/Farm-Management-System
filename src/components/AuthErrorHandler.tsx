@@ -32,9 +32,6 @@ const AuthErrorHandler: React.FC = () => {
     } catch (error) {
       console.error('Logout failed:', error);
     } finally {
-      // Clear any stored tokens using safe storage utility
-      storage.removeItem('token');
-      storage.removeItem('refresh_token');
       storage.removeItem('auth');
       
       // Redirect to home - AppContent will show AuthPage if not authenticated

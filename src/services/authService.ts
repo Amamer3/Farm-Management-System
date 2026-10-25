@@ -1,6 +1,6 @@
 import { User, LoginCredentials, RegisterData, UserRole } from "@/types/auth"
 import { getPublicApiBaseUrl, getRequestTimeoutMs, isProd } from "@/lib/env"
-import { parseApiError, storage, withTimeout, retryWithBackoff, isRetryableError, ErrorType } from "@/utils/errorHandler"
+import { parseApiError, storage, withTimeout, retryWithBackoff, ErrorType } from "@/utils/errorHandler"
 
 function getApiBaseUrl(): string {
   return getPublicApiBaseUrl()
@@ -8,8 +8,6 @@ function getApiBaseUrl(): string {
 
 const API_BASE_URL = getApiBaseUrl()
 const AUTH_STORAGE_KEY = "auth"
-const TOKEN_STORAGE_KEY = "token"
-const REFRESH_TOKEN_STORAGE_KEY = "refresh_token"
 const REQUEST_TIMEOUT = getRequestTimeoutMs()
 
 interface AuthResponse {
@@ -26,15 +24,12 @@ interface AuthResponse {
       createdAt?: any
       updatedAt?: any
     }
-    token: string
-    refreshToken?: string
-    refresh_token?: string
     expiresIn?: number
   }
   timestamp: string
 }
 
-type AuthEvent = 'login' | 'logout' | 'token_refresh' | 'session_expired' | 'permission_denied'
+type AuthEvent = "login" | "logout" | "token_refresh" | "session_expired" | "permission_denied"
 
 class AuthService {
   private refreshTimeout?: ReturnType<typeof setTimeout>
@@ -43,14 +38,14 @@ class AuthService {
   private initializing = false
   private initPromise?: Promise<User | null>
   private listeners: Map<AuthEvent, (() => void)[]> = new Map()
-  private lastLoginTime: number = 0
-  private readonly LOGIN_GRACE_PERIOD = 5000 // 5 seconds grace period after login
+  private lastLoginTime = 0
+  private readonly LOGIN_GRACE_PERIOD = 5000
+  private sessionExpiresAt = 0
 
   constructor() {
-    this.setupTokenRefresh()
+    this.setupSessionRefresh()
   }
 
-  // === Event System ===
   on(event: AuthEvent, callback: () => void): () => void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, [])
@@ -68,183 +63,108 @@ class AuthService {
   }
 
   private emit(event: AuthEvent): void {
-    this.listeners.get(event)?.forEach(cb => cb())
+    this.listeners.get(event)?.forEach((cb) => cb())
   }
 
-  // === Token Management ===
-  private getToken(): string | null {
-    return storage.getItem(TOKEN_STORAGE_KEY)
+  hasSession(): boolean {
+    return !!this.getCurrentUser()
   }
-  
-  // Public method to check if token exists
+
   hasToken(): boolean {
-    return !!this.getToken()
+    return this.hasSession()
   }
 
-  private getRefreshToken(): string | null {
-    return storage.getItem(REFRESH_TOKEN_STORAGE_KEY)
+  private rememberSession(expiresIn?: number): void {
+    const seconds = expiresIn && expiresIn > 0 ? expiresIn : 15 * 60
+    this.sessionExpiresAt = Date.now() + seconds * 1000
+    this.scheduleSessionRefresh()
   }
 
-  private setTokens(accessToken: string, refreshToken: string): void {
-    const tokenStored = storage.setItem(TOKEN_STORAGE_KEY, accessToken)
-    const refreshTokenStored = storage.setItem(REFRESH_TOKEN_STORAGE_KEY, refreshToken)
-    
-    if (!tokenStored || !refreshTokenStored) {
-      console.error('Failed to store tokens in localStorage')
-      throw new Error('Failed to store authentication tokens')
-    }
-    
-    // Verify tokens were actually stored
-    const verifyToken = storage.getItem(TOKEN_STORAGE_KEY)
-    if (verifyToken !== accessToken) {
-      console.error('Token storage verification failed')
-      throw new Error('Token storage verification failed')
-    }
-    
-    this.scheduleTokenRefresh()
-  }
-
-  private clearTokens(): void {
+  private clearSession(emitLogout = true): void {
     if (this.refreshTimeout) {
       clearTimeout(this.refreshTimeout)
       this.refreshTimeout = undefined
     }
-    storage.removeItem(TOKEN_STORAGE_KEY)
-    storage.removeItem(REFRESH_TOKEN_STORAGE_KEY)
+    this.sessionExpiresAt = 0
+    storage.removeItem("token")
+    storage.removeItem("refresh_token")
     storage.removeItem(AUTH_STORAGE_KEY)
-    this.emit('logout')
-  }
-
-  // === JWT Utils ===
-  private decodeJwtPayload(token: string): any {
-    try {
-      const payload = token.split('.')[1]
-      if (!payload) return {}
-      return JSON.parse(atob(payload))
-    } catch {
-      return {}
+    if (emitLogout) {
+      this.emit("logout")
     }
   }
 
-  private isTokenExpired(token: string): boolean {
-    try {
-      const payload = this.decodeJwtPayload(token)
-      if (!payload.exp) return false
-      return Date.now() >= payload.exp * 1000
-    } catch {
-      return true
-    }
-  }
-
-  // === Proactive Refresh Scheduling ===
-  private scheduleTokenRefresh(): void {
+  private scheduleSessionRefresh(): void {
     if (this.refreshTimeout) {
       clearTimeout(this.refreshTimeout)
     }
+    if (!this.sessionExpiresAt) return
 
-    const token = this.getToken()
-    if (!token) return
-
-    try {
-      const payload = this.decodeJwtPayload(token)
-      const expiresAt = payload.exp * 1000
-      const refreshAt = expiresAt - 5 * 60 * 1000 // 5 min before expiry
-      const delay = Math.max(0, refreshAt - Date.now())
-
-      this.refreshTimeout = setTimeout(() => {
-        this.checkAndRefreshToken().catch(() => {
-          this.clearTokens()
-          this.emit('session_expired')
-        }).finally(() => {
-          this.scheduleTokenRefresh()
+    const refreshAt = this.sessionExpiresAt - 60 * 1000
+    const delay = Math.max(0, refreshAt - Date.now())
+    this.refreshTimeout = setTimeout(() => {
+      this.refreshSession()
+        .catch(() => {
+          this.clearSession()
+          this.emit("session_expired")
         })
-      }, delay)
-    } catch {
-      this.clearTokens()
-    }
+        .finally(() => {
+          this.scheduleSessionRefresh()
+        })
+    }, delay)
   }
 
-  private setupTokenRefresh(): void {
-    this.scheduleTokenRefresh()
+  private setupSessionRefresh(): void {
+    this.scheduleSessionRefresh()
   }
 
-  // === Core Request Handler ===
   async makeRequest<T>(
     endpoint: string,
     options: RequestInit = {},
     isRetry = false
   ): Promise<T> {
-    const token = this.getToken()
     const url = `${API_BASE_URL}${endpoint}`
+    const isPublicAuth =
+      endpoint.startsWith("/auth/login") ||
+      endpoint.startsWith("/auth/register") ||
+      endpoint.startsWith("/auth/setup") ||
+      endpoint.startsWith("/auth/refresh-token")
 
-    // For auth endpoints (login, register, refresh), don't require token
-    const isAuthEndpoint = endpoint.startsWith('/auth/login') || 
-                           endpoint.startsWith('/auth/register') || 
-                           endpoint.startsWith('/auth/setup') ||
-                           endpoint.startsWith('/auth/refresh-token')
-
-    // For non-auth endpoints, we must have a token
-    let finalToken = token
-    if (!isAuthEndpoint && !token) {
-      console.error('No token available for authenticated endpoint:', endpoint)
-      // Try to get token one more time
-      finalToken = this.getToken()
-      if (!finalToken) {
-        this.clearTokens()
-        this.emit('session_expired')
-        throw new Error('Authentication required. Please log in again.')
-      }
+    const headers: Record<string, string> = {}
+    const isFormData = typeof FormData !== "undefined" && options.body instanceof FormData
+    if (!isFormData) {
+      headers["Content-Type"] = "application/json"
     }
 
-    // Build headers object, ensuring Authorization is set if we have a token
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    }
-    
-    // Add Authorization header if we have a token
-    if (finalToken) {
-      headers['Authorization'] = `Bearer ${finalToken}`
-    }
-    
-    // Merge with any existing headers from options
     if (options.headers) {
       if (options.headers instanceof Headers) {
-        // Convert Headers object to plain object
         options.headers.forEach((value, key) => {
           headers[key] = value
         })
       } else if (Array.isArray(options.headers)) {
-        // Convert array of [key, value] pairs to object
         options.headers.forEach(([key, value]) => {
           headers[key] = value
         })
       } else {
-        // Plain object
         Object.assign(headers, options.headers)
       }
     }
-    
+
     const config: RequestInit = {
       ...options,
       headers,
-      // Add CORS and credentials for production cross-origin requests
-      mode: 'cors',
-      credentials: 'omit', // Don't send cookies, but allow CORS
-      // For same-origin requests, credentials can be 'same-origin'
-      ...(url.startsWith('/') || new URL(url, window.location.origin).origin === window.location.origin
-        ? { credentials: 'same-origin' as RequestCredentials }
-        : { credentials: 'omit' as RequestCredentials }),
+      mode: "cors",
+      credentials: "include",
     }
 
     try {
-      const fetchPromise = fetch(url, config)
-      const response = await withTimeout(fetchPromise, REQUEST_TIMEOUT)
+      const response = await withTimeout(fetch(url, config), REQUEST_TIMEOUT)
 
       if (!response.ok) {
         let errorData: any = { message: `HTTP ${response.status}` }
         try {
-          const contentType = response.headers.get('content-type')
-          if (contentType?.includes('application/json')) {
+          const contentType = response.headers.get("content-type")
+          if (contentType?.includes("application/json")) {
             errorData = await response.json()
           } else {
             errorData.message = response.statusText || errorData.message
@@ -253,125 +173,93 @@ class AuthService {
           errorData.message = response.statusText || `HTTP ${response.status}`
         }
 
-        // Enhanced error logging for production debugging
         if (isProd) {
-          console.error('[API Error]', {
+          console.error("[API Error]", {
             url,
             status: response.status,
             statusText: response.statusText,
             endpoint,
             errorData,
-            apiBaseUrl: API_BASE_URL
+            apiBaseUrl: API_BASE_URL,
           })
         }
 
-        const errorMessage = errorData.message || errorData.error?.message || errorData.error || `HTTP ${response.status}`
+        const errorMessage =
+          errorData.message || errorData.error?.message || errorData.error || `HTTP ${response.status}`
 
-        // Handle 401 with auto-refresh (once per request)
-        if (response.status === 401 && token && !endpoint.includes('/auth/') && !isRetry) {
+        if (response.status === 401 && !isPublicAuth && !isRetry) {
           try {
-            await this.processQueue()
-            await this.refreshToken()
+            await this.refreshSession()
             return this.makeRequest<T>(endpoint, options, true)
-          } catch (refreshError) {
-            // Don't clear tokens immediately after login - might be backend issue
+          } catch {
             const timeSinceLogin = Date.now() - this.lastLoginTime
             if (timeSinceLogin < this.LOGIN_GRACE_PERIOD) {
-              // Within grace period - don't clear, just throw error
-              const error = new Error('Authentication failed. Please try again.')
+              const error = new Error("Authentication failed. Please try again.")
               ;(error as any).status = 401
               throw error
             }
-            // Outside grace period - clear tokens
-            this.clearTokens()
-            this.emit('session_expired')
-            const error = new Error('Session expired. Please log in again.')
+            this.clearSession()
+            this.emit("session_expired")
+            const error = new Error("Session expired. Please log in again.")
             ;(error as any).status = 401
             throw error
           }
         }
 
-        // Server errors (5xx)
         if (response.status >= 500) {
-          console.error('Server error:', { endpoint, status: response.status, error: errorData })
-          
-          // Check for GCP permission errors
-          const errorMessageStr = JSON.stringify(errorData).toLowerCase()
-          const isGcpPermissionError = errorMessageStr.includes('permission denied') ||
-                                       errorMessageStr.includes('serviceusage') ||
-                                       errorMessageStr.includes('identitytoolkit') ||
-                                       errorMessageStr.includes('caller does not have required permission')
-          
-          let userMsg: string
-          if (isGcpPermissionError) {
-            userMsg = 'The authentication service is experiencing a configuration issue. Please contact your administrator. This is a server-side permission problem that needs to be fixed by the backend team.'
-          } else if (endpoint.includes('/auth/login')) {
-            userMsg = 'Authentication service unavailable. Try again later.'
-          } else if (endpoint.includes('/auth/profile')) {
-            userMsg = 'Unable to update profile. The server encountered an error. Please try again later or contact support if the problem persists.'
-          } else {
-            userMsg = 'The server encountered an error. Please try again later.'
-          }
-          
-          const error = new Error(userMsg)
+          const error = new Error("The server encountered an error. Please try again later.")
           ;(error as any).status = response.status
-          ;(error as any).originalError = errorData
           throw error
         }
 
-        // Auth-specific errors
-        const isAuthEndpoint = endpoint.includes('/auth/')
+        const isAuthEndpoint = endpoint.includes("/auth/")
         const isInvalidCredentials = /invalid|incorrect|wrong|password/i.test(errorMessage)
         const isUserNotFound = /not found|does not exist/i.test(errorMessage)
-
-        const isPublicSetup = endpoint.startsWith('/auth/setup')
-        if (isAuthEndpoint && !isPublicSetup && (response.status === 401 || response.status === 404 || isInvalidCredentials || isUserNotFound)) {
-          let msg = 'Invalid email or password.'
-          if (isUserNotFound) msg = 'No account found with this email.'
+        const isPublicSetup = endpoint.startsWith("/auth/setup")
+        if (
+          isAuthEndpoint &&
+          !isPublicSetup &&
+          (response.status === 401 || response.status === 404 || isInvalidCredentials || isUserNotFound)
+        ) {
+          let msg = "Invalid email or password."
+          if (isUserNotFound) msg = "No account found with this email."
           const error = new Error(msg)
           ;(error as any).status = response.status
           throw error
         }
 
-        // 403 Forbidden - Permission denied
         if (response.status === 403) {
-          // Emit permission denied event for redirect handling
-          this.emit('permission_denied')
-          const error = new Error('You do not have permission to perform this action.')
+          this.emit("permission_denied")
+          const error = new Error("You do not have permission to perform this action.")
           ;(error as any).status = 403
           throw error
         }
 
-        // 404
         if (response.status === 404) {
-          const error = new Error('Resource not found.')
+          const error = new Error("Resource not found.")
           ;(error as any).status = 404
           throw error
         }
 
-        // 429 Rate Limit
         if (response.status === 429) {
-          // Try to extract retry-after header if available
-          const retryAfter = response.headers.get('retry-after')
-          let rateLimitMessage = 'Too many login attempts. Please wait a moment and try again.'
+          const retryAfter = response.headers.get("retry-after")
+          let rateLimitMessage = "Too many login attempts. Please wait a moment and try again."
           if (retryAfter) {
             const seconds = parseInt(retryAfter, 10)
             if (seconds < 60) {
               rateLimitMessage = `Too many login attempts. Please wait ${seconds} seconds and try again.`
             } else {
               const minutes = Math.ceil(seconds / 60)
-              rateLimitMessage = `Too many login attempts. Please wait ${minutes} minute${minutes > 1 ? 's' : ''} and try again.`
+              rateLimitMessage = `Too many login attempts. Please wait ${minutes} minute${minutes > 1 ? "s" : ""} and try again.`
             }
           }
           const error = new Error(rateLimitMessage)
           ;(error as any).status = 429
-          ;(error as any).retryAfter = retryAfter
           throw error
         }
 
-        // 400
         if (response.status === 400) {
-          const error = new Error(errorMessage || 'Invalid request.')
+          const error = new Error(errorMessage || "Invalid request.")
           ;(error as any).status = 400
           throw error
         }
@@ -381,8 +269,8 @@ class AuthService {
         throw error
       }
 
-      const contentType = response.headers.get('content-type')
-      if (contentType?.includes('application/json')) {
+      const contentType = response.headers.get("content-type")
+      if (contentType?.includes("application/json")) {
         return await response.json()
       }
       const text = await response.text()
@@ -393,16 +281,15 @@ class AuthService {
     }
   }
 
-  // === Token Refresh with Queue ===
-  private processQueue(error?: any, token?: string) {
-    this.failedQueue.forEach(prom => {
+  private processQueue(error?: any): void {
+    this.failedQueue.forEach((prom) => {
       if (error) prom.reject(error)
-      else prom.resolve(token)
+      else prom.resolve(undefined)
     })
     this.failedQueue = []
   }
 
-  private async refreshToken(): Promise<void> {
+  private async refreshSession(): Promise<void> {
     if (this.isRefreshing) {
       return new Promise((resolve, reject) => {
         this.failedQueue.push({ resolve, reject })
@@ -410,110 +297,58 @@ class AuthService {
     }
 
     this.isRefreshing = true
-    const refreshToken = this.getRefreshToken()
-
-    if (!refreshToken) {
-      this.processQueue(new Error('No refresh token'))
-      this.isRefreshing = false
-      throw new Error('No refresh token')
-    }
-
     try {
       const response = await retryWithBackoff(
         () => {
-          // Use fetch directly for refresh to avoid infinite loop
           const url = `${API_BASE_URL}/auth/refresh-token`
           return fetch(url, {
-          method: 'POST',
-            mode: 'cors',
-            credentials: 'omit',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          body: JSON.stringify({ refreshToken }),
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: "{}",
           }).then(async (res) => {
             if (!res.ok) {
-              const errorData = await res.json().catch(() => ({ message: 'Refresh failed' }))
-              throw new Error(errorData.message || errorData.error?.message || 'Token refresh failed')
+              const errorData = await res.json().catch(() => ({ message: "Refresh failed" }))
+              throw new Error(errorData.message || errorData.error?.message || "Session refresh failed")
             }
             return res.json() as Promise<AuthResponse>
           })
         },
-        1, // Only retry once for refresh
+        1,
         1000
       )
 
-      const oldRefreshToken = this.getRefreshToken()
-      const newRefreshToken = response.data.refreshToken || response.data.refresh_token || oldRefreshToken
-
-      // Update tokens
-      this.setTokens(response.data.token, newRefreshToken)
-
-      // Update user
-      const user = this.transformUserResponse(response)
-      storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user))
-
-      this.processQueue(null, response.data.token)
-      this.emit('token_refresh')
+      if (response.data?.user) {
+        const user = this.transformUserResponse(response)
+        storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user))
+      }
+      this.rememberSession(response.data?.expiresIn)
+      this.processQueue()
+      this.emit("token_refresh")
     } catch (error) {
       this.processQueue(error)
-      // Don't clear tokens here - let the caller decide based on grace period
       throw error
     } finally {
       this.isRefreshing = false
     }
   }
 
-  private async checkAndRefreshToken(): Promise<void> {
-    const token = this.getToken()
-    const refreshToken = this.getRefreshToken()
-
-    if (!token || !refreshToken || !this.isTokenExpired(token)) {
-      return
-    }
-
-    try {
-      await this.refreshToken()
-    } catch (error) {
-      const appError = parseApiError(error)
-      if (appError.type === ErrorType.AUTHENTICATION || appError.type === ErrorType.AUTHORIZATION) {
-        this.clearTokens()
-        this.emit('session_expired')
-      }
-      throw error
-    }
-  }
-
-  // === User Transformation ===
   private transformUserResponse(response: AuthResponse): User {
     const userData = response.data.user
-    const token = response.data.token
+    const id = userData.id || userData.farmId || "unknown"
+    const backendRole = (userData.role || "").toUpperCase().replace(/\s+/g, "_")
+    let role: UserRole = "Worker"
+    if (backendRole.includes("ADMIN")) role = "Admin"
+    else if (backendRole.includes("MANAGER") || backendRole.includes("FARM")) role = "Manager"
 
-    // Extract ID
-    const id = userData.id || userData.farmId || 'unknown'
-
-    // Normalize role
-    const backendRole = (userData.role || '').toUpperCase().replace(/\s+/g, '_')
-    let role: UserRole = 'Worker'
-    if (backendRole.includes('ADMIN')) role = 'Admin'
-    else if (backendRole.includes('MANAGER') || backendRole.includes('FARM')) role = 'Manager'
-
-    // Extract email
-    let email = userData.email
-    if (!email && token) {
-      try {
-        email = this.decodeJwtPayload(token).email
-      } catch {}
-    }
-
-    // Handle createdAt
     let createdAt = new Date().toISOString()
     if (userData.createdAt) {
       if (userData.createdAt._seconds) {
         createdAt = new Date(userData.createdAt._seconds * 1000).toISOString()
-      } else if (typeof userData.createdAt === 'number') {
+      } else if (typeof userData.createdAt === "number") {
         createdAt = new Date(userData.createdAt * 1000).toISOString()
-      } else if (typeof userData.createdAt === 'string') {
+      } else if (typeof userData.createdAt === "string") {
         createdAt = new Date(userData.createdAt).toISOString()
       }
     }
@@ -521,48 +356,24 @@ class AuthService {
     return {
       id,
       name: userData.name,
-      email: email || '',
+      email: userData.email || "",
       role,
       createdAt,
-      lastLogin: new Date().toISOString()
+      lastLogin: new Date().toISOString(),
     }
   }
 
-  // === Public API ===
   async login(credentials: LoginCredentials): Promise<User> {
-    try {
-      const response = await this.makeRequest<AuthResponse>('/auth/login', {
-        method: 'POST',
-        body: JSON.stringify(credentials),
-      })
-
-      const user = this.transformUserResponse(response)
-      const refreshToken = response.data.refreshToken || response.data.refresh_token || ''
-      
-      // Verify token exists before storing
-      if (!response.data.token) {
-        console.error('Login response missing token')
-        throw new Error('Login failed: No token received from server')
-      }
-      
-      this.setTokens(response.data.token, refreshToken)
-      
-      // Verify token was stored
-      const storedToken = this.getToken()
-      if (!storedToken) {
-        console.error('Failed to store token after login')
-        throw new Error('Failed to store authentication token')
-      }
-      
-      storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user))
-      this.lastLoginTime = Date.now() // Track login time for grace period
-      this.emit('login')
-
-      return user
-    } catch (error) {
-      console.error('Login failed:', { email: credentials.email.split('@')[0] + '@...' })
-      throw error
-    }
+    const response = await this.makeRequest<AuthResponse>("/auth/login", {
+      method: "POST",
+      body: JSON.stringify(credentials),
+    })
+    const user = this.transformUserResponse(response)
+    storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user))
+    this.rememberSession(response.data.expiresIn)
+    this.lastLoginTime = Date.now()
+    this.emit("login")
+    return user
   }
 
   async setupFarm(data: {
@@ -574,112 +385,71 @@ class AuthService {
     enterprises: string[]
     crops: string[]
   }): Promise<User> {
-    const response = await this.makeRequest<AuthResponse>('/auth/setup', {
-      method: 'POST',
+    const response = await this.makeRequest<AuthResponse>("/auth/setup", {
+      method: "POST",
       body: JSON.stringify(data),
     })
-
     const user = this.transformUserResponse(response)
-    this.setTokens(response.data.token, response.data.refreshToken || response.data.refresh_token || '')
     storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user))
+    this.rememberSession(response.data.expiresIn)
     this.lastLoginTime = Date.now()
-    this.emit('login')
+    this.emit("login")
     return user
   }
 
   async register(data: RegisterData): Promise<User> {
-    const response = await this.makeRequest<AuthResponse>('/auth/register', {
-      method: 'POST',
+    const response = await this.makeRequest<AuthResponse>("/auth/register", {
+      method: "POST",
       body: JSON.stringify(data),
     })
-
     const user = this.transformUserResponse(response)
-    this.setTokens(response.data.token, response.data.refreshToken || '')
     storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user))
-    this.emit('login')
-
+    this.rememberSession(response.data.expiresIn)
+    this.emit("login")
     return user
   }
 
   async logout(): Promise<void> {
     try {
-      await this.makeRequest('/auth/logout', { method: 'POST' })
+      await this.makeRequest("/auth/logout", { method: "POST" })
     } catch (error) {
-      console.error('Logout request failed:', error)
+      console.error("Logout request failed:", error)
     } finally {
-      this.clearTokens()
+      this.clearSession()
     }
   }
 
   private normalizeRole(role: string | undefined): UserRole {
-    if (!role) return 'Worker'
+    if (!role) return "Worker"
     const normalized = role.toUpperCase().trim()
-    if (normalized.includes('ADMIN')) return 'Admin'
-    if (normalized.includes('MANAGER') || normalized.includes('FARM')) return 'Manager'
-    return 'Worker'
+    if (normalized.includes("ADMIN")) return "Admin"
+    if (normalized.includes("MANAGER") || normalized.includes("FARM")) return "Manager"
+    return "Worker"
   }
 
   getCurrentUser(): (User & { phone?: string; address?: string; dateOfBirth?: string; bio?: string; department?: string }) | null {
-    // Always try to get user from storage first - use as fallback
     try {
       const userJson = storage.getItem(AUTH_STORAGE_KEY)
-      if (userJson) {
-        const user = JSON.parse(userJson)
-        // Normalize role if it's not already normalized
-        if (user.role && typeof user.role === 'string') {
-          user.role = this.normalizeRole(user.role)
-        }
-        // Ensure required fields exist with proper defaults
-        if (!user.id) {
-          user.id = 'unknown'
-        }
-        if (!user.name) {
-          // Try to extract name from email if name is missing
-          user.name = user.email?.split('@')[0] || 'User'
-        }
-        if (!user.email) {
-          user.email = ''
-        }
-        if (!user.createdAt) {
-          user.createdAt = new Date().toISOString()
-        }
-        if (!user.lastLogin) {
-          user.lastLogin = new Date().toISOString()
-        }
-        // If we have a token, check if it's expired (but still return user)
-        // The token refresh will handle expired tokens
-        const token = this.getToken()
-        if (token) {
-    const payload = this.decodeJwtPayload(token)
-          // If token is expired, we'll still return the user
-          // initializeAuth will try to refresh it
-    if (payload.exp && this.isTokenExpired(token)) {
-            // Token expired but we have user data - return it anyway
-            // The refresh logic will handle token renewal
-            return user as User
-          }
-        }
-        return user as User
+      if (!userJson) return null
+      const user = JSON.parse(userJson)
+      if (user.role && typeof user.role === "string") {
+        user.role = this.normalizeRole(user.role)
       }
+      if (!user.id) user.id = "unknown"
+      if (!user.name) user.name = user.email?.split("@")[0] || "User"
+      if (!user.email) user.email = ""
+      if (!user.createdAt) user.createdAt = new Date().toISOString()
+      if (!user.lastLogin) user.lastLogin = new Date().toISOString()
+      return user as User
     } catch {
-      // If parsing fails, remove corrupted data
       storage.removeItem(AUTH_STORAGE_KEY)
-    }
-    
-    // No stored user - check if we have a token (might be first time)
-    const token = this.getToken()
-    if (!token) {
       return null
     }
-    
-    return null
   }
 
   async verifyToken(): Promise<boolean> {
-    const token = this.getToken()
-    if (!token) return false
     try {
-      await this.makeRequest('/auth/verify-token')
+      await this.makeRequest("/auth/verify-token")
       return true
     } catch {
       return false
@@ -687,76 +457,41 @@ class AuthService {
   }
 
   private normalizeTimestamp(timestamp: any): string {
-    if (!timestamp) {
-      return new Date().toISOString()
-    }
-    
-    // Handle Firebase timestamp format { _seconds: number, _nanoseconds: number }
+    if (!timestamp) return new Date().toISOString()
     if (timestamp._seconds !== undefined) {
       return new Date(timestamp._seconds * 1000).toISOString()
     }
-    
-    // Handle Unix timestamp in seconds
-    if (typeof timestamp === 'number') {
-      // If timestamp is less than year 2000 in milliseconds, assume it's in seconds
+    if (typeof timestamp === "number") {
       if (timestamp < 946684800000) {
         return new Date(timestamp * 1000).toISOString()
       }
       return new Date(timestamp).toISOString()
     }
-    
-    // Handle ISO string
-    if (typeof timestamp === 'string') {
+    if (typeof timestamp === "string") {
       return new Date(timestamp).toISOString()
     }
-    
     return new Date().toISOString()
   }
 
   private transformProfileData(profileData: any): User {
-    // Normalize role
-    const role = this.normalizeRole(profileData.role || 'Worker')
-    
-    // Normalize timestamps
-    const createdAt = this.normalizeTimestamp(profileData.createdAt)
-    const lastLogin = this.normalizeTimestamp(profileData.lastLogin)
-    
     return {
-      id: profileData.id || profileData.farmId || 'unknown',
-      name: profileData.name || profileData.email?.split('@')[0] || 'User',
-      email: profileData.email || '',
-      role,
+      id: profileData.id || profileData.farmId || "unknown",
+      name: profileData.name || profileData.email?.split("@")[0] || "User",
+      email: profileData.email || "",
+      role: this.normalizeRole(profileData.role || "Worker"),
       avatar: profileData.avatar,
-      createdAt,
-      lastLogin,
+      createdAt: this.normalizeTimestamp(profileData.createdAt),
+      lastLogin: this.normalizeTimestamp(profileData.lastLogin),
     }
   }
 
   async getProfile(): Promise<User & { phone?: string; address?: string; dateOfBirth?: string; bio?: string; department?: string; avatar?: string }> {
     try {
-      const response = await this.makeRequest<any>('/auth/profile')
-      
-      // Handle different response formats
-      let profileData: any
-      if (response && typeof response === 'object') {
-        // If response has data field, use it
-        if ('data' in response && response.data) {
-          profileData = response.data
-        } else {
-          // Otherwise use response directly
-          profileData = response
-        }
-      } else {
-        profileData = response
-      }
-      
-      // Transform and normalize the profile data (core User fields)
+      const response = await this.makeRequest<any>("/auth/profile")
+      const profileData = response?.data ?? response
       const user = this.transformProfileData(profileData)
-      
-      // Preserve additional fields that aren't in User type
       const extendedUser = {
         ...user,
-        // Explicitly preserve avatar - check multiple possible locations
         avatar: profileData.avatar || profileData.avatarUrl || profileData.profilePicture || user.avatar || undefined,
         phone: profileData.phone || undefined,
         address: profileData.address || undefined,
@@ -766,120 +501,48 @@ class AuthService {
         farmId: profileData.farmId || undefined,
         isActive: profileData.isActive,
       }
-      
-      // Store the extended user data (including additional fields)
       storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(extendedUser))
-      
       return extendedUser
     } catch (error) {
-      // If profile fetch fails, check if we have a stored user
       const storedUser = this.getCurrentUser()
-      if (storedUser) {
-        // Return stored user instead of throwing - might be a network issue
-        return storedUser as any
-      }
+      if (storedUser) return storedUser as any
       throw error
     }
   }
 
   async updateProfile(updates: Partial<User>): Promise<User> {
-    const response = await this.makeRequest<any>('/auth/profile', {
-      method: 'PUT',
+    const response = await this.makeRequest<any>("/auth/profile", {
+      method: "PUT",
       body: JSON.stringify(updates),
     })
-    
-    // Handle different response formats
-    let profileData: any
-    if (response && typeof response === 'object') {
-      // If response has data field, use it
-      if ('data' in response && response.data) {
-        profileData = response.data
-      } else {
-        // Otherwise use response directly
-        profileData = response
-      }
-    } else {
-      profileData = response
-    }
-    
-    // Transform and normalize the profile data
+    const profileData = response?.data ?? response
     const updatedUser = this.transformProfileData(profileData)
-    
-    // Store normalized user
     storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(updatedUser))
     return updatedUser
   }
 
   async uploadAvatar(formData: FormData): Promise<{ avatar: string }> {
-    const token = this.getToken()
-    if (!token) {
-      throw new Error('Authentication required')
-    }
-
-    const url = `${API_BASE_URL}/auth/profile/avatar`
-    const response = await fetch(url, {
-      method: 'POST',
-      mode: 'cors',
-      credentials: 'omit',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        // Don't set Content-Type - let browser set it with boundary for multipart/form-data
-      },
+    const result = await this.makeRequest<any>("/auth/profile/avatar", {
+      method: "POST",
       body: formData,
     })
-
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Upload failed' }))
-      throw new Error(error.message || error.error?.message || 'Failed to upload avatar')
-    }
-
-    const result = await response.json()
-    
-    // Handle different response formats
-    let avatarUrl: string
-    if (result && typeof result === 'object') {
-      if ('data' in result && result.data) {
-        // Handle { success: true, data: { avatar: "..." } }
-        avatarUrl = result.data.avatar || result.data
-      } else if ('avatar' in result) {
-        // Handle { avatar: "..." }
-        avatarUrl = result.avatar
-      } else {
-        // Handle direct string or other formats
-        avatarUrl = typeof result === 'string' ? result : result.url || ''
-      }
-    } else {
-      avatarUrl = result || ''
-    }
-    
-    // Update stored user with new avatar
+    const avatarUrl = result?.data?.avatar || result?.avatar || result?.url || ""
     const currentUser = this.getCurrentUser()
     if (currentUser) {
-      const updatedUser = { ...currentUser, avatar: avatarUrl }
-      storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(updatedUser))
+      storage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ ...currentUser, avatar: avatarUrl }))
     }
-    
     return { avatar: avatarUrl }
   }
 
-  /** Download a binary file (CSV/PDF/Excel) from an authenticated API endpoint. */
   async downloadFile(endpoint: string, fallbackFilename: string): Promise<void> {
-    const token = this.getToken()
-    if (!token) {
-      throw new Error('Authentication required')
-    }
-
-    const url = endpoint.startsWith('http')
+    const url = endpoint.startsWith("http")
       ? endpoint
-      : `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`
+      : `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`
 
     const response = await fetch(url, {
-      method: 'GET',
-      mode: 'cors',
-      credentials: 'omit',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      method: "GET",
+      mode: "cors",
+      credentials: "include",
     })
 
     if (!response.ok) {
@@ -894,12 +557,11 @@ class AuthService {
     }
 
     const blob = await response.blob()
-    const disposition = response.headers.get('Content-Disposition') || ''
+    const disposition = response.headers.get("Content-Disposition") || ""
     const match = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/i)
-    const filename = match?.[1]?.replace(/['"]/g, '') || fallbackFilename
-
+    const filename = match?.[1]?.replace(/['"]/g, "") || fallbackFilename
     const objectUrl = URL.createObjectURL(blob)
-    const a = document.createElement('a')
+    const a = document.createElement("a")
     a.href = objectUrl
     a.download = filename
     document.body.appendChild(a)
@@ -909,65 +571,40 @@ class AuthService {
   }
 
   async deleteAvatar(): Promise<void> {
-    const token = this.getToken()
-    if (!token) {
-      throw new Error('Authentication required')
-    }
-
-    const url = `${API_BASE_URL}/auth/profile/avatar`
-    const response = await fetch(url, {
-      method: 'DELETE',
-      mode: 'cors',
-      credentials: 'omit',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    })
-
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Delete failed' }))
-      throw new Error(error.message || error.error?.message || 'Failed to delete avatar')
-    }
-
-    // Update stored user to remove avatar
+    await this.makeRequest("/auth/profile/avatar", { method: "DELETE" })
     const currentUser = this.getCurrentUser()
     if (currentUser) {
-      const updatedUser = { ...currentUser, avatar: undefined }
-      storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(updatedUser))
+      storage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ ...currentUser, avatar: undefined }))
     }
   }
 
   async updateSecuritySettings(settings: { [key: string]: boolean }): Promise<void> {
-    await this.makeRequest('/auth/profile/security-settings', {
-      method: 'PUT',
+    await this.makeRequest("/auth/profile/security-settings", {
+      method: "PUT",
       body: JSON.stringify(settings),
     })
   }
 
   async changePassword(currentPassword: string, newPassword: string): Promise<void> {
-    // If currentPassword is empty, user doesn't have a password yet (setting initial password)
     const payload: { currentPassword?: string; newPassword: string } = { newPassword }
     if (currentPassword) {
       payload.currentPassword = currentPassword
     }
-    
-    await this.makeRequest('/auth/change-password', {
-      method: 'POST',
+    await this.makeRequest("/auth/change-password", {
+      method: "POST",
       body: JSON.stringify(payload),
     })
   }
 
   async revokeToken(userId: string): Promise<void> {
-    await this.makeRequest('/auth/revoke-token', {
-      method: 'POST',
+    await this.makeRequest("/auth/revoke-token", {
+      method: "POST",
       body: JSON.stringify({ userId }),
     })
   }
 
   isAuthenticated(): boolean {
-    const token = this.getToken()
-    return !!(token && !this.isTokenExpired(token) && this.getCurrentUser())
+    return !!this.getCurrentUser()
   }
 
   hasRole(role: UserRole): boolean {
@@ -975,23 +612,14 @@ class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.hasRole('Admin')
+    return this.hasRole("Admin")
   }
 
-  // === App Initialization ===
   async initializeAuth(): Promise<User | null> {
-    // If we already have a valid user, don't re-initialize
-    const currentUser = this.getCurrentUser()
-    if (currentUser) {
-      return currentUser
-    }
-
     if (this.initPromise) return this.initPromise
-
     if (this.initializing) {
-      return new Promise(resolve => setTimeout(() => resolve(this.initializeAuth()), 100))
+      return new Promise((resolve) => setTimeout(() => resolve(this.initializeAuth()), 100))
     }
-
     this.initializing = true
     this.initPromise = this.performInit()
     const result = await this.initPromise
@@ -1001,63 +629,23 @@ class AuthService {
   }
 
   private async performInit(): Promise<User | null> {
-    const token = this.getToken()
-    const storedUser = this.getCurrentUser()
-
-    if (!token) {
-      this.clearTokens()
-      return null
-    }
-
-    // Check if token has exp field before checking expiration
-    const payload = this.decodeJwtPayload(token)
-    const hasExp = payload.exp !== undefined
-    const isExpired = hasExp && this.isTokenExpired(token)
-
-    if (isExpired) {
-      const refreshToken = this.getRefreshToken()
-      if (!refreshToken) {
-        this.clearTokens()
-        return null
-      }
-      try {
-        await this.refreshToken()
-      } catch {
-        this.clearTokens()
-        return null
-      }
-    }
-
     try {
       const profile = await this.getProfile()
-      this.scheduleTokenRefresh()
+      this.rememberSession()
       return profile
     } catch (error) {
       const appError = parseApiError(error)
-      // If profile fetch fails but we have a stored user and token is valid, keep the stored user
-      if (storedUser && (!hasExp || !isExpired)) {
-        // Token seems valid, return stored user instead of clearing
-        return storedUser
-      }
-      
-      if (appError.type === ErrorType.AUTHENTICATION && !isExpired) {
+      if (appError.type === ErrorType.AUTHENTICATION) {
         try {
-          await this.refreshToken()
-          const profile = await this.getProfile()
-          return profile
+          await this.refreshSession()
+          return await this.getProfile()
         } catch {
-          // Only clear if refresh also fails
-          this.clearTokens()
+          this.clearSession(false)
           return null
         }
       }
-      
-      // If we have a stored user and token exists, don't clear - might be a network issue
-      if (storedUser) {
-        return storedUser
-      }
-      
-      this.clearTokens()
+      const storedUser = this.getCurrentUser()
+      if (storedUser) return storedUser
       return null
     }
   }

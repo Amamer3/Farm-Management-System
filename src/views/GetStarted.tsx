@@ -146,7 +146,7 @@ export default function GetStarted() {
       <header className="sticky top-0 z-20 bg-white/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-3xl items-center justify-between gap-3 px-4 sm:h-[84px] sm:px-6">
           <Link href="/" className="flex min-w-0 items-center gap-2">
-            <img src={getLogoPath()} alt="" className="h-8 w-8 shrink-0 object-contain sm:h-11 sm:w-11" />
+            <img src={getLogoPath()} alt={`${getAppName()} logo`} className="h-8 w-8 shrink-0 object-contain sm:h-11 sm:w-11" />
             <span className="truncate text-base font-extrabold tracking-tight text-[#173528] sm:text-[22px]">{getAppName()}</span>
           </Link>
           <Link href="/login" className="rounded-full bg-[#F3F4F2] px-4 py-2 text-sm font-semibold text-[#1c241f] transition hover:bg-[#E7EAE6]">

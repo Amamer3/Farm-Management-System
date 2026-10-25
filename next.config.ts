@@ -27,6 +27,7 @@ const privateWorkspacePaths = [
 ];
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,

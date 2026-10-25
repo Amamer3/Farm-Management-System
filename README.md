@@ -124,6 +124,16 @@ npm run dev
 
 The application will be available at `http://localhost:8080` (or the `PORT` set in `.env`).
 
+### Docker
+
+Copy `.env.example` to `.env`, then:
+
+```bash
+docker compose up --build
+```
+
+The app listens on `http://localhost:8080`. `/api` is proxied to `DOCKER_API_PROXY_TARGET` (defaults to `http://host.docker.internal:5050` so a backend on your machine stays reachable from the container).
+
 ## 📁 Project Structure
 
 ```

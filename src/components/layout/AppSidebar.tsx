@@ -1,5 +1,8 @@
+"use client"
+
 import { useState, useEffect, useRef } from "react"
-import { NavLink, useLocation } from "react-router-dom"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { 
   BarChart3, 
   Bird, 
@@ -21,6 +24,7 @@ import { Button } from "@/components/ui/button"
 import { useUserRole } from "@/contexts/UserRoleContext"
 import { useFarm } from "@/contexts/FarmContext"
 import { useToast } from "@/hooks/use-toast"
+import { getAppName, getAppTagline } from "@/lib/env"
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: Home, enterprise: "" },
@@ -77,7 +81,7 @@ function readLogoFile(file: File): Promise<string> {
 export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const logoInputRef = useRef<HTMLInputElement>(null)
-  const location = useLocation()
+  const pathname = usePathname()
   const { user, canAccess } = useUserRole()
   const { hasEnterprise, farm, setLogo } = useFarm()
   const { toast } = useToast()
@@ -198,8 +202,8 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
             </button>
             {!isCollapsed && (
               <div className="min-w-0">
-                <h1 className="text-base sm:text-lg font-bold text-foreground truncate leading-tight">Agrocyms</h1>
-                <p className="text-[11px] sm:text-xs text-muted-foreground truncate leading-tight">Farm management</p>
+                <h1 className="text-base sm:text-lg font-bold text-foreground truncate leading-tight">{getAppName()}</h1>
+                <p className="text-[11px] sm:text-xs text-muted-foreground truncate leading-tight">{getAppTagline()}</p>
               </div>
             )}
           </div>
@@ -250,13 +254,13 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
           )}
         >
           {filteredNavigation.map((item) => {
-            const isActive = location.pathname === item.href
+            const isActive = pathname === item.href
             const Icon = item.icon
 
             return (
               <div key={item.name} className="relative group">
-                <NavLink
-                  to={item.href}
+                <Link
+                  href={item.href}
                   title={isCollapsed ? item.name : undefined}
                   className={cn(
                     "sidebar-nav-item transition-all duration-200",
@@ -273,7 +277,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                   {!isCollapsed && (
                     <span className="truncate text-sm">{item.name}</span>
                   )}
-                </NavLink>
+                </Link>
 
                 {isCollapsed && (
                   <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 hidden lg:block border border-border">

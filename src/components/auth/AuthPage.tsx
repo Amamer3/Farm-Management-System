@@ -1,5 +1,8 @@
+"use client"
+
 import { useState, useEffect } from "react"
-import { Link, useNavigate, useSearchParams } from "react-router-dom"
+import Link from "next/link"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Loader2, AlertCircle, Eye, EyeOff } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -10,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { getAppName, getAppTagline, getLogoPath } from "@/lib/env"
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Validation Schema
@@ -128,8 +132,8 @@ function LoginForm({ isRedirecting = false }: { isRedirecting?: boolean }) {
 // ──────────────────────────────────────────────────────────────────────────────
 export function AuthPage() {
   const { isAuthenticated, isLoading } = useUserRole()
-  const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const reason = searchParams.get('reason')
   const [isRedirecting, setIsRedirecting] = useState(false)
 
@@ -140,7 +144,7 @@ export function AuthPage() {
       setIsRedirecting(true)
       // Small delay to ensure smooth transition and keep loading state visible
       const timer = setTimeout(() => {
-        navigate("/", { replace: true })
+        router.replace("/")
       }, 300) // 300ms delay to keep login screen visible
       
       return () => clearTimeout(timer)
@@ -148,22 +152,22 @@ export function AuthPage() {
       // Reset redirecting state if not authenticated
       setIsRedirecting(false)
     }
-  }, [isAuthenticated, isLoading, navigate])
+  }, [isAuthenticated, isLoading, router])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex items-center justify-center p-4">
       <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
         {/* Left: Branding */}
         <div className="text-center lg:text-left space-y-8">
-          <Link to="/" className="flex items-center justify-center lg:justify-start gap-3">
+          <Link href="/" className="flex items-center justify-center lg:justify-start gap-3">
             <img
-              src="/Agrocyms%20logo.png"
-              alt="Agrocyms"
+              src={getLogoPath()}
+              alt={getAppName()}
               className="h-20 w-20 object-contain bg-transparent"
             />
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Agrocyms</h1>
-              <p className="text-sm text-muted-foreground">Farm management</p>
+              <h1 className="text-3xl font-bold text-foreground">{getAppName()}</h1>
+              <p className="text-sm text-muted-foreground">{getAppTagline()}</p>
             </div>
           </Link>
 
@@ -202,7 +206,7 @@ export function AuthPage() {
               <LoginForm isRedirecting={isRedirecting} />
               <p className="mt-6 text-center text-sm text-muted-foreground">
                 New farm?{" "}
-                <Link to="/get-started" className="font-medium text-primary hover:underline">
+                <Link href="/get-started" className="font-medium text-primary hover:underline">
                   Get started
                 </Link>
               </p>

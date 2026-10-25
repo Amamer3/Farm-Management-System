@@ -51,8 +51,7 @@ A comprehensive, modern web application for managing poultry farm operations. Bu
 
 - **[React 18.3](https://react.dev/)** - UI library
 - **[TypeScript 5.5](https://www.typescriptlang.org/)** - Type-safe JavaScript
-- **[Vite 7.2](https://vitejs.dev/)** - Build tool and dev server
-- **[React Router 6.26](https://reactrouter.com/)** - Client-side routing
+- **[Next.js 15](https://nextjs.org/)** - App Router and dev server
 
 ### UI Framework & Styling
 
@@ -97,7 +96,7 @@ A comprehensive, modern web application for managing poultry farm operations. Bu
 
 ```bash
 git clone <YOUR_GIT_URL>
-cd eggcellent-farm-view
+cd Farm-Management-System
 ```
 
 2. **Install dependencies**
@@ -108,11 +107,13 @@ npm install
 
 3. **Set up environment variables**
 
-Create a `.env` file in the root directory:
+Copy `.env.example` to `.env` and adjust values as needed:
 
 ```env
-VITE_API_BASE_URL=http://localhost:3000/api
-VITE_APP_NAME=Agrocyms
+NEXT_PUBLIC_APP_NAME=Agrocyms
+NEXT_PUBLIC_API_BASE_URL=/api
+API_PROXY_TARGET=http://localhost:5050
+PORT=8080
 ```
 
 4. **Start the development server**
@@ -121,36 +122,36 @@ VITE_APP_NAME=Agrocyms
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173` (or the port shown in your terminal).
+The application will be available at `http://localhost:8080` (or the `PORT` set in `.env`).
 
 ## 📁 Project Structure
 
 ```
-eggcellent-farm-view/
-├── public/                 # Static assets
+agrocyms/
+├── docs/                  # API specs and guides
+├── public/                # Static assets
+├── scripts/               # Dev/start helpers
 ├── src/
-│   ├── components/        # React components
-│   │   ├── auth/         # Authentication components
-│   │   ├── dashboard/    # Dashboard-specific components
-│   │   ├── layout/       # Layout components (Header, Sidebar)
-│   │   ├── statistics/   # Statistics dashboard components
-│   │   └── ui/           # Reusable UI components (shadcn/ui)
-│   ├── contexts/         # React Context providers
-│   ├── hooks/            # Custom React hooks
-│   ├── pages/            # Page components
-│   ├── services/         # API service layers
-│   ├── types/            # TypeScript type definitions
-│   ├── utils/            # Utility functions
-│   ├── App.tsx           # Main app component
-│   ├── main.tsx          # Application entry point
-│   └── index.css         # Global styles
-├── dist/                 # Production build output
-├── .env                  # Environment variables (not in git)
-├── package.json          # Dependencies and scripts
-├── tsconfig.json         # TypeScript configuration
-├── tailwind.config.ts    # Tailwind CSS configuration
-├── vite.config.ts        # Vite configuration
-└── README.md            # This file
+│   ├── app/               # Next.js routes
+│   ├── components/        # Shared UI
+│   │   ├── auth/
+│   │   ├── dashboard/
+│   │   ├── layout/
+│   │   ├── statistics/
+│   │   └── ui/
+│   ├── contexts/
+│   ├── hooks/
+│   ├── lib/
+│   ├── services/
+│   ├── types/
+│   ├── utils/
+│   ├── views/             # Screens used by routes
+│   └── index.css
+├── .env.example
+├── next.config.ts
+├── package.json
+├── tailwind.config.ts
+└── tsconfig.json
 ```
 
 ## 🔑 Key Features
@@ -245,13 +246,13 @@ The application handles various API response formats:
 
 See the following specification documents for detailed API endpoint information:
 
-- [`AUTH_ENDPOINTS_SPECIFICATION.md`](./AUTH_ENDPOINTS_SPECIFICATION.md) - Authentication endpoints
-- [`EGG_COLLECTION_SPECIFICATION.md`](./EGG_COLLECTION_SPECIFICATION.md) - Egg collection endpoints
-- [`FEED_INVENTORY_SPECIFICATION.md`](./FEED_INVENTORY_SPECIFICATION.md) - Feed inventory endpoints
-- [`MEDICINE_SPECIFICATION.md`](./MEDICINE_SPECIFICATION.md) - Medicine management endpoints
-- [`REPORTS_SPECIFICATION.md`](./REPORTS_SPECIFICATION.md) - Reports and analytics endpoints
-- [`STATISTICS_SPECIFICATION.md`](./STATISTICS_SPECIFICATION.md) - Statistics dashboard endpoints
-- [`API_TESTING_GUIDE.md`](./API_TESTING_GUIDE.md) - API testing guide
+- [`docs/AUTH_ENDPOINTS_SPECIFICATION.md`](./docs/AUTH_ENDPOINTS_SPECIFICATION.md) - Authentication endpoints
+- [`docs/EGG_COLLECTION_SPECIFICATION.md`](./docs/EGG_COLLECTION_SPECIFICATION.md) - Egg collection endpoints
+- [`docs/FEED_INVENTORY_SPECIFICATION.md`](./docs/FEED_INVENTORY_SPECIFICATION.md) - Feed inventory endpoints
+- [`docs/MEDICINE_SPECIFICATION.md`](./docs/MEDICINE_SPECIFICATION.md) - Medicine management endpoints
+- [`docs/REPORTS_SPECIFICATION.md`](./docs/REPORTS_SPECIFICATION.md) - Reports and analytics endpoints
+- [`docs/STATISTICS_SPECIFICATION.md`](./docs/STATISTICS_SPECIFICATION.md) - Statistics dashboard endpoints
+- [`docs/API_TESTING_GUIDE.md`](./docs/API_TESTING_GUIDE.md) - API testing guide
 
 ## 🔐 Role-Based Access Control
 
@@ -373,8 +374,10 @@ This application can be deployed to any static hosting service:
 
 Make sure to set the following environment variables in your hosting platform:
 
-- `VITE_API_BASE_URL`: Your API base URL
-- `VITE_APP_NAME`: Application name
+- `NEXT_PUBLIC_API_BASE_URL`: Your API base URL
+- `API_PROXY_TARGET`: Backend origin the `/api` rewrite proxies to
+- `NEXT_PUBLIC_APP_NAME`: Application name
+- `PORT`: Frontend dev server port
 
 ### Custom Domain
 
@@ -390,15 +393,15 @@ Most hosting providers allow you to connect custom domains. Check your hosting p
 
 ### API Documentation
 
-All API endpoint specifications are available in the root directory:
+All API endpoint specifications are available in `docs/`:
 
-- `AUTH_ENDPOINTS_SPECIFICATION.md`
-- `EGG_COLLECTION_SPECIFICATION.md`
-- `FEED_INVENTORY_SPECIFICATION.md`
-- `MEDICINE_SPECIFICATION.md`
-- `REPORTS_SPECIFICATION.md`
-- `STATISTICS_SPECIFICATION.md`
-- `API_TESTING_GUIDE.md`
+- `docs/AUTH_ENDPOINTS_SPECIFICATION.md`
+- `docs/EGG_COLLECTION_SPECIFICATION.md`
+- `docs/FEED_INVENTORY_SPECIFICATION.md`
+- `docs/MEDICINE_SPECIFICATION.md`
+- `docs/REPORTS_SPECIFICATION.md`
+- `docs/STATISTICS_SPECIFICATION.md`
+- `docs/API_TESTING_GUIDE.md`
 
 ### Type Definitions
 

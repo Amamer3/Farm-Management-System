@@ -1,5 +1,7 @@
+"use client"
+
 import { useEffect, useRef } from "react"
-import { useLocation } from "react-router-dom"
+import { usePathname } from "next/navigation"
 import { useUserRole } from "@/contexts/UserRoleContext"
 
 interface ProtectedRouteProps {
@@ -18,7 +20,7 @@ export function ProtectedRoute({
   requiredPage 
 }: ProtectedRouteProps) {
   const { canAccess, hasPermission, redirectToSafePage, isLoading, isAuthenticated, user } = useUserRole()
-  const location = useLocation()
+  const pathname = usePathname()
   const hasRedirected = useRef(false)
   const redirectingRef = useRef(false)
 
@@ -33,7 +35,7 @@ export function ProtectedRoute({
       const page = requiredPage.startsWith("/") ? requiredPage : `/${requiredPage}`
       hasPageAccess = canAccess(page)
     } else {
-      hasPageAccess = canAccess(location.pathname)
+      hasPageAccess = canAccess(pathname)
     }
 
     const hasRequiredPerm = requiredPermission ? hasPermission(requiredPermission) : true
@@ -52,7 +54,7 @@ export function ProtectedRoute({
     if (!isAuthenticated) return
 
     // Don't redirect if we're already on profile or dashboard (safe pages)
-    const currentPath = location.pathname
+    const currentPath = pathname
     if (currentPath === "/profile" || currentPath === "/") {
       hasRedirected.current = false
       redirectingRef.current = false
@@ -83,8 +85,7 @@ export function ProtectedRoute({
       // User has access, reset redirect flag
       hasRedirected.current = false
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, isAuthenticated, user?.id, user?.role, location.pathname, requiredPage, requiredPermission])
+  }, [isLoading, isAuthenticated, user?.id, user?.role, pathname, requiredPage, requiredPermission])
 
   // Show loading state while checking permissions
   if (isLoading) {
@@ -106,7 +107,7 @@ export function ProtectedRoute({
   // Check access before rendering
   const hasPageAccess = requiredPage 
     ? canAccess(requiredPage.startsWith("/") ? requiredPage : `/${requiredPage}`)
-    : canAccess(location.pathname)
+    : canAccess(pathname)
   
   const hasRequiredPermission = requiredPermission ? hasPermission(requiredPermission) : true
 

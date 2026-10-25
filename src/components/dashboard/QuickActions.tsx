@@ -1,11 +1,13 @@
+"use client"
+
 import { Plus, Package, Egg, Syringe, Users } from "lucide-react"
-import { useNavigate } from "react-router-dom"
+import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import { useUserRole } from "@/contexts/UserRoleContext"
 import { useFarm } from "@/contexts/FarmContext"
 
 export function QuickActions() {
-  const navigate = useNavigate()
+  const router = useRouter()
   const { toast } = useToast()
   const { hasPermission } = useUserRole()
   const { farm } = useFarm()
@@ -26,7 +28,7 @@ export function QuickActions() {
       icon: Plus,
       description: "Register new poultry batch",
       variant: "default" as const,
-      onClick: () => hasPermission("manage_birds") ? navigate("/birds") : showPermissionError(),
+      onClick: () => hasPermission("manage_birds") ? router.push("/birds") : showPermissionError(),
       permission: "manage_birds"
     } : null,
     {
@@ -34,7 +36,7 @@ export function QuickActions() {
       icon: Package,
       description: "Record feed consumption",
       variant: "secondary" as const,
-      onClick: () => hasPermission("manage_feed") ? navigate("/feed") : showPermissionError(),
+      onClick: () => hasPermission("manage_feed") ? router.push("/feed") : showPermissionError(),
       permission: "manage_feed"
     },
     showPoultry ? {
@@ -42,7 +44,7 @@ export function QuickActions() {
       icon: Egg,
       description: "Log daily egg collection",
       variant: "secondary" as const,
-      onClick: () => hasPermission("collect_eggs") ? navigate("/eggs") : showPermissionError(),
+      onClick: () => hasPermission("collect_eggs") ? router.push("/eggs") : showPermissionError(),
       permission: "collect_eggs"
     } : null,
     enterprises?.includes("small_ruminants") ? {
@@ -50,7 +52,7 @@ export function QuickActions() {
       icon: Users,
       description: "Open flock records",
       variant: "default" as const,
-      onClick: () => navigate("/ruminants"),
+      onClick: () => router.push("/ruminants"),
       permission: "view_dashboard"
     } : null,
     enterprises?.includes("cattle") ? {
@@ -58,7 +60,7 @@ export function QuickActions() {
       icon: Users,
       description: "Open the cattle herd",
       variant: "default" as const,
-      onClick: () => navigate("/cattle"),
+      onClick: () => router.push("/cattle"),
       permission: "view_dashboard"
     } : null,
     enterprises?.includes("pigs") ? {
@@ -66,7 +68,7 @@ export function QuickActions() {
       icon: Users,
       description: "Open pig records",
       variant: "default" as const,
-      onClick: () => navigate("/pigs"),
+      onClick: () => router.push("/pigs"),
       permission: "view_dashboard"
     } : null,
     {
@@ -74,7 +76,7 @@ export function QuickActions() {
       icon: Syringe,
       description: "Track vaccinations",
       variant: "secondary" as const,
-      onClick: () => hasPermission("manage_medicine") ? navigate("/medicine") : showPermissionError(),
+      onClick: () => hasPermission("manage_medicine") ? router.push("/medicine") : showPermissionError(),
       permission: "manage_medicine"
     }
   ].filter((action): action is NonNullable<typeof action> => action !== null)

@@ -1,4 +1,5 @@
 import { authService } from './authService'
+import { getPublicApiBaseUrl, isDev } from '@/lib/env'
 import { parseApiError, withTimeout, retryWithBackoff, isRetryableError, ErrorType } from '@/utils/errorHandler'
 import type {
   DashboardStats,
@@ -27,26 +28,11 @@ import type {
   ExportReportRequest
 } from '../types/api'
 
-// Get API base URL from environment variable
-// Must be set in .env file or production environment variables
-// Examples:
-//   Development: VITE_API_BASE_URL=/api
-//   Production: VITE_API_BASE_URL=https://farm-management-server.onrender.com/api
 function getApiBaseUrl(): string {
-  const envUrl = import.meta.env.VITE_API_BASE_URL
-  if (!envUrl) {
-    throw new Error('VITE_API_BASE_URL environment variable is not set. Please configure it in your .env file or production environment.')
-  }
-  // If it's a full URL, ensure it ends with /api
-  if (envUrl.startsWith('http')) {
-    return envUrl.endsWith('/api') ? envUrl : `${envUrl.replace(/\/$/, '')}/api`
-  }
-  // If it's a relative path, use as-is
-  return envUrl
+  return getPublicApiBaseUrl()
 }
 
 const API_BASE_URL = getApiBaseUrl()
-const REQUEST_TIMEOUT = 30000 // 30 seconds
 
 // Global abort controller per request (optional, for cancellation)
 interface RequestOptions extends RequestInit {
@@ -167,7 +153,7 @@ class BaseApiService {
       // If none of the above, return the response as-is (might be direct object)
       return response as T
     } catch (error) {
-      if (import.meta.env.DEV) {
+      if (isDev) {
         console.error(`[API Error] ${endpoint}:`, error)
       }
       throw error

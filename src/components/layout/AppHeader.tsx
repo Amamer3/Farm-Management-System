@@ -1,6 +1,8 @@
+"use client"
+
 import { Menu, Bell, Search, User, LogOut, Settings, X } from "lucide-react"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -23,17 +25,17 @@ interface AppHeaderProps {
 export function AppHeader({ onMenuToggle }: AppHeaderProps) {
   const [searchValue, setSearchValue] = useState("")
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
-  const navigate = useNavigate()
+  const router = useRouter()
   const { user, logout } = useUserRole()
   const { farm } = useFarm()
 
   const handleLogout = async () => {
     try {
       await logout()
-      navigate('/')
+      router.push('/')
     } catch (error) {
       console.error('Logout failed:', error)
-      navigate('/')
+      router.push('/')
     }
   }
 
@@ -131,11 +133,11 @@ export function AppHeader({ onMenuToggle }: AppHeaderProps) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate('/profile')}>
+            <DropdownMenuItem onClick={() => router.push('/profile')}>
               <User className="w-4 h-4 mr-2" />
               Profile
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/farm')}>
+            <DropdownMenuItem onClick={() => router.push('/farm')}>
               <Settings className="w-4 h-4 mr-2" />
               Farm settings
             </DropdownMenuItem>

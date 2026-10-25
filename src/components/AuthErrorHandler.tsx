@@ -1,12 +1,14 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { authService } from '@/services/authService';
 import { storage } from '@/utils/errorHandler';
 
 const AuthErrorHandler: React.FC = () => {
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('Your session has expired or is invalid. Please log in again to continue.');
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     // Listen for authentication errors
@@ -36,7 +38,7 @@ const AuthErrorHandler: React.FC = () => {
       storage.removeItem('auth');
       
       // Redirect to home - AppContent will show AuthPage if not authenticated
-      navigate('/');
+      router.push('/');
       setShowError(false);
     }
   };

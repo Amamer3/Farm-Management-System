@@ -1,3 +1,5 @@
+"use client";
+
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -36,7 +38,7 @@ class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log error to console in development
-    if (import.meta.env.DEV) {
+    if (process.env.NODE_ENV === "development") {
       console.error('ErrorBoundary caught an error:', error, errorInfo);
     }
 
@@ -96,7 +98,7 @@ class ErrorBoundary extends Component<Props, State> {
                   <p className="font-mono text-sm break-all">
                     {this.state.error?.message || 'Unknown error occurred'}
                   </p>
-                  {import.meta.env.DEV && this.state.errorInfo && (
+                  {process.env.NODE_ENV === "development" && this.state.errorInfo && (
                     <details className="mt-2">
                       <summary className="cursor-pointer text-sm font-semibold">
                         Stack Trace (Development Only)
@@ -126,7 +128,7 @@ class ErrorBoundary extends Component<Props, State> {
                 </Button>
               </div>
 
-              {import.meta.env.DEV && (
+              {process.env.NODE_ENV === "development" && (
                 <div className="mt-4 p-3 bg-muted rounded text-sm text-muted-foreground">
                   <p className="font-semibold mb-1">Development Mode:</p>
                   <p>This error boundary is only visible in development. In production, users will see a more user-friendly message.</p>

@@ -1,4 +1,27 @@
-# Logs
+# dependencies
+node_modules
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# next.js / build
+.next
+out
+dist
+dist-ssr
+build
+.turbo
+
+# env — keep the example committed
+.env
+.env.*
+!.env.example
+
+# logs and debug
 logs
 *.log
 npm-debug.log*
@@ -7,23 +30,31 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# testing
+coverage
+
+# vercel
+.vercel
+
+# certificates and secrets
+*.pem
 *.local
 
-# Editor directories and files
+# editor
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+
+# os
+.DS_Store
+Thumbs.db
+Desktop.ini

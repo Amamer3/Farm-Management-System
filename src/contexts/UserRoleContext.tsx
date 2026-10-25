@@ -1,5 +1,7 @@
+"use client"
+
 import { createContext, useContext, useState, ReactNode, useEffect, useCallback, useRef, useMemo } from "react"
-import { useNavigate } from "react-router-dom"
+import { useRouter } from "next/navigation"
 import { User, UserRole, AuthState } from "@/types/auth"
 import { authService } from "@/services/authService"
 
@@ -65,7 +67,7 @@ const UserRoleContext = createContext<UserRoleContextType | undefined>(undefined
 export function UserRoleProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const navigate = useNavigate()
+  const router = useRouter()
 
   // ──────────────────────────────────────────────────────────────────────
   // Auth Event Handlers
@@ -73,20 +75,20 @@ export function UserRoleProvider({ children }: { children: ReactNode }) {
   const handleLogin = useCallback((loggedInUser: User) => {
     setUser(loggedInUser)
     setIsLoading(false)
-    navigate("/", { replace: true })
-  }, [navigate])
+    router.replace("/")
+  }, [router])
 
   const handleLogout = useCallback(() => {
     setUser(null)
     setIsLoading(false)
-    navigate("/login", { replace: true })
-  }, [navigate])
+    router.replace("/login")
+  }, [router])
 
   const handleSessionExpired = useCallback(() => {
     setUser(null)
     setIsLoading(false)
-    navigate("/login?reason=expired", { replace: true })
-  }, [navigate])
+    router.replace("/login?reason=expired")
+  }, [router])
 
   const handleTokenRefresh = useCallback(() => {
     // Optionally refresh user profile
@@ -96,15 +98,15 @@ export function UserRoleProvider({ children }: { children: ReactNode }) {
   // Redirect to a safe page (profile or dashboard) when user doesn't have permission
   // Defined early so it can be used in event handlers
   // Use ref to store navigate function to avoid dependency on navigate
-  const navigateRef = useRef(navigate)
+  const routerRef = useRef(router)
   useEffect(() => {
-    navigateRef.current = navigate
-  }, [navigate])
+    routerRef.current = router
+  }, [router])
 
   const redirectToSafePage = useCallback(() => {
     const currentUser = user
     if (!currentUser) {
-      navigateRef.current("/", { replace: true })
+      routerRef.current.replace("/")
       return
     }
     
@@ -113,10 +115,10 @@ export function UserRoleProvider({ children }: { children: ReactNode }) {
     // Check if user can access profile (all authenticated users should be able to)
     const canAccessProfile = currentUser.role === 'Admin' || (pageAccess[currentUser.role]?.includes("/profile") ?? false)
     if (canAccessProfile) {
-      navigateRef.current("/profile", { replace: true })
+      routerRef.current.replace("/profile")
     } else {
       // Fallback to dashboard (home) - all authenticated users can access dashboard
-      navigateRef.current("/", { replace: true })
+      routerRef.current.replace("/")
     }
   }, [user])
 

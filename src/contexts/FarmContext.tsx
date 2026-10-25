@@ -1,3 +1,5 @@
+"use client"
+
 import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from "react"
 import { farmService } from "@/services/dataService"
 import { useUserRole } from "@/contexts/UserRoleContext"

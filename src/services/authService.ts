@@ -1,29 +1,16 @@
 import { User, LoginCredentials, RegisterData, UserRole } from "@/types/auth"
+import { getPublicApiBaseUrl, getRequestTimeoutMs, isProd } from "@/lib/env"
 import { parseApiError, storage, withTimeout, retryWithBackoff, isRetryableError, ErrorType } from "@/utils/errorHandler"
 
-// Get API base URL from environment variable
-// Must be set in .env file or production environment variables
-// Examples:
-//   Development: VITE_API_BASE_URL=/api
-//   Production: VITE_API_BASE_URL=https://farm-management-server.onrender.com/api
 function getApiBaseUrl(): string {
-  const envUrl = import.meta.env.VITE_API_BASE_URL
-  if (!envUrl) {
-    throw new Error('VITE_API_BASE_URL environment variable is not set. Please configure it in your .env file or production environment.')
-  }
-  // If it's a full URL, ensure it ends with /api
-  if (envUrl.startsWith('http')) {
-    return envUrl.endsWith('/api') ? envUrl : `${envUrl.replace(/\/$/, '')}/api`
-  }
-  // If it's a relative path, use as-is
-  return envUrl
+  return getPublicApiBaseUrl()
 }
 
 const API_BASE_URL = getApiBaseUrl()
 const AUTH_STORAGE_KEY = "auth"
 const TOKEN_STORAGE_KEY = "token"
 const REFRESH_TOKEN_STORAGE_KEY = "refresh_token"
-const REQUEST_TIMEOUT = 30000 // 30 seconds
+const REQUEST_TIMEOUT = getRequestTimeoutMs()
 
 interface AuthResponse {
   success: boolean
@@ -267,7 +254,7 @@ class AuthService {
         }
 
         // Enhanced error logging for production debugging
-        if (import.meta.env.PROD) {
+        if (isProd) {
           console.error('[API Error]', {
             url,
             status: response.status,

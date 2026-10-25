@@ -311,6 +311,7 @@ export function getUserFriendlyMessage(error: unknown): string {
  */
 export const storage = {
   getItem(key: string): string | null {
+    if (typeof window === "undefined") return null;
     try {
       return localStorage.getItem(key);
     } catch (error) {
@@ -320,6 +321,7 @@ export const storage = {
   },
 
   setItem(key: string, value: string): boolean {
+    if (typeof window === "undefined") return false;
     try {
       localStorage.setItem(key, value);
       return true;
@@ -333,6 +335,7 @@ export const storage = {
   },
 
   removeItem(key: string): boolean {
+    if (typeof window === "undefined") return false;
     try {
       localStorage.removeItem(key);
       return true;

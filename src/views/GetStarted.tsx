@@ -197,16 +197,16 @@ export default function GetStarted() {
             <span className="truncate text-base font-extrabold tracking-tight text-[#173528] sm:text-[22px]">{getAppName()}</span>
           </Link>
           <Link href="/login" className="rounded-full bg-[#F3F4F2] px-4 py-2 text-sm font-semibold text-[#1c241f] transition hover:bg-[#E7EAE6]">
-            Log in
+            Sign in
           </Link>
         </div>
       </header>
 
       <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
         <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#3d6b4a]">Get started</p>
-        <h1 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-5xl">Set up your farm</h1>
+        <h1 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-5xl">Get Started with Agrocyms</h1>
         <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#526057] sm:text-base">
-          These answers decide which records and dashboard sections open for this farm.
+          Create your account and take the first step toward a more organized approach to farm management.
         </p>
 
         <ol className="mt-8 grid grid-cols-4 gap-2 sm:gap-3">
@@ -371,6 +371,14 @@ export default function GetStarted() {
                 <label htmlFor="owner-confirm" className="text-sm font-semibold">Confirm password</label>
                 <input id="owner-confirm" type={showPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className={fieldClass} autoComplete="new-password" />
               </div>
+              <p className="text-xs leading-relaxed text-[#66756c]">
+                By creating an account, you agree to the{" "}
+                <Link href="/terms" className="font-semibold text-[#173528] underline-offset-4 hover:underline">
+                  Terms of Service
+                </Link>{" "}
+                and acknowledge the{" "}
+                <Link href="/privacy" className="font-semibold text-[#173528] underline-offset-4 hover:underline">Privacy Policy</Link>.
+              </p>
             </div>
           )}
 
@@ -405,7 +413,7 @@ export default function GetStarted() {
 
         <p className="mt-6 text-center text-sm text-[#526057]">
           Already have an account?{" "}
-          <Link href="/login" className="font-bold text-[#173528]">Log in</Link>
+          <Link href="/login" className="font-bold text-[#173528]">Sign in</Link>
         </p>
       </main>
     </div>

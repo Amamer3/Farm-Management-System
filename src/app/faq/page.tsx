@@ -4,12 +4,16 @@ import { JsonLd } from "@/components/seo/JsonLd"
 import { FAQS } from "@/lib/marketing"
 import { breadcrumbJsonLd, createPageMetadata, faqJsonLd, webPageJsonLd } from "@/lib/seo"
 
+const title = "Farm Management Software FAQs | Agrocyms"
+const description =
+  "Find answers about Agrocyms registration, farm management features, subscriptions, account setup, and using the platform."
+
 export const metadata: Metadata = createPageMetadata({
-  title: "Farm management FAQ",
-  description:
-    "Answers about Agrocyms: which farms it fits, how setup works, poultry and livestock records, crops, and team logins.",
+  title,
+  description,
   path: "/faq",
-  keywords: ["Agrocyms FAQ", "farm management questions", "poultry software FAQ"],
+  absoluteTitle: true,
+  keywords: ["farm management software FAQ", "Agrocyms FAQ", "agriculture software questions"],
 })
 
 export default function FaqPage() {
@@ -17,12 +21,7 @@ export default function FaqPage() {
     <>
       <JsonLd
         data={[
-          webPageJsonLd({
-            name: "Farm management FAQ",
-            description:
-              "Answers about Agrocyms: which farms it fits, how setup works, poultry and livestock records, crops, and team logins.",
-            path: "/faq",
-          }),
+          webPageJsonLd({ name: title, description, path: "/faq" }),
           breadcrumbJsonLd([
             { name: "Home", path: "/" },
             { name: "FAQ", path: "/faq" },
@@ -32,8 +31,8 @@ export default function FaqPage() {
       />
       <MarketingPage
         eyebrow="FAQ"
-        title="Questions farms ask before they switch the books."
-        lead="Short answers about the mix Agrocyms covers, how setup works, and how the team signs in."
+        title="Farm management software FAQs"
+        lead="Answers about Agrocyms registration, farm management features, subscriptions, account setup, and using the platform."
       >
         <section className="mx-auto max-w-[860px] px-4 pb-6 sm:px-6">
           <div className="space-y-3">
@@ -53,8 +52,10 @@ export default function FaqPage() {
           </div>
         </section>
         <MarketingCta
-          title="Ready to record the farm you have?"
-          body="Setup is a short signup. Staff who already have accounts can log in instead."
+          title="Ready to organize this farm?"
+          body="Create your account, or contact us if you have a question the FAQ does not cover."
+          secondaryHref="/contact"
+          secondaryLabel="Contact"
         />
       </MarketingPage>
     </>

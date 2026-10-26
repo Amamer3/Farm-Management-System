@@ -9,10 +9,11 @@ import { getAppName, getLogoPath } from "@/lib/env"
 import { searchPublicPages } from "@/lib/marketing"
 
 const homeNav = [
-  { id: "about", label: "About us", href: "/about" },
-  { id: "product", label: "Product", href: "/features" },
-  { id: "why", label: "Why Choose us", href: "/#why" },
-  { id: "faq", label: "FAQ", href: "/faq" },
+  { id: "features", label: "Features", href: "/features" },
+  { id: "solutions", label: "Solutions", href: "/solutions" },
+  { id: "pricing", label: "Pricing", href: "/pricing" },
+  { id: "resources", label: "Resources", href: "/resources" },
+  { id: "about", label: "About", href: "/about" },
 ]
 
 export function MarketingChrome({
@@ -64,12 +65,12 @@ export function MarketingChrome({
             <span className="truncate text-base font-extrabold tracking-tight text-[#173528] sm:text-lg lg:text-[22px]">{appName}</span>
           </Link>
 
-          <nav aria-label="Primary" className="hidden min-w-0 items-center gap-2 lg:flex">
+          <nav aria-label="Primary" className="hidden min-w-0 items-center gap-1.5 lg:flex">
             {homeNav.map((item) => (
               <Link
                 key={item.id}
                 href={item.href}
-                className="whitespace-nowrap rounded-full bg-[#F3F4F2] px-3.5 py-2.5 text-sm font-semibold text-[#1c241f] transition hover:bg-[#E7EAE6] xl:px-5"
+                className="whitespace-nowrap rounded-full bg-[#F3F4F2] px-2.5 py-2 text-xs font-semibold text-[#1c241f] transition hover:bg-[#E7EAE6] xl:px-4 xl:py-2.5 xl:text-sm"
               >
                 {item.label}
               </Link>
@@ -137,7 +138,7 @@ export function MarketingChrome({
               href="/get-started"
               className="inline-flex items-center gap-2 rounded-full bg-[#173528] py-1.5 pl-1.5 pr-1.5 text-sm font-semibold text-white lg:pl-5"
             >
-              <span className="hidden lg:inline">Explore</span>
+              <span className="hidden lg:inline">Get Started</span>
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#173528]">
                 <ArrowRight className="h-4 w-4" />
               </span>
@@ -171,7 +172,7 @@ export function MarketingChrome({
             ))}
             <div className="grid grid-cols-2 gap-2 pt-1">
               <Link href="/login" className="rounded-2xl border border-[#E4E8E4] px-4 py-3 text-center text-sm font-semibold" onClick={() => setMenuOpen(false)}>
-                Log in
+                Sign in
               </Link>
               <Link href="/get-started" className="rounded-2xl bg-[#173528] px-4 py-3 text-center text-sm font-semibold text-white" onClick={() => setMenuOpen(false)}>
                 Get started
@@ -192,14 +193,14 @@ export function MarketingChrome({
                 <span className="text-[22px] font-extrabold tracking-tight">{appName}</span>
               </Link>
               <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/75">
-                Records for poultry, livestock, and crops, shaped around the farm you actually run.
+                One platform. Every farm. Smarter agriculture — crop and livestock operations in one workspace.
               </p>
               <SocialLinks className="mt-5" />
               <Link
                 href="/get-started"
                 className="mt-6 inline-flex items-center gap-3 rounded-full bg-white py-1.5 pl-5 pr-1.5 text-sm font-semibold text-[#173528]"
               >
-                Set up your farm
+                Get Started
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#173528] text-white">
                   <ArrowRight className="h-4 w-4" />
                 </span>
@@ -209,22 +210,24 @@ export function MarketingChrome({
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/55">Explore</p>
               <ul className="mt-4 space-y-2">
-                <li><Link href="/about" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">About us</Link></li>
                 <li><Link href="/features" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Features</Link></li>
-                <li><Link href="/use-cases" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Use cases</Link></li>
+                <li><Link href="/solutions" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Solutions</Link></li>
+                <li><Link href="/pricing" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Pricing</Link></li>
+                <li><Link href="/resources" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Resources</Link></li>
+                <li><Link href="/about" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">About</Link></li>
                 <li><Link href="/faq" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">FAQ</Link></li>
-                <li><Link href="/#why" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Why choose us</Link></li>
+                <li><Link href="/contact" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Contact</Link></li>
               </ul>
             </div>
 
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/55">Enterprises</p>
               <ul className="mt-4 space-y-2">
+                <li><Link href="/features/crop-management" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Crop management</Link></li>
+                <li><Link href="/features/livestock-management" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Livestock</Link></li>
                 <li><Link href="/features/poultry" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Poultry</Link></li>
-                <li><Link href="/features/goats-sheep" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Goats & sheep</Link></li>
                 <li><Link href="/features/cattle" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Cattle</Link></li>
-                <li><Link href="/features/pigs" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Pigs</Link></li>
-                <li><Link href="/features/crops" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Crops</Link></li>
+                <li><Link href="/use-cases/feed-inventory" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Inventory</Link></li>
               </ul>
             </div>
 
@@ -232,7 +235,8 @@ export function MarketingChrome({
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/55">Account</p>
               <ul className="mt-4 space-y-2">
                 <li><Link href="/get-started" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Get started</Link></li>
-                <li><Link href="/login" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Log in</Link></li>
+                <li><Link href="/login" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Sign in</Link></li>
+                <li><Link href="/contact" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Contact</Link></li>
               </ul>
             </div>
           </div>

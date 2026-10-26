@@ -1,3 +1,5 @@
+import { RESOURCE_ARTICLES } from "@/lib/siteContent"
+
 export type FeaturePage = {
   slug: string
   enterpriseId: string
@@ -209,62 +211,62 @@ export const FAQS = [
   {
     question: "What is Agrocyms?",
     answer:
-      "Agrocyms is farm management software for mixed enterprises. It keeps poultry, goats and sheep, cattle, pigs, and crops on one farm workspace instead of splitting daily work across notebooks.",
+      "Agrocyms is a digital farm management platform designed to help agricultural businesses organize farm operations and manage farming information in one place.",
   },
   {
-    question: "Which farms can use Agrocyms?",
+    question: "Who can use Agrocyms?",
     answer:
-      "Farms that raise poultry, small ruminants, cattle, pigs, crops, or any mix of those. During setup you choose the enterprises this farm actually runs, and the dashboard follows that mix.",
+      "Agrocyms is intended for crop farming businesses, livestock operations, farm managers, and other agricultural businesses whose needs match the platform's available functionality. During setup you choose poultry, goats and sheep, cattle, pigs, crops, or a mix.",
   },
   {
-    question: "Does Agrocyms work for poultry and egg collection?",
+    question: "How do I create an account?",
     answer:
-      "Yes. You can record bird batches, pens, daily egg collections by grade, feed stock, and treatments in the same farm account.",
+      "Visit the registration page, enter the requested information, name the farm, choose enterprises and crops, and create the first owner account. Any additional onboarding steps are shown during signup.",
   },
   {
-    question: "Can I keep livestock and crops in one account?",
+    question: "Does Agrocyms support crop farming?",
     answer:
-      "Yes. Setup asks what you raise and what you grow. Livestock events and crop lists stay attached to the same farm so staff do not need two systems.",
+      "Yes. You can name the crops this farm grows during setup so field lists sit beside livestock records. See the crop management page for the production records currently supported.",
   },
   {
-    question: "How do staff sign in?",
+    question: "Does Agrocyms support livestock farming?",
     answer:
-      "After the farm is created, team members sign in with their own accounts and see the same farm. Roles control who can manage users, records, and reports.",
+      "Yes. Poultry, goats and sheep, cattle, and pigs each have their own records inside the same farm account. Consult the livestock management page for the capabilities in the live application.",
   },
   {
-    question: "How long does setup take?",
+    question: "Can I manage more than one enterprise?",
     answer:
-      "A short signup names the farm, picks enterprises and crops, and creates the first account. The dashboard opens already pointed at that work.",
+      "Yes. Setup lets you pick more than one enterprise. Poultry pages stay separate from cattle or crop lists, but they share the same login. Additional locations and user limits depend on what your account supports.",
   },
   {
-    question: "Is Agrocyms only for large farms?",
+    question: "Is Agrocyms free?",
     answer:
-      "No. It is built for farms that want daily records in one place, whether that is a layer house, a mixed livestock yard, or fields beside a flock.",
+      "Refer to the pricing page and the plans shown at signup for subscription options. Do not assume a free plan or trial is available unless it is offered in the product.",
   },
   {
-    question: "Can I skip setup if I already have an account?",
+    question: "How much does Agrocyms cost?",
     answer:
-      "Yes. Staff who already have logins can go straight to the login page and pick up the farm they belong to.",
+      "Subscription prices depend on the published plans. Visit the pricing page and complete signup to see current prices, billing intervals, and included features.",
+  },
+  {
+    question: "How do I subscribe?",
+    answer:
+      "Create an account, review the available subscription options in the product, choose a suitable plan, and complete the payment process supported by Agrocyms.",
+  },
+  {
+    question: "Can I cancel my subscription?",
+    answer:
+      "Cancellation is subject to the subscription terms displayed when you purchase. Consult the account billing area or the contact page for instructions.",
+  },
+  {
+    question: "How do I contact support?",
+    answer:
+      "Use the contact page to ask about registration, subscriptions, or platform functionality.",
   },
   {
     question: "Does Agrocyms track feed and medicine?",
     answer:
       "Yes. Feed stock and medicine use sit on the same farm as the animals they belong to, so inventory is not a separate notebook.",
-  },
-  {
-    question: "Can one farm keep poultry and cattle together?",
-    answer:
-      "Yes. Setup lets you pick more than one enterprise. Poultry pages stay separate from cattle pages, but they share the same login and farm profile.",
-  },
-  {
-    question: "Is Agrocyms a mobile app?",
-    answer:
-      "Agrocyms is a web workspace. It opens in a phone or desktop browser, so staff can sign in without installing a store app.",
-  },
-  {
-    question: "What reports can I see?",
-    answer:
-      "The workspace includes production and inventory views for the enterprises this farm runs, so egg, herd, stock, and health records can be reviewed together.",
   },
 ]
 
@@ -499,22 +501,36 @@ export function getPublicSearchIndex(): SearchEntry[] {
       id: "home",
       title: "Home",
       href: "/",
-      description: "Farm management software for poultry, livestock, and crops.",
-      keywords: ["home", "agrocyms", "farm management"],
+      description: "Farm management software for crop and livestock operations.",
+      keywords: ["home", "agrocyms", "farm management software"],
     },
     {
       id: "about",
-      title: "About us",
+      title: "About Agrocyms",
       href: "/about",
-      description: "How Agrocyms starts with the farm you have.",
-      keywords: ["about", "company", "workspace"],
+      description: "A digital farm management platform for agricultural businesses.",
+      keywords: ["about", "company", "mission"],
     },
     {
       id: "features",
       title: "Features",
       href: "/features",
-      description: "Poultry, goats and sheep, cattle, pigs, and crops.",
-      keywords: ["features", "product", "enterprises"],
+      description: "Crop, livestock, inventory, records, and team access.",
+      keywords: ["features", "product", "farm management system"],
+    },
+    {
+      id: "crop-hub",
+      title: "Crop management",
+      href: "/features/crop-management",
+      description: "Organize crop farming activities and production records.",
+      keywords: ["crop management software", "crops", "fields"],
+    },
+    {
+      id: "livestock-hub",
+      title: "Livestock management",
+      href: "/features/livestock-management",
+      description: "Organize poultry, goats, cattle, and pig records.",
+      keywords: ["livestock management software", "animals", "herd"],
     },
     ...FEATURE_PAGES.map((item) => ({
       id: item.slug,
@@ -538,24 +554,59 @@ export function getPublicSearchIndex(): SearchEntry[] {
       keywords: item.keywords,
     })),
     {
+      id: "solutions",
+      title: "Solutions",
+      href: "/solutions",
+      description: "Farm management solutions for crop, livestock, and commercial farms.",
+      keywords: ["solutions", "crop farmers", "livestock farmers"],
+    },
+    {
+      id: "pricing",
+      title: "Pricing",
+      href: "/pricing",
+      description: "Subscription options for farming businesses.",
+      keywords: ["pricing", "plans", "subscription"],
+    },
+    {
+      id: "resources",
+      title: "Resources",
+      href: "/resources",
+      description: "Guides on farm management, crops, livestock, and records.",
+      keywords: ["resources", "guides", "farm management tips"],
+    },
+    {
+      id: "contact",
+      title: "Contact",
+      href: "/contact",
+      description: "Questions about Agrocyms, subscriptions, and onboarding.",
+      keywords: ["contact", "support", "help"],
+    },
+    ...RESOURCE_ARTICLES.map((item) => ({
+      id: item.slug,
+      title: item.title,
+      href: `/resources/${item.slug}`,
+      description: item.description,
+      keywords: item.keywords,
+    })),
+    {
       id: "faq",
       title: "FAQ",
       href: "/faq",
-      description: "Answers about setup, enterprises, team logins, and records.",
+      description: "Answers about registration, features, subscriptions, and setup.",
       keywords: ["faq", "questions", "help"],
     },
     {
       id: "start",
       title: "Get started",
       href: "/get-started",
-      description: "Create a farm account and choose enterprises.",
-      keywords: ["signup", "setup", "get started"],
+      description: "Create your Agrocyms account and set up the farm.",
+      keywords: ["signup", "register", "get started", "create account"],
     },
     {
       id: "login",
-      title: "Log in",
+      title: "Sign in",
       href: "/login",
-      description: "Sign in to an existing farm workspace.",
+      description: "Sign in to your Agrocyms farm workspace.",
       keywords: ["login", "sign in"],
     },
     {

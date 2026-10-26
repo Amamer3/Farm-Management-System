@@ -5,10 +5,13 @@ import { getAppName } from "@/lib/env"
 import { createPageMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Log in",
-  description: `Sign in to your ${getAppName()} farm workspace to continue production, inventory, and health records.`,
+  title: "Sign In to Agrocyms",
+  description: `Sign in to your ${getAppName()} account to access your farm management workspace.`,
   path: "/login",
-  keywords: ["Agrocyms login", "farm software login"],
+  index: false,
+  follow: true,
+  absoluteTitle: true,
+  keywords: ["Agrocyms login", "sign in"],
 })
 
 function LoginFallback() {

@@ -80,7 +80,9 @@ export const PRODUCTION_SITE_URL = "https://agrocyms.com"
 
 export function getSiteUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "")
-  if (explicit && !explicit.includes("localhost")) return explicit
+  if (explicit && !explicit.includes("localhost")) {
+    return explicit.replace(/^http:\/\//i, "https://")
+  }
   if (process.env.NODE_ENV === "development") {
     return `http://localhost:${process.env.PORT || "8080"}`
   }
@@ -97,6 +99,10 @@ export function getGoogleSiteVerification(): string | undefined {
 
 export function getBingSiteVerification(): string | undefined {
   return process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION || undefined
+}
+
+export function getContactEmail(): string {
+  return process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@agrocyms.com"
 }
 
 export function getRequestTimeoutMs(): number {

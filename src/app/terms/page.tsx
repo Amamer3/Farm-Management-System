@@ -5,10 +5,11 @@ import { getAppName } from "@/lib/env"
 import { breadcrumbJsonLd, createPageMetadata, webPageJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Terms of use",
+  title: "Terms of Service | Agrocyms",
   description:
-    "Terms for using Agrocyms: farm accounts, team access, acceptable use, and responsibility for the records you enter.",
+    "Review the terms governing registration, subscriptions, use of Agrocyms, account responsibilities, and service conditions.",
   path: "/terms",
+  absoluteTitle: true,
 })
 
 export default function TermsPage() {

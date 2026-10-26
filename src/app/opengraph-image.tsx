@@ -9,7 +9,7 @@ export const contentType = ogContentType
 export default function OpenGraphImage() {
   return renderOgImage({
     eyebrow: getAppName(),
-    title: "Record. Raise. Grow.",
-    subtitle: "Farm records for poultry, livestock, and crops — shaped around the mix you actually run.",
+    title: "Manage Your Farm Smarter",
+    subtitle: "One platform. Every farm. Smarter agriculture.",
   })
 }

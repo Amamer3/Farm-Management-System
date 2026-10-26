@@ -5,10 +5,11 @@ import { getAppName } from "@/lib/env"
 import { breadcrumbJsonLd, createPageMetadata, howToJsonLd, webPageJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Set up your farm",
-  description: `Create a ${getAppName()} farm account. Choose poultry, livestock, and crops, then open a dashboard already pointed at that mix.`,
+  title: "Create Your Agrocyms Account | Get Started",
+  description: `Create your ${getAppName()} account to get started with digital farm management.`,
   path: "/get-started",
-  keywords: ["farm setup", "create farm account", "Agrocyms signup"],
+  absoluteTitle: true,
+  keywords: ["create Agrocyms account", "farm software signup", "get started"],
 })
 
 export default function GetStartedPage() {
@@ -17,8 +18,8 @@ export default function GetStartedPage() {
       <JsonLd
         data={[
           webPageJsonLd({
-            name: "Set up your farm",
-            description: `Create a ${getAppName()} farm account. Choose poultry, livestock, and crops, then open a dashboard already pointed at that mix.`,
+            name: "Create Your Agrocyms Account",
+            description: `Create your ${getAppName()} account to get started with digital farm management.`,
             path: "/get-started",
           }),
           breadcrumbJsonLd([

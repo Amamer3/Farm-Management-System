@@ -29,20 +29,41 @@ export function MarketingPage({
   )
 }
 
-export function MarketingCta({ title, body }: { title: string; body: string }) {
+export function MarketingCta({
+  title,
+  body,
+  href = "/get-started",
+  label = "Get Started",
+  secondaryHref,
+  secondaryLabel,
+}: {
+  title: string
+  body: string
+  href?: string
+  label?: string
+  secondaryHref?: string
+  secondaryLabel?: string
+}) {
   return (
     <section className="mx-auto max-w-[1320px] px-4 py-12 text-center sm:px-6 sm:py-16">
       <h2 className="text-3xl font-extrabold tracking-tight sm:text-5xl">{title}</h2>
       <p className="mx-auto mt-3 max-w-xl text-[#526057]">{body}</p>
-      <Link
-        href="/get-started"
-        className="mt-8 inline-flex items-center gap-3 rounded-full bg-[#173528] py-2 pl-6 pr-2 text-base font-semibold text-white"
-      >
-        Set up your farm
-        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#173528]">
-          <ArrowRight className="h-5 w-5" />
-        </span>
-      </Link>
+      <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <Link
+          href={href}
+          className="inline-flex items-center gap-3 rounded-full bg-[#173528] py-2 pl-6 pr-2 text-base font-semibold text-white"
+        >
+          {label}
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#173528]">
+            <ArrowRight className="h-5 w-5" />
+          </span>
+        </Link>
+        {secondaryHref && secondaryLabel && (
+          <Link href={secondaryHref} className="rounded-full bg-[#F3F4F2] px-5 py-3 text-sm font-semibold text-[#173528]">
+            {secondaryLabel}
+          </Link>
+        )}
+      </div>
     </section>
   )
 }

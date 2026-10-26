@@ -5,10 +5,11 @@ import { getAppName } from "@/lib/env"
 import { breadcrumbJsonLd, createPageMetadata, webPageJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Privacy policy",
+  title: "Privacy Policy | Agrocyms",
   description:
-    "How Agrocyms handles farm and account information: what is collected, why it is kept, and how you can ask about it.",
+    "Read the Agrocyms Privacy Policy to understand how personal information is collected, used, protected, and managed.",
   path: "/privacy",
+  absoluteTitle: true,
 })
 
 export default function PrivacyPage() {

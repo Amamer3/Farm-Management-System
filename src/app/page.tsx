@@ -2,11 +2,11 @@ import type { Metadata } from "next"
 import { HomePage } from "@/views/HomePage"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { FAQS } from "@/lib/marketing"
+import { HOME_SEO } from "@/lib/siteContent"
 import { breadcrumbJsonLd, createPageMetadata, faqJsonLd, webPageJsonLd } from "@/lib/seo"
 
-const homeTitle = "Agrocyms | Farm Management Software for Poultry, Livestock & Crops"
-const homeDescription =
-  "Agrocyms is farm management software for poultry, livestock, and crops. Track egg collection, herds, feed, medicine, and fields in one farm workspace."
+const homeTitle = HOME_SEO.title
+const homeDescription = HOME_SEO.description
 
 export const revalidate = 3600
 
@@ -15,13 +15,7 @@ export const metadata: Metadata = createPageMetadata({
   description: homeDescription,
   path: "/",
   absoluteTitle: true,
-  keywords: [
-    "farm management software",
-    "poultry farm records",
-    "egg collection tracking",
-    "mixed livestock software",
-    "crop and livestock dashboard",
-  ],
+  keywords: HOME_SEO.keywords,
 })
 
 export default function Page() {

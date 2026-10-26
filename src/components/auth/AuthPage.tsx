@@ -173,12 +173,12 @@ export function AuthPage() {
 
           <div className="space-y-4">
             <h2 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-              Run Your Farm
+              Welcome Back
               <br />
-              <span className="text-primary">Like Clockwork</span>
+              <span className="text-primary">to Agrocyms</span>
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed max-w-lg mx-auto lg:mx-0">
-              Track livestock, manage feed and health, and grow your business with real-time insights across poultry and herd enterprises.
+              Sign in to continue managing your farming operations.
             </p>
           </div>
         </div>
@@ -188,10 +188,10 @@ export function AuthPage() {
           <Card className="w-full max-w-md shadow-xl border-0">
             <CardHeader className="space-y-1 pb-8">
               <CardTitle className="text-2xl font-bold text-center">
-                Welcome Back
+                Sign In
               </CardTitle>
               <CardDescription className="text-center">
-                Enter your credentials to access your farm dashboard
+                Email address and password
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -205,9 +205,8 @@ export function AuthPage() {
               )}
               <LoginForm isRedirecting={isRedirecting} />
               <p className="mt-6 text-center text-sm text-muted-foreground">
-                New farm?{" "}
                 <Link href="/get-started" className="font-medium text-primary hover:underline">
-                  Get started
+                  Create an account
                 </Link>
               </p>
             </CardContent>

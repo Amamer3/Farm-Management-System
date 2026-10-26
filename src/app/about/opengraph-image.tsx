@@ -9,7 +9,7 @@ export const contentType = ogContentType
 export default function AboutOpenGraphImage() {
   return renderOgImage({
     eyebrow: getAppName(),
-    title: "About",
-    subtitle: "A farm workspace that starts with the farm you have.",
+    title: "About Agrocyms",
+    subtitle: "Helping agricultural businesses manage smarter.",
   })
 }

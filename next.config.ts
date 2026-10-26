@@ -42,11 +42,20 @@ const nextConfig: NextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-DNS-Prefetch-Control", value: "on" },
-          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+          ...(process.env.NODE_ENV === "production"
+            ? [
+                { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+                { key: "Content-Security-Policy", value: "upgrade-insecure-requests" },
+              ]
+            : []),
         ],
       },
       {
         source: "/search",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }],
+      },
+      {
+        source: "/login",
         headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }],
       },
       {
@@ -79,15 +88,20 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/",
-        has: [{ type: "host", value: "www.agrocyms.com" }],
+        has: [{ type: "header", key: "x-forwarded-proto", value: "http" }],
         destination: "https://agrocyms.com/",
-        permanent: true,
+        statusCode: 301,
       },
       {
         source: "/:path*",
-        has: [{ type: "host", value: "www.agrocyms.com" }],
+        has: [{ type: "header", key: "x-forwarded-proto", value: "http" }],
         destination: "https://agrocyms.com/:path*",
-        permanent: true,
+        statusCode: 301,
+      },
+      {
+        source: "/register",
+        destination: "/get-started",
+        statusCode: 301,
       },
     ];
   },

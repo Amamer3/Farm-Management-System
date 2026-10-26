@@ -7,31 +7,32 @@ export function GET() {
 
 > ${getAppDescription()}
 
-${name} is farm management software for mixed enterprises. Farms choose poultry, goats and sheep, cattle, pigs, crops, or a mix during setup. The dashboard then shows records for that mix.
+${name} is farm management software for crop and livestock businesses. Farms choose poultry, goats and sheep, cattle, pigs, crops, or a mix during setup. The dashboard then shows records for that mix.
 
 ## Public pages
 
 - [Home](${absoluteUrl("/")})
 - [About](${absoluteUrl("/about")})
 - [Features](${absoluteUrl("/features")})
+- [Crop management](${absoluteUrl("/features/crop-management")})
+- [Livestock management](${absoluteUrl("/features/livestock-management")})
 - [Poultry](${absoluteUrl("/features/poultry")})
 - [Goats & sheep](${absoluteUrl("/features/goats-sheep")})
 - [Cattle](${absoluteUrl("/features/cattle")})
 - [Pigs](${absoluteUrl("/features/pigs")})
 - [Crops](${absoluteUrl("/features/crops")})
-- [Use cases](${absoluteUrl("/use-cases")})
-- [Mixed farms](${absoluteUrl("/use-cases/mixed-farm")})
-- [Egg collection](${absoluteUrl("/use-cases/egg-collection")})
-- [Feed & medicine](${absoluteUrl("/use-cases/feed-inventory")})
+- [Solutions](${absoluteUrl("/solutions")})
+- [Pricing](${absoluteUrl("/pricing")})
+- [Resources](${absoluteUrl("/resources")})
 - [FAQ](${absoluteUrl("/faq")})
+- [Contact](${absoluteUrl("/contact")})
 - [Get started](${absoluteUrl("/get-started")})
-- [Log in](${absoluteUrl("/login")})
 - [Privacy](${absoluteUrl("/privacy")})
 - [Terms](${absoluteUrl("/terms")})
 
 ## Product
 
-${name} tracks bird batches, egg collection, feed and medicine stock, livestock events, crop lists, team logins, reports, and statistics. Authenticated workspace routes are private and should not be treated as public documentation.
+${name} tracks bird batches, egg collection, feed and medicine stock, livestock events, crop lists, team logins, reports, and statistics. Authenticated workspace routes are private and should not be treated as public documentation. Subscription prices are shown in the product at signup.
 `
 
   return new Response(body, {

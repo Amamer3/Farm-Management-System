@@ -12,9 +12,9 @@ COPY . .
 COPY .env.example .env
 
 ARG NEXT_PUBLIC_APP_NAME=Agrocyms
-ARG NEXT_PUBLIC_APP_TAGLINE="Farm management"
-ARG NEXT_PUBLIC_APP_TITLE="Agrocyms - Multi-Enterprise Farm Management"
-ARG NEXT_PUBLIC_APP_DESCRIPTION="Agrocyms multi-enterprise farm management for poultry, small ruminants, and herd operations — inventory, production, and health tracking"
+ARG NEXT_PUBLIC_APP_TAGLINE="One Platform. Every Farm. Smarter Agriculture."
+ARG NEXT_PUBLIC_APP_TITLE="Farm Management Software for Modern Agriculture | Agrocyms"
+ARG NEXT_PUBLIC_APP_DESCRIPTION="Manage your farming operations with Agrocyms. Bring crop and livestock activities, farm resources, and business management together in one platform."
 ARG NEXT_PUBLIC_LOGO_PATH="/agrocyms-logo.png"
 ARG NEXT_PUBLIC_TWITTER_HANDLE=@agrocyms
 ARG NEXT_PUBLIC_SITE_URL=https://agrocyms.com

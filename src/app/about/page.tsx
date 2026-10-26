@@ -1,29 +1,25 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 import { MarketingCta, MarketingPage } from "@/components/marketing/MarketingPage"
 import { JsonLd } from "@/components/seo/JsonLd"
-import { getAppName } from "@/lib/env"
+import { ABOUT } from "@/lib/siteContent"
 import { breadcrumbJsonLd, createPageMetadata, webPageJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = createPageMetadata({
-  title: "About",
-  description:
-    "Agrocyms is a farm workspace that starts with the farm you have. Choose poultry, livestock, and crops, then keep daily records in one place.",
+  title: ABOUT.title,
+  description: ABOUT.description,
   path: "/about",
-  keywords: ["about Agrocyms", "farm management software", "mixed farm records"],
+  absoluteTitle: true,
+  keywords: ABOUT.keywords,
 })
 
 export default function AboutPage() {
-  const name = getAppName()
-
   return (
     <>
       <JsonLd
         data={[
           webPageJsonLd({
-            name: "About Agrocyms",
-            description:
-              "Agrocyms is a farm workspace that starts with the farm you have. Choose poultry, livestock, and crops, then keep daily records in one place.",
+            name: ABOUT.headline,
+            description: ABOUT.description,
             path: "/about",
           }),
           breadcrumbJsonLd([
@@ -32,45 +28,33 @@ export default function AboutPage() {
           ]),
         ]}
       />
-      <MarketingPage
-        eyebrow="About us"
-        title={`A farm workspace that starts with the farm you have.`}
-        lead={`${name} asks what you raise and what you grow, then opens menus and records shaped around that mix. Staff who already have accounts can sign in and pick up the same farm.`}
-      >
+      <MarketingPage eyebrow={ABOUT.eyebrow} title={ABOUT.headline} lead={ABOUT.lead}>
         <section className="mx-auto max-w-[1320px] px-4 pb-10 sm:px-6">
           <div className="grid gap-4 md:grid-cols-2">
-            {[
-              ["Name the farm", "The workspace belongs to a real place, not a generic livestock template."],
-              ["Pick the enterprises", "Poultry, goats and sheep, cattle, pigs, crops, or a mix."],
-              ["Add the crops", "Fields sit beside the flock when this farm grows food."],
-              ["Open the dashboard", "Daily work starts already pointed at the animals and fields you run."],
-            ].map(([title, body]) => (
-              <article key={title} className="rounded-[28px] bg-[#F3F4F2] p-6">
-                <h2 className="text-xl font-bold">{title}</h2>
-                <p className="mt-2 text-sm leading-relaxed text-[#526057]">{body}</p>
+            <article className="rounded-[28px] bg-[#F3F4F2] p-6">
+              <h2 className="text-xl font-bold">Our mission</h2>
+              <p className="mt-2 text-sm leading-relaxed text-[#526057]">{ABOUT.mission}</p>
+            </article>
+            <article className="rounded-[28px] bg-[#F3F4F2] p-6">
+              <h2 className="text-xl font-bold">Our vision</h2>
+              <p className="mt-2 text-sm leading-relaxed text-[#526057]">{ABOUT.vision}</p>
+            </article>
+          </div>
+          <h2 className="mt-10 text-2xl font-extrabold tracking-tight">What we believe</h2>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            {ABOUT.beliefs.map((item) => (
+              <article key={item.title} className="rounded-[28px] border border-[#E4E8E4] bg-white p-6">
+                <h3 className="text-lg font-bold">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-[#526057]">{item.body}</p>
               </article>
             ))}
           </div>
-          <p className="mt-8 max-w-2xl text-base leading-relaxed text-[#3e4b43]">
-            {name} is farm management software for mixed enterprises. It is built for places that are tired of
-            splitting egg books, herd notes, and field lists. See{" "}
-            <Link href="/features" className="font-semibold text-[#173528] underline-offset-4 hover:underline">
-              what the farm can run
-            </Link>
-            , how{" "}
-            <Link href="/use-cases" className="font-semibold text-[#173528] underline-offset-4 hover:underline">
-              mixed farms use it
-            </Link>
-            , or read the{" "}
-            <Link href="/faq" className="font-semibold text-[#173528] underline-offset-4 hover:underline">
-              FAQ
-            </Link>
-            .
-          </p>
         </section>
         <MarketingCta
-          title={`Bring this farm onto ${name}`}
-          body="A short signup records the farm, the crops, and your account."
+          title="Discover a more organized approach to farm management."
+          body="Explore Agrocyms features, solutions, and farm setup."
+          label="Explore Agrocyms"
+          href="/features"
         />
       </MarketingPage>
     </>

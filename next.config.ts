@@ -42,6 +42,7 @@ const nextConfig: NextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-DNS-Prefetch-Control", value: "on" },
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
         ],
       },
       {
@@ -56,14 +57,50 @@ const nextConfig: NextConfig = {
         source: "/robots.txt",
         headers: [{ key: "Cache-Control", value: "public, max-age=3600" }],
       },
+      {
+        source: "/favicon.ico",
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400, s-maxage=604800" }],
+      },
+      {
+        source: "/apple-touch-icon.png",
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400, s-maxage=604800" }],
+      },
+      {
+        source: "/favicon_io/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400, s-maxage=604800" }],
+      },
       ...privateWorkspacePaths.map((source) => ({
         source,
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
       })),
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: "/",
+        has: [{ type: "host", value: "www.agrocyms.com" }],
+        destination: "https://agrocyms.com/",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.agrocyms.com" }],
+        destination: "https://agrocyms.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
+      {
+        source: "/favicon.ico",
+        destination: "/favicon_io/favicon.ico",
+      },
+      {
+        source: "/apple-touch-icon.png",
+        destination: "/favicon_io/apple-touch-icon.png",
+      },
       {
         source: "/api/:path*",
         destination: `${apiProxyTarget.replace(/\/$/, "")}/api/:path*`,

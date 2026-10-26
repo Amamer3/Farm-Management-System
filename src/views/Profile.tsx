@@ -379,7 +379,7 @@ const Profile = () => {
         <AppSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
         <div className="flex-1 flex flex-col">
           <AppHeader onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-          <main className="flex-1 responsive-container responsive-spacing overflow-y-auto flex items-center justify-center">
+          <main className="flex-1 responsive-container responsive-spacing overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden flex items-center justify-center">
             <div className="text-center">
               <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
               <p className="text-muted-foreground">Loading your profile...</p>
@@ -396,7 +396,7 @@ const Profile = () => {
         <AppSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
         <div className="flex-1 flex flex-col">
           <AppHeader onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-          <main className="flex-1 responsive-container responsive-spacing overflow-y-auto flex items-center justify-center">
+          <main className="flex-1 responsive-container responsive-spacing overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden flex items-center justify-center">
             <p className="text-muted-foreground">Please log in to view your profile.</p>
           </main>
         </div>
@@ -411,7 +411,7 @@ const Profile = () => {
       <div className="flex-1 flex flex-col">
         <AppHeader onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
         
-        <main className="flex-1 responsive-container responsive-spacing overflow-y-auto">
+        <main className="flex-1 responsive-container responsive-spacing overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           <div className="responsive-flex items-start sm:items-center justify-between mb-6">
             <div>
               <h1 className="responsive-title text-foreground">Profile Settings</h1>

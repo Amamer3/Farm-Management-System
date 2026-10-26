@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next"
-import { getAppDescription, getAppName, getLogoPath } from "@/lib/env"
+import { getAppDescription, getAppName } from "@/lib/env"
+import { ICON_192_PATH, ICON_512_PATH } from "@/lib/seo"
 
 export default function manifest(): MetadataRoute.Manifest {
   const name = getAppName()
-  const logo = getLogoPath()
 
   return {
     name,
@@ -17,8 +17,14 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ["business", "productivity", "utilities"],
     icons: [
       {
-        src: logo,
-        sizes: "any",
+        src: ICON_192_PATH,
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: ICON_512_PATH,
+        sizes: "512x512",
         type: "image/png",
         purpose: "any",
       },

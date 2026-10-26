@@ -1,6 +1,7 @@
 "use client"
 
-import { Menu, Bell, Search, User, LogOut, Settings, X } from "lucide-react"
+import { Menu, Search, User, LogOut, Settings, X } from "lucide-react"
+import { NotificationBell } from "@/components/layout/NotificationBell"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -102,12 +103,7 @@ export function AppHeader({ onMenuToggle }: AppHeaderProps) {
           <Search className="w-5 h-5" />
         </Button>
 
-        <Button variant="ghost" size="icon" className="relative" aria-label="Notifications">
-          <Bell className="w-5 h-5" />
-          <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 bg-red-500 rounded-full text-[10px] leading-none flex items-center justify-center text-white font-medium">
-            3
-          </span>
-        </Button>
+        <NotificationBell />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

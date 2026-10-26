@@ -58,8 +58,24 @@ export function absoluteUrl(path = "/"): string {
   return `${base}${path.startsWith("/") ? path : `/${path}`}`
 }
 
+export const FAVICON_PATH = "/favicon_io/favicon.ico"
+export const ICON_16_PATH = "/favicon_io/favicon-16x16.png"
+export const ICON_32_PATH = "/favicon_io/favicon-32x32.png"
+export const ICON_192_PATH = "/favicon_io/android-chrome-192x192.png"
+export const ICON_512_PATH = "/favicon_io/android-chrome-512x512.png"
+export const APPLE_ICON_PATH = "/favicon_io/apple-touch-icon.png"
+
 export function logoAbsoluteUrl(): string {
   return absoluteUrl(getLogoPath())
+}
+
+export function defaultSocialImage() {
+  return {
+    url: absoluteUrl("/opengraph-image"),
+    width: 1200,
+    height: 630,
+    alt: `${getAppName()} farm management software`,
+  }
 }
 
 export function twitterProfileUrl(): string {
@@ -119,10 +135,13 @@ export function createPageMetadata({
       type: "website",
       locale: locale === "en" ? "en_US" : locale,
       siteName: appName,
+      images: [defaultSocialImage()],
     },
     twitter: {
+      card: "summary_large_image",
       title: socialTitle,
       description,
+      images: [defaultSocialImage().url],
     },
   }
 }
@@ -143,7 +162,6 @@ export function rootMetadata(): Metadata {
   const description = getAppDescription()
   const locale = getSiteLocale()
   const siteUrl = getSiteUrl()
-  const logo = getLogoPath()
   const twitter = getTwitterHandle()
   const google = getGoogleSiteVerification()
   const bing = getBingSiteVerification()
@@ -180,9 +198,15 @@ export function rootMetadata(): Metadata {
       telephone: false,
     },
     icons: {
-      icon: logo,
-      shortcut: logo,
-      apple: logo,
+      icon: [
+        { url: FAVICON_PATH, sizes: "48x48" },
+        { url: ICON_16_PATH, sizes: "16x16", type: "image/png" },
+        { url: ICON_32_PATH, sizes: "32x32", type: "image/png" },
+        { url: ICON_192_PATH, sizes: "192x192", type: "image/png" },
+        { url: ICON_512_PATH, sizes: "512x512", type: "image/png" },
+      ],
+      shortcut: FAVICON_PATH,
+      apple: [{ url: APPLE_ICON_PATH, sizes: "180x180" }],
     },
     manifest: "/manifest.webmanifest",
     appleWebApp: {
@@ -218,6 +242,7 @@ export function rootMetadata(): Metadata {
       siteName: appName,
       title: appTitle,
       description,
+      images: [defaultSocialImage()],
     },
     twitter: {
       card: "summary_large_image",
@@ -225,6 +250,7 @@ export function rootMetadata(): Metadata {
       creator: twitter,
       title: appTitle,
       description,
+      images: [defaultSocialImage().url],
     },
     verification: {
       ...(google ? { google } : {}),
@@ -261,6 +287,7 @@ export function organizationJsonLd(): JsonLd {
     "@type": "Organization",
     "@id": organizationId(),
     name,
+    alternateName: [`${name} farm management software`, `${name} farm records`],
     url: getSiteUrl(),
     logo: logoImageObject(),
     image: logoImageObject(),
@@ -289,14 +316,6 @@ export function websiteJsonLd(): JsonLd {
     description: getAppDescription(),
     inLanguage: getSiteLocale(),
     publisher: { "@id": organizationId() },
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: `${getSiteUrl()}/search?q={search_term_string}`,
-      },
-      "query-input": "required name=search_term_string",
-    },
   }
 }
 
@@ -305,7 +324,8 @@ export function softwareJsonLd(): JsonLd {
   return {
     "@type": "SoftwareApplication",
     "@id": softwareId(),
-    name,
+    name: `${name} Farm Management Software`,
+    alternateName: name,
     applicationCategory: "BusinessApplication",
     applicationSubCategory: "Farm Management Software",
     operatingSystem: "Web",

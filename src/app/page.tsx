@@ -6,7 +6,9 @@ import { breadcrumbJsonLd, createPageMetadata, faqJsonLd, webPageJsonLd } from "
 
 const homeTitle = "Agrocyms | Farm Management Software for Poultry, Livestock & Crops"
 const homeDescription =
-  "Agrocyms is farm management software for mixed enterprises. Track poultry and egg collection, goats and sheep, cattle, pigs, feed, medicine, and crops in one farm workspace."
+  "Agrocyms is farm management software for poultry, livestock, and crops. Track egg collection, herds, feed, medicine, and fields in one farm workspace."
+
+export const revalidate = 3600
 
 export const metadata: Metadata = createPageMetadata({
   title: homeTitle,

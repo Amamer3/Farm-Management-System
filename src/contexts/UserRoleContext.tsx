@@ -169,25 +169,9 @@ export function UserRoleProvider({ children }: { children: ReactNode }) {
         return
       }
 
-      // No stored user - try to restore the HTTP-only cookie session
-      try {
-        const freshUser = await authService.initializeAuth()
-        if (isMounted && !hasLoggedInRef.current) {
-          setUser(freshUser)
-        }
-      } catch (error) {
-        // Only clear user if we have no stored user AND auth fails
-        if (isMounted && !hasLoggedInRef.current) {
-          const msg = error instanceof Error ? error.message : String(error)
-          // Only clear on actual auth errors, not network issues
-          if (msg.includes("expired") || msg.includes("invalid") || msg.includes("unauthorized")) {
-            setUser(null)
-          }
-        }
-      } finally {
-        if (isMounted && !hasLoggedInRef.current) {
-          setIsLoading(false)
-        }
+      if (isMounted && !hasLoggedInRef.current) {
+        setUser(null)
+        setIsLoading(false)
       }
     }
 

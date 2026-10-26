@@ -47,6 +47,35 @@ export function getTwitterHandle(): string {
   return requiredValue("NEXT_PUBLIC_TWITTER_HANDLE", process.env.NEXT_PUBLIC_TWITTER_HANDLE)
 }
 
+function socialHandle(): string {
+  return getTwitterHandle().replace(/^@/, "")
+}
+
+export function getXUrl(): string {
+  return process.env.NEXT_PUBLIC_X_URL || `https://x.com/${socialHandle()}`
+}
+
+export function getInstagramUrl(): string {
+  return process.env.NEXT_PUBLIC_INSTAGRAM_URL || `https://www.instagram.com/${socialHandle()}`
+}
+
+export function getLinkedInUrl(): string {
+  return process.env.NEXT_PUBLIC_LINKEDIN_URL || `https://www.linkedin.com/company/${socialHandle()}`
+}
+
+export function getFacebookUrl(): string {
+  return process.env.NEXT_PUBLIC_FACEBOOK_URL || `https://www.facebook.com/${socialHandle()}`
+}
+
+export function getSocialLinks(): { id: string; label: string; href: string }[] {
+  return [
+    { id: "x", label: "X", href: getXUrl() },
+    { id: "instagram", label: "Instagram", href: getInstagramUrl() },
+    { id: "linkedin", label: "LinkedIn", href: getLinkedInUrl() },
+    { id: "facebook", label: "Facebook", href: getFacebookUrl() },
+  ]
+}
+
 export const PRODUCTION_SITE_URL = "https://agrocyms.com"
 
 export function getSiteUrl(): string {

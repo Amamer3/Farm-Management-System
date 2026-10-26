@@ -1,6 +1,6 @@
 import { User, LoginCredentials, RegisterData, UserRole } from "@/types/auth"
 import { getPublicApiBaseUrl, getRequestTimeoutMs, isProd } from "@/lib/env"
-import { parseApiError, storage, withTimeout, retryWithBackoff, ErrorType } from "@/utils/errorHandler"
+import { parseApiError, storage, withTimeout, retryWithBackoff } from "@/utils/errorHandler"
 
 function getApiBaseUrl(): string {
   return getPublicApiBaseUrl()
@@ -212,13 +212,11 @@ class AuthService {
           throw error
         }
 
-        const isAuthEndpoint = endpoint.includes("/auth/")
+        const isLogin = endpoint.startsWith("/auth/login")
         const isInvalidCredentials = /invalid|incorrect|wrong|password/i.test(errorMessage)
         const isUserNotFound = /not found|does not exist/i.test(errorMessage)
-        const isPublicSetup = endpoint.startsWith("/auth/setup")
         if (
-          isAuthEndpoint &&
-          !isPublicSetup &&
+          isLogin &&
           (response.status === 401 || response.status === 404 || isInvalidCredentials || isUserNotFound)
         ) {
           let msg = "Invalid email or password."
@@ -485,7 +483,7 @@ class AuthService {
     }
   }
 
-  async getProfile(): Promise<User & { phone?: string; address?: string; dateOfBirth?: string; bio?: string; department?: string; avatar?: string }> {
+  async getProfile(options?: { allowCache?: boolean }): Promise<User & { phone?: string; address?: string; dateOfBirth?: string; bio?: string; department?: string; avatar?: string }> {
     try {
       const response = await this.makeRequest<any>("/auth/profile")
       const profileData = response?.data ?? response
@@ -504,8 +502,10 @@ class AuthService {
       storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(extendedUser))
       return extendedUser
     } catch (error) {
-      const storedUser = this.getCurrentUser()
-      if (storedUser) return storedUser as any
+      if (options?.allowCache !== false) {
+        const storedUser = this.getCurrentUser()
+        if (storedUser) return storedUser as any
+      }
       throw error
     }
   }
@@ -629,23 +629,17 @@ class AuthService {
   }
 
   private async performInit(): Promise<User | null> {
+    // Profile and refresh are cookie-gated. Calling them with no saved user
+    // just produces 401s on every public page for guests.
+    if (!this.getCurrentUser()) {
+      return null
+    }
     try {
-      const profile = await this.getProfile()
+      const profile = await this.getProfile({ allowCache: false })
       this.rememberSession()
       return profile
-    } catch (error) {
-      const appError = parseApiError(error)
-      if (appError.type === ErrorType.AUTHENTICATION) {
-        try {
-          await this.refreshSession()
-          return await this.getProfile()
-        } catch {
-          this.clearSession(false)
-          return null
-        }
-      }
-      const storedUser = this.getCurrentUser()
-      if (storedUser) return storedUser
+    } catch {
+      this.clearSession(false)
       return null
     }
   }

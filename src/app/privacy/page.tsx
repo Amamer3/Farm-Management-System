@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { MarketingPage } from "@/components/marketing/MarketingPage"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { getAppName } from "@/lib/env"
-import { breadcrumbJsonLd, createPageMetadata } from "@/lib/seo"
+import { breadcrumbJsonLd, createPageMetadata, webPageJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = createPageMetadata({
   title: "Privacy policy",
@@ -17,10 +17,18 @@ export default function PrivacyPage() {
   return (
     <>
       <JsonLd
-        data={breadcrumbJsonLd([
-          { name: "Home", path: "/" },
-          { name: "Privacy", path: "/privacy" },
-        ])}
+        data={[
+          webPageJsonLd({
+            name: "Privacy policy",
+            description:
+              "How Agrocyms handles farm and account information: what is collected, why it is kept, and how you can ask about it.",
+            path: "/privacy",
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Privacy", path: "/privacy" },
+          ]),
+        ]}
       />
       <MarketingPage
         eyebrow="Privacy"

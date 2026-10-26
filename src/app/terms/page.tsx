@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { MarketingPage } from "@/components/marketing/MarketingPage"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { getAppName } from "@/lib/env"
-import { breadcrumbJsonLd, createPageMetadata } from "@/lib/seo"
+import { breadcrumbJsonLd, createPageMetadata, webPageJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = createPageMetadata({
   title: "Terms of use",
@@ -17,10 +17,18 @@ export default function TermsPage() {
   return (
     <>
       <JsonLd
-        data={breadcrumbJsonLd([
-          { name: "Home", path: "/" },
-          { name: "Terms", path: "/terms" },
-        ])}
+        data={[
+          webPageJsonLd({
+            name: "Terms of use",
+            description:
+              "Terms for using Agrocyms: farm accounts, team access, acceptable use, and responsibility for the records you enter.",
+            path: "/terms",
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Terms", path: "/terms" },
+          ]),
+        ]}
       />
       <MarketingPage
         eyebrow="Terms"

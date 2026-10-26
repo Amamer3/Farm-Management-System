@@ -44,6 +44,18 @@ const nextConfig: NextConfig = {
           { key: "X-DNS-Prefetch-Control", value: "on" },
         ],
       },
+      {
+        source: "/search",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }],
+      },
+      {
+        source: "/sitemap.xml",
+        headers: [{ key: "Cache-Control", value: "public, max-age=3600, s-maxage=86400" }],
+      },
+      {
+        source: "/robots.txt",
+        headers: [{ key: "Cache-Control", value: "public, max-age=3600" }],
+      },
       ...privateWorkspacePaths.map((source) => ({
         source,
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],

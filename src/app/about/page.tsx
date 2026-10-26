@@ -3,7 +3,7 @@ import Link from "next/link"
 import { MarketingCta, MarketingPage } from "@/components/marketing/MarketingPage"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { getAppName } from "@/lib/env"
-import { breadcrumbJsonLd, createPageMetadata } from "@/lib/seo"
+import { breadcrumbJsonLd, createPageMetadata, webPageJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = createPageMetadata({
   title: "About",
@@ -19,10 +19,18 @@ export default function AboutPage() {
   return (
     <>
       <JsonLd
-        data={breadcrumbJsonLd([
-          { name: "Home", path: "/" },
-          { name: "About", path: "/about" },
-        ])}
+        data={[
+          webPageJsonLd({
+            name: "About Agrocyms",
+            description:
+              "Agrocyms is a farm workspace that starts with the farm you have. Choose poultry, livestock, and crops, then keep daily records in one place.",
+            path: "/about",
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "About", path: "/about" },
+          ]),
+        ]}
       />
       <MarketingPage
         eyebrow="About us"
@@ -44,11 +52,16 @@ export default function AboutPage() {
             ))}
           </div>
           <p className="mt-8 max-w-2xl text-base leading-relaxed text-[#3e4b43]">
-            {name} is built for mixed farms that are tired of splitting egg books, herd notes, and field lists. See{" "}
+            {name} is farm management software for mixed enterprises. It is built for places that are tired of
+            splitting egg books, herd notes, and field lists. See{" "}
             <Link href="/features" className="font-semibold text-[#173528] underline-offset-4 hover:underline">
               what the farm can run
-            </Link>{" "}
-            or read the{" "}
+            </Link>
+            , how{" "}
+            <Link href="/use-cases" className="font-semibold text-[#173528] underline-offset-4 hover:underline">
+              mixed farms use it
+            </Link>
+            , or read the{" "}
             <Link href="/faq" className="font-semibold text-[#173528] underline-offset-4 hover:underline">
               FAQ
             </Link>

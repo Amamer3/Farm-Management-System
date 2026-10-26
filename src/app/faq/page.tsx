@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { MarketingCta, MarketingPage } from "@/components/marketing/MarketingPage"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { FAQS } from "@/lib/marketing"
-import { breadcrumbJsonLd, createPageMetadata, faqJsonLd } from "@/lib/seo"
+import { breadcrumbJsonLd, createPageMetadata, faqJsonLd, webPageJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = createPageMetadata({
   title: "Farm management FAQ",
@@ -17,6 +17,12 @@ export default function FaqPage() {
     <>
       <JsonLd
         data={[
+          webPageJsonLd({
+            name: "Farm management FAQ",
+            description:
+              "Answers about Agrocyms: which farms it fits, how setup works, poultry and livestock records, crops, and team logins.",
+            path: "/faq",
+          }),
           breadcrumbJsonLd([
             { name: "Home", path: "/" },
             { name: "FAQ", path: "/faq" },
@@ -32,7 +38,14 @@ export default function FaqPage() {
         <section className="mx-auto max-w-[860px] px-4 pb-6 sm:px-6">
           <div className="space-y-3">
             {FAQS.map((item) => (
-              <article key={item.question} className="rounded-[28px] border border-[#E4E8E4] bg-white p-6">
+              <article
+                key={item.question}
+                id={item.question
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, "-")
+                  .replace(/^-|-$/g, "")}
+                className="scroll-mt-28 rounded-[28px] border border-[#E4E8E4] bg-white p-6"
+              >
                 <h2 className="text-lg font-bold">{item.question}</h2>
                 <p className="mt-2 text-sm leading-relaxed text-[#526057]">{item.answer}</p>
               </article>

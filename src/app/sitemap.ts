@@ -1,13 +1,14 @@
 import type { MetadataRoute } from "next"
-import { absoluteUrl, PUBLIC_ROUTES } from "@/lib/seo"
+import { absoluteUrl, PUBLIC_ROUTES, SITE_CONTENT_UPDATED } from "@/lib/seo"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date()
-
   return PUBLIC_ROUTES.map((route) => ({
     url: absoluteUrl(route.path),
-    lastModified,
+    lastModified: SITE_CONTENT_UPDATED,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
+    ...("images" in route && route.images
+      ? { images: route.images.map((image) => absoluteUrl(image)) }
+      : {}),
   }))
 }

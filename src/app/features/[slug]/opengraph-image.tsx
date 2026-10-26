@@ -3,6 +3,7 @@ import { getAppName } from "@/lib/env"
 import { ogContentType, ogSize, renderOgImage } from "@/lib/og"
 
 export const runtime = "nodejs"
+export const alt = "Agrocyms farm enterprise records"
 export const size = ogSize
 export const contentType = ogContentType
 

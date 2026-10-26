@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react"
 import { MarketingCta, MarketingPage } from "@/components/marketing/MarketingPage"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { FEATURE_PAGES } from "@/lib/marketing"
-import { breadcrumbJsonLd, createPageMetadata } from "@/lib/seo"
+import { breadcrumbJsonLd, createPageMetadata, itemListJsonLd, webPageJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = createPageMetadata({
   title: "Farm management features",
@@ -23,10 +23,19 @@ export default function FeaturesPage() {
   return (
     <>
       <JsonLd
-        data={breadcrumbJsonLd([
-          { name: "Home", path: "/" },
-          { name: "Features", path: "/features" },
-        ])}
+        data={[
+          webPageJsonLd({
+            name: "Farm management features",
+            description:
+              "Agrocyms covers poultry, goats and sheep, cattle, pigs, and crops. Pick the mix this farm runs and keep production, stock, and health in one workspace.",
+            path: "/features",
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Features", path: "/features" },
+          ]),
+          itemListJsonLd(FEATURE_PAGES.map((item) => ({ name: item.title, path: `/features/${item.slug}` }))),
+        ]}
       />
       <MarketingPage
         eyebrow="Product"
@@ -59,6 +68,23 @@ export default function FeaturesPage() {
               </Link>
             </article>
           </div>
+        </section>
+        <section className="mx-auto max-w-[1320px] px-4 pb-6 sm:px-6">
+          <p className="max-w-2xl text-base leading-relaxed text-[#3e4b43]">
+            Looking for a specific job? See how{" "}
+            <Link href="/use-cases/mixed-farm" className="font-semibold text-[#173528] underline-offset-4 hover:underline">
+              mixed farms
+            </Link>
+            ,{" "}
+            <Link href="/use-cases/egg-collection" className="font-semibold text-[#173528] underline-offset-4 hover:underline">
+              egg collection
+            </Link>
+            , and{" "}
+            <Link href="/use-cases/feed-inventory" className="font-semibold text-[#173528] underline-offset-4 hover:underline">
+              feed inventory
+            </Link>{" "}
+            use the same workspace.
+          </p>
         </section>
         <MarketingCta
           title="Start with your mix"

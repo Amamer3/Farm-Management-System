@@ -1,4 +1,5 @@
 export const PENDING_FARM_KEY = "agrocyms.pendingFarm"
+export const SIGNUP_DRAFT_KEY = "agrocyms.signupDraft"
 
 export type FarmEnterprise = {
   id: string
@@ -59,6 +60,23 @@ export type PendingFarm = {
   crops: string[]
 }
 
+export type SignupDraft = {
+  step: number
+  enterprises: string[]
+  crops: string[]
+  noCrops: boolean
+  farmName: string
+  location: string
+  ownerName: string
+  email: string
+}
+
+const SIGNUP_STEP_COUNT = 4
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === "string")
+}
+
 const cropsKey = (id: string) => `agrocyms.farmCrops.${id}`
 
 export function enterpriseLabel(id: string) {
@@ -96,6 +114,61 @@ export function writePendingFarm(profile: PendingFarm) {
 
 export function clearPendingFarm() {
   sessionStorage.removeItem(PENDING_FARM_KEY)
+}
+
+export function readSignupDraft(): SignupDraft | null {
+  if (typeof window === "undefined") return null
+  try {
+    const raw = localStorage.getItem(SIGNUP_DRAFT_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as Partial<SignupDraft> & Record<string, unknown>
+    if (!parsed || typeof parsed !== "object") return null
+
+    const step = typeof parsed.step === "number" && Number.isInteger(parsed.step)
+      ? Math.min(Math.max(parsed.step, 0), SIGNUP_STEP_COUNT - 1)
+      : 0
+
+    return {
+      step,
+      enterprises: isStringArray(parsed.enterprises) ? parsed.enterprises : [],
+      crops: isStringArray(parsed.crops) ? parsed.crops : [],
+      noCrops: Boolean(parsed.noCrops),
+      farmName: typeof parsed.farmName === "string" ? parsed.farmName : "",
+      location: typeof parsed.location === "string" ? parsed.location : "",
+      ownerName: typeof parsed.ownerName === "string" ? parsed.ownerName : "",
+      email: typeof parsed.email === "string" ? parsed.email : "",
+    }
+  } catch {
+    return null
+  }
+}
+
+export function writeSignupDraft(draft: SignupDraft) {
+  if (typeof window === "undefined") return
+  try {
+    const safeDraft: SignupDraft = {
+      step: Math.min(Math.max(draft.step, 0), SIGNUP_STEP_COUNT - 1),
+      enterprises: draft.enterprises,
+      crops: draft.noCrops ? [] : draft.crops,
+      noCrops: draft.noCrops,
+      farmName: draft.farmName,
+      location: draft.location,
+      ownerName: draft.ownerName,
+      email: draft.email,
+    }
+    localStorage.setItem(SIGNUP_DRAFT_KEY, JSON.stringify(safeDraft))
+  } catch {
+    // Signup can continue without a persisted draft.
+  }
+}
+
+export function clearSignupDraft() {
+  if (typeof window === "undefined") return
+  try {
+    localStorage.removeItem(SIGNUP_DRAFT_KEY)
+  } catch {
+    // Ignore storage failures when clearing.
+  }
 }
 
 export function readStoredCrops(id?: string): string[] {

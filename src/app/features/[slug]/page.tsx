@@ -3,8 +3,8 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { MarketingCta, MarketingPage } from "@/components/marketing/MarketingPage"
 import { JsonLd } from "@/components/seo/JsonLd"
-import { FEATURE_PAGES, featureBySlug } from "@/lib/marketing"
-import { breadcrumbJsonLd, createPageMetadata } from "@/lib/seo"
+import { FEATURE_FAQS, FEATURE_PAGES, USE_CASE_PAGES, featureBySlug } from "@/lib/marketing"
+import { breadcrumbJsonLd, createPageMetadata, faqJsonLd, webPageJsonLd } from "@/lib/seo"
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -34,18 +34,30 @@ export default async function FeatureDetailPage({ params }: PageProps) {
   const feature = featureBySlug(slug)
   if (!feature) notFound()
 
+  const faqs = FEATURE_FAQS[feature.slug] ?? []
+  const relatedUseCases = USE_CASE_PAGES.filter((item) => item.relatedFeatures.includes(feature.slug))
+
   return (
     <>
       <JsonLd
-        data={breadcrumbJsonLd([
-          { name: "Home", path: "/" },
-          { name: "Features", path: "/features" },
-          { name: feature.eyebrow, path: `/features/${feature.slug}` },
-        ])}
+        data={[
+          webPageJsonLd({
+            name: feature.title,
+            description: feature.description,
+            path: `/features/${feature.slug}`,
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Features", path: "/features" },
+            { name: feature.eyebrow, path: `/features/${feature.slug}` },
+          ]),
+          ...(faqs.length ? [faqJsonLd(faqs)] : []),
+        ]}
       />
       <MarketingPage eyebrow={feature.eyebrow} title={feature.headline} lead={feature.summary}>
         <section className="mx-auto max-w-[1320px] px-4 pb-6 sm:px-6">
-          <div className="grid gap-4 md:grid-cols-3">
+          <p className="max-w-3xl text-base leading-relaxed text-[#3e4b43]">{feature.description}</p>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
             {feature.outcomes.map((item) => (
               <article key={item.title} className="rounded-[28px] border border-[#E4E8E4] bg-white p-6">
                 <h2 className="text-lg font-bold">{item.title}</h2>
@@ -67,6 +79,37 @@ export default async function FeatureDetailPage({ params }: PageProps) {
             </ul>
           </div>
         </section>
+
+        {faqs.length > 0 && (
+          <section className="mx-auto max-w-[860px] px-4 py-6 sm:px-6">
+            <h2 className="text-2xl font-extrabold tracking-tight">Questions about {feature.eyebrow.toLowerCase()}</h2>
+            <div className="mt-5 space-y-3">
+              {faqs.map((item) => (
+                <article key={item.question} className="rounded-[28px] border border-[#E4E8E4] bg-white p-6">
+                  <h3 className="text-lg font-bold">{item.question}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-[#526057]">{item.answer}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {relatedUseCases.length > 0 && (
+          <section className="mx-auto max-w-[1320px] px-4 py-6 sm:px-6">
+            <h2 className="text-2xl font-extrabold tracking-tight">Related use cases</h2>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {relatedUseCases.map((item) => (
+                <Link
+                  key={item.slug}
+                  href={`/use-cases/${item.slug}`}
+                  className="rounded-full bg-[#E7F3E4] px-4 py-2 text-sm font-semibold text-[#173528]"
+                >
+                  {item.eyebrow}
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className="mx-auto max-w-[1320px] px-4 py-6 sm:px-6">
           <h2 className="text-2xl font-extrabold tracking-tight">Other enterprises</h2>

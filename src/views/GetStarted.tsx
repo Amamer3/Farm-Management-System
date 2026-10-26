@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, ArrowRight, Check, Eye, EyeOff, Loader2 } from "lucide-react"
@@ -10,9 +10,12 @@ import {
   CROP_OPTIONS,
   FARM_ENTERPRISES,
   clearPendingFarm,
+  clearSignupDraft,
   cropLabel,
   enterpriseLabel,
+  readSignupDraft,
   writePendingFarm,
+  writeSignupDraft,
 } from "@/lib/farmProfile"
 import { getAppName, getLogoPath } from "@/lib/env"
 
@@ -34,14 +37,51 @@ export default function GetStarted() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
+  const [draftReady, setDraftReady] = useState(false)
 
   const growsCrops = enterprises.includes("crops")
+  const cropsLocked = !growsCrops && noCrops
+
+  useEffect(() => {
+    const draft = readSignupDraft()
+    if (draft) {
+      setStep(draft.step)
+      setEnterprises(draft.enterprises)
+      setCrops(draft.crops)
+      setNoCrops(draft.noCrops || (draft.enterprises.length > 0 && !draft.enterprises.includes("crops") && draft.crops.length === 0))
+      setFarmName(draft.farmName)
+      setLocation(draft.location)
+      setOwnerName(draft.ownerName)
+      setEmail(draft.email)
+    }
+    setDraftReady(true)
+  }, [])
+
+  useEffect(() => {
+    if (!draftReady) return
+    // Persist progress only. Password fields stay in memory and are never written here.
+    writeSignupDraft({
+      step,
+      enterprises,
+      crops,
+      noCrops,
+      farmName,
+      location,
+      ownerName,
+      email,
+    })
+  }, [draftReady, step, enterprises, crops, noCrops, farmName, location, ownerName, email])
 
   const toggleEnterprise = (id: string) => {
     setError(null)
     setEnterprises((current) => {
       const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id]
-      if (!next.includes("crops")) setNoCrops(false)
+      if (next.includes("crops")) {
+        setNoCrops(false)
+      } else {
+        setNoCrops(true)
+        setCrops([])
+      }
       return next
     })
   }
@@ -58,8 +98,13 @@ export default function GetStarted() {
       setError("Choose at least one type of farm.")
       return
     }
-    if (step === 0 && growsCrops) {
-      setNoCrops(false)
+    if (step === 0) {
+      if (growsCrops) {
+        setNoCrops(false)
+      } else {
+        setNoCrops(true)
+        setCrops([])
+      }
     }
     if (step === 1) {
       if (growsCrops && crops.length === 0) {
@@ -117,6 +162,7 @@ export default function GetStarted() {
         crops: profile.crops,
       })
       clearPendingFarm()
+      clearSignupDraft()
       router.replace("/")
     } catch (err: unknown) {
       const status = typeof err === "object" && err && "status" in err ? Number((err as { status?: number }).status) : 0
@@ -124,6 +170,7 @@ export default function GetStarted() {
         try {
           writePendingFarm(profile)
           await register(ownerName.trim(), email.trim(), password, "Admin")
+          clearSignupDraft()
           router.replace("/")
           return
         } catch (fallbackError: unknown) {
@@ -142,7 +189,7 @@ export default function GetStarted() {
   const fieldClass = "h-12 w-full rounded-2xl border border-[#E4E8E4] bg-[#F7F8F7] px-4 text-sm text-[#142018] outline-none transition focus:border-[#173528] focus:bg-white"
 
   return (
-    <div className="min-h-screen bg-white text-[#142018]" style={{ fontFamily: "Manrope, Inter, sans-serif" }}>
+    <div className="min-h-screen bg-white font-manrope text-[#142018]">
       <header className="sticky top-0 z-20 bg-white/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-3xl items-center justify-between gap-3 px-4 sm:h-[84px] sm:px-6">
           <Link href="/" className="flex min-w-0 items-center gap-2">
@@ -174,7 +221,10 @@ export default function GetStarted() {
         </ol>
 
         <div className="mt-6 rounded-[28px] border border-[#E4E8E4] bg-white p-4 sm:mt-8 sm:rounded-[32px] sm:p-8">
-          {step === 0 && (
+          {!draftReady ? (
+            <div className="min-h-[280px]" aria-hidden="true" />
+          ) : null}
+          {draftReady && step === 0 && (
             <div>
               <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">What does this farm do?</h2>
               <p className="mt-2 text-sm leading-relaxed text-[#526057]">Select every enterprise you want on the dashboard. You can change this later in Farm settings.</p>
@@ -206,7 +256,7 @@ export default function GetStarted() {
             </div>
           )}
 
-          {step === 1 && (
+          {draftReady && step === 1 && (
             <div>
               <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">Which crops do you grow?</h2>
               <p className="mt-2 text-sm leading-relaxed text-[#526057]">
@@ -218,17 +268,22 @@ export default function GetStarted() {
                 <span className="text-[#526057]">Selected farm type: </span>
                 <span className="font-bold">{enterprises.map(enterpriseLabel).join(", ")}</span>
               </p>
-              <div className={`mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 ${noCrops ? "pointer-events-none opacity-40" : ""}`}>
+              <div className={`mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 ${cropsLocked ? "opacity-45" : ""}`}>
                 {CROP_OPTIONS.map((crop) => {
-                  const selected = crops.includes(crop.id)
+                  const selected = !cropsLocked && crops.includes(crop.id)
                   return (
                     <button
                       key={crop.id}
                       type="button"
-                      disabled={noCrops}
+                      disabled={cropsLocked}
+                      aria-disabled={cropsLocked}
                       onClick={() => toggleCrop(crop.id)}
-                      className={`rounded-2xl border px-3 py-3 text-sm font-semibold ${
-                        selected ? "border-[#173528] bg-[#E7F3E4] text-[#142018]" : "border-[#E4E8E4] bg-[#F7F8F7] text-[#142018]"
+                      className={`rounded-2xl border px-3 py-3 text-sm font-semibold transition ${
+                        cropsLocked
+                          ? "cursor-not-allowed border-[#E8EBE8] bg-[#F3F4F2] text-[#9aa39c]"
+                          : selected
+                            ? "border-[#173528] bg-[#E7F3E4] text-[#142018]"
+                            : "border-[#E4E8E4] bg-[#F7F8F7] text-[#142018] hover:border-[#173528]/30"
                       }`}
                     >
                       {crop.label}
@@ -241,8 +296,11 @@ export default function GetStarted() {
                   type="button"
                   onClick={() => {
                     setError(null)
-                    setNoCrops((current) => !current)
-                    setCrops([])
+                    setNoCrops((current) => {
+                      const next = !current
+                      if (next) setCrops([])
+                      return next
+                    })
                   }}
                   className={`mt-4 w-full rounded-2xl border px-4 py-3 text-left text-sm font-semibold ${
                     noCrops ? "border-[#173528] bg-[#E7F3E4]" : "border-[#E4E8E4] bg-[#F7F8F7] text-[#526057]"
@@ -254,7 +312,7 @@ export default function GetStarted() {
             </div>
           )}
 
-          {step === 2 && (
+          {draftReady && step === 2 && (
             <div className="space-y-5">
               <div>
                 <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">Name the farm</h2>
@@ -278,7 +336,7 @@ export default function GetStarted() {
             </div>
           )}
 
-          {step === 3 && (
+          {draftReady && step === 3 && (
             <div className="space-y-5">
               <div>
                 <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">Create your account</h2>

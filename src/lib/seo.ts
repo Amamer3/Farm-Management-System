@@ -9,6 +9,10 @@ import {
   getSiteLocale,
   getSiteUrl,
   getTwitterHandle,
+  getXUrl,
+  getInstagramUrl,
+  getLinkedInUrl,
+  getFacebookUrl,
 } from "@/lib/env"
 
 export const PRIVATE_PATHS = [
@@ -26,8 +30,10 @@ export const PRIVATE_PATHS = [
   "/ruminants",
 ] as const
 
+export const SITE_CONTENT_UPDATED = new Date("2026-10-26")
+
 export const PUBLIC_ROUTES = [
-  { path: "/", changeFrequency: "weekly", priority: 1 },
+  { path: "/", changeFrequency: "weekly", priority: 1, images: ["/landing/farmer.png", "/landing/field.png"] },
   { path: "/about", changeFrequency: "monthly", priority: 0.8 },
   { path: "/features", changeFrequency: "weekly", priority: 0.9 },
   { path: "/features/poultry", changeFrequency: "monthly", priority: 0.8 },
@@ -35,6 +41,10 @@ export const PUBLIC_ROUTES = [
   { path: "/features/cattle", changeFrequency: "monthly", priority: 0.8 },
   { path: "/features/pigs", changeFrequency: "monthly", priority: 0.8 },
   { path: "/features/crops", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/use-cases", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/use-cases/mixed-farm", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/use-cases/egg-collection", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/use-cases/feed-inventory", changeFrequency: "monthly", priority: 0.8 },
   { path: "/faq", changeFrequency: "monthly", priority: 0.8 },
   { path: "/get-started", changeFrequency: "monthly", priority: 0.9 },
   { path: "/login", changeFrequency: "yearly", priority: 0.4 },
@@ -53,7 +63,7 @@ export function logoAbsoluteUrl(): string {
 }
 
 export function twitterProfileUrl(): string {
-  return `https://twitter.com/${getTwitterHandle().replace(/^@/, "")}`
+  return getXUrl()
 }
 
 type PageMetaInput = {
@@ -77,6 +87,7 @@ export function createPageMetadata({
 }: PageMetaInput): Metadata {
   const url = absoluteUrl(path)
   const appName = getAppName()
+  const locale = getSiteLocale()
   const socialTitle = absoluteTitle ? title : `${title} | ${appName}`
 
   return {
@@ -85,6 +96,10 @@ export function createPageMetadata({
     keywords,
     alternates: {
       canonical: url,
+      languages: {
+        [locale]: url,
+        "x-default": url,
+      },
     },
     robots: {
       index,
@@ -102,6 +117,8 @@ export function createPageMetadata({
       description,
       url,
       type: "website",
+      locale: locale === "en" ? "en_US" : locale,
+      siteName: appName,
     },
     twitter: {
       title: socialTitle,
@@ -168,8 +185,20 @@ export function rootMetadata(): Metadata {
       apple: logo,
     },
     manifest: "/manifest.webmanifest",
+    appleWebApp: {
+      capable: true,
+      title: appName,
+      statusBarStyle: "default",
+    },
     alternates: {
       canonical: siteUrl,
+      languages: {
+        [locale]: siteUrl,
+        "x-default": siteUrl,
+      },
+      types: {
+        "text/plain": absoluteUrl("/llms.txt"),
+      },
     },
     robots: {
       index: true,
@@ -206,31 +235,67 @@ export function rootMetadata(): Metadata {
 
 type JsonLd = Record<string, unknown>
 
+export function organizationId(): string {
+  return `${getSiteUrl()}/#organization`
+}
+
+export function websiteId(): string {
+  return `${getSiteUrl()}/#website`
+}
+
+export function softwareId(): string {
+  return `${getSiteUrl()}/#software`
+}
+
+function logoImageObject(): JsonLd {
+  return {
+    "@type": "ImageObject",
+    url: logoAbsoluteUrl(),
+    caption: `${getAppName()} logo`,
+  }
+}
+
 export function organizationJsonLd(): JsonLd {
   const name = getAppName()
   return {
-    "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": organizationId(),
     name,
     url: getSiteUrl(),
-    logo: logoAbsoluteUrl(),
+    logo: logoImageObject(),
+    image: logoImageObject(),
     description: getAppDescription(),
-    sameAs: [twitterProfileUrl()],
+    brand: {
+      "@type": "Brand",
+      name,
+    },
+    areaServed: "Worldwide",
+    knowsAbout: [
+      "Farm management software",
+      "Poultry and egg collection",
+      "Livestock records",
+      "Crop farm records",
+    ],
+    sameAs: [getXUrl(), getInstagramUrl(), getLinkedInUrl(), getFacebookUrl()],
   }
 }
 
 export function websiteJsonLd(): JsonLd {
   return {
-    "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": websiteId(),
     name: getAppName(),
     url: getSiteUrl(),
     description: getAppDescription(),
     inLanguage: getSiteLocale(),
-    publisher: {
-      "@type": "Organization",
-      name: getAppName(),
-      logo: logoAbsoluteUrl(),
+    publisher: { "@id": organizationId() },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${getSiteUrl()}/search?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
     },
   }
 }
@@ -238,14 +303,21 @@ export function websiteJsonLd(): JsonLd {
 export function softwareJsonLd(): JsonLd {
   const name = getAppName()
   return {
-    "@context": "https://schema.org",
     "@type": "SoftwareApplication",
+    "@id": softwareId(),
     name,
     applicationCategory: "BusinessApplication",
     applicationSubCategory: "Farm Management Software",
     operatingSystem: "Web",
     url: getSiteUrl(),
     description: getAppDescription(),
+    isAccessibleForFree: true,
+    browserRequirements: "Requires JavaScript and a modern browser.",
+    audience: {
+      "@type": "Audience",
+      audienceType: "Farm owners and farm staff",
+    },
+    provider: { "@id": organizationId() },
     offers: {
       "@type": "Offer",
       price: "0",
@@ -259,6 +331,54 @@ export function softwareJsonLd(): JsonLd {
       "Team logins for the same farm",
       "Reports and production statistics",
     ],
+    screenshot: absoluteUrl("/landing/farmer.png"),
+    softwareHelp: {
+      "@type": "WebPage",
+      url: absoluteUrl("/faq"),
+    },
+  }
+}
+
+export function siteGraphJsonLd(): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [organizationJsonLd(), websiteJsonLd(), softwareJsonLd()],
+  }
+}
+
+export function webPageJsonLd({
+  name,
+  description,
+  path,
+}: {
+  name: string
+  description: string
+  path: string
+}): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${absoluteUrl(path)}#webpage`,
+    url: absoluteUrl(path),
+    name,
+    description,
+    inLanguage: getSiteLocale(),
+    isPartOf: { "@id": websiteId() },
+    about: { "@id": softwareId() },
+    dateModified: SITE_CONTENT_UPDATED.toISOString(),
+  }
+}
+
+export function itemListJsonLd(items: { name: string; path: string }[]): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      url: absoluteUrl(item.path),
+    })),
   }
 }
 
@@ -297,30 +417,35 @@ export function howToJsonLd(): JsonLd {
     name: `Set up a farm on ${getAppName()}`,
     description: "Name the farm, choose enterprises and crops, then create the first account.",
     totalTime: "PT5M",
+    url: absoluteUrl("/get-started"),
     step: [
       {
         "@type": "HowToStep",
         position: 1,
         name: "Choose enterprises",
         text: "Pick poultry, goats and sheep, cattle, pigs, crops, or a mix.",
+        url: absoluteUrl("/get-started"),
       },
       {
         "@type": "HowToStep",
         position: 2,
         name: "Add crops",
         text: "Select the crops this farm grows, or record that it does not grow crops.",
+        url: absoluteUrl("/get-started"),
       },
       {
         "@type": "HowToStep",
         position: 3,
         name: "Name the farm",
         text: "Enter the farm name and location so records stay attached to the right place.",
+        url: absoluteUrl("/get-started"),
       },
       {
         "@type": "HowToStep",
         position: 4,
         name: "Create the account",
         text: "Add the owner account. The dashboard opens already pointed at that farm.",
+        url: absoluteUrl("/get-started"),
       },
     ],
   }

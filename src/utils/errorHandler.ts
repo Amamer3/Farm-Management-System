@@ -124,10 +124,13 @@ export function parseApiError(error: unknown): AppError {
     }
 
     // Authorization errors
-    if (message.includes('403') || message.includes('forbidden') || message.includes('authorization')) {
+    if (message.includes('403') || message.includes('forbidden') || message.includes('authorization') || message.includes('trial')) {
+      const trialEnded = message.includes('trial') || (error as { code?: string }).code === "TRIAL_ENDED"
       return {
         type: ErrorType.AUTHORIZATION,
-        message: 'You do not have permission to perform this action.',
+        message: trialEnded
+          ? (error instanceof Error ? error.message : 'The 30-day trial has ended. You can still view and export records.')
+          : 'You do not have permission to perform this action.',
         originalError: error,
         statusCode: 403,
         retryable: false,

@@ -1,0 +1,414 @@
+{
+  "language": { "label": "Idioma" },
+  "common": {
+    "appName": "Agrocyms",
+    "tagline": "Una plataforma. Cada granja. Agricultura más inteligente.",
+    "getStarted": "Empezar",
+    "signIn": "Iniciar sesión",
+    "search": "Buscar",
+    "searchSite": "Buscar en el sitio",
+    "searchPages": "Buscar páginas",
+    "searchAllPages": "Buscar en todas las páginas",
+    "noSearchResults": "No hay coincidencias.",
+    "skipToContent": "Saltar al contenido",
+    "loading": "Cargando...",
+    "redirecting": "Redirigiendo...",
+    "back": "Atrás",
+    "continue": "Continuar",
+    "close": "Cerrar",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "toggleMenu": "Mostrar menú",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "termsOfService": "Términos de servicio",
+    "privacyPolicy": "Política de privacidad",
+    "contact": "Contacto",
+    "faq": "Preguntas frecuentes",
+    "retry": "Reintentar...",
+    "refreshPage": "Actualizar página",
+    "somethingWentWrong": "Algo salió mal",
+    "unexpectedError": "Ocurrió un error inesperado. Pruebe una de las opciones siguientes.",
+    "errorDetails": "Detalles del error",
+    "unknownError": "Ocurrió un error desconocido",
+    "goHome": "Ir al inicio",
+    "reload": "Recargar página",
+    "accessDenied": "Acceso denegado",
+    "noPermission": "No tiene permiso para realizar esta acción.",
+    "profile": "Perfil",
+    "logout": "Cerrar sesión",
+    "farmSettings": "Ajustes de la granja",
+    "user": "Usuario",
+    "member": "Miembro",
+    "home": "Inicio"
+  },
+  "nav": {
+    "features": "Funciones",
+    "solutions": "Soluciones",
+    "pricing": "Precios",
+    "resources": "Recursos",
+    "about": "Acerca de",
+    "faq": "Preguntas frecuentes",
+    "contact": "Contacto"
+  },
+  "footer": {
+    "blurb": "Una plataforma. Cada granja. Agricultura más inteligente: cultivos y ganado en un solo espacio de trabajo.",
+    "explore": "Explorar",
+    "enterprises": "Empresas",
+    "account": "Cuenta",
+    "cropManagement": "Gestión de cultivos",
+    "livestock": "Ganado",
+    "poultry": "Avicultura",
+    "cattle": "Vacuno",
+    "inventory": "Inventario"
+  },
+  "auth": {
+    "welcomeBack": "Bienvenido de nuevo",
+    "toBrand": "a {name}",
+    "subtitle": "Inicie sesión para seguir gestionando su explotación.",
+    "cardTitle": "Iniciar sesión",
+    "cardDescription": "Correo electrónico y contraseña",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "usted@granja.com",
+    "password": "Contraseña",
+    "invalidEmail": "Introduzca un correo electrónico válido",
+    "passwordMin": "La contraseña debe tener al menos 6 caracteres",
+    "loginFailed": "No se pudo iniciar sesión. Compruebe sus datos.",
+    "signingIn": "Iniciando sesión...",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña",
+    "createAccount": "Crear una cuenta",
+    "sessionExpired": "Su sesión ha caducado. Vuelva a iniciar sesión."
+  },
+  "home": {
+    "records": "Sus registros",
+    "onePlatform": "Una plataforma para cada granja",
+    "farmerAlt": "Agricultor de pie en un invernadero con los brazos cruzados",
+    "fieldAlt": "Hileras de cultivos verdes vistas desde arriba",
+    "produceAlt": "Peras, uvas y manzanas verdes en un cajón",
+    "faqTitle": "Preguntas que se hacen las granjas antes de cambiar.",
+    "seeEveryAnswer": "Ver todas las respuestas",
+    "hero": {
+      "eyebrow": "Una gestión agrícola más inteligente empieza aquí",
+      "title": "Gestione su granja de forma más inteligente con Agrocyms",
+      "kicker": "Su granja es un negocio. Dele las herramientas para funcionar como uno.",
+      "body": "Agrocyms ayuda a las empresas agrícolas a reunir sus operaciones en una plataforma digital, para organizar actividades, controlar recursos y gestionar el rendimiento a medida que crece el negocio.",
+      "primaryCta": "Empezar",
+      "secondaryCta": "Explorar funciones",
+      "support": "Cree su cuenta y descubra una forma más inteligente de gestionar su explotación."
+    },
+    "platform": {
+      "eyebrow": "Una plataforma",
+      "title": "Todo lo que su granja necesita, conectado",
+      "lead": "Gestionar una granja implica personas, recursos, actividades diarias y decisiones de negocio. Agrocyms centraliza la gestión agrícola para que dedique menos tiempo a registros dispersos y más a sus operaciones.",
+      "cards": {
+        "crops": {
+          "title": "Gestión de cultivos",
+          "body": "Organice las actividades de producción, siga los registros de siembra y mantenga visibles los cultivos junto al trabajo ganadero.",
+          "cta": "Explorar gestión de cultivos"
+        },
+        "livestock": {
+          "title": "Gestión ganadera",
+          "body": "Mantenga aves, cabras y ovejas, vacuno y cerdos organizados con registros estructurados para las actividades que realmente opera esta granja.",
+          "cta": "Explorar gestión ganadera"
+        },
+        "inventory": {
+          "title": "Inventario y recursos",
+          "body": "Controle el pienso y el uso de medicamentos en la misma granja que los animales y campos a los que pertenecen.",
+          "cta": "Explorar gestión de recursos"
+        },
+        "business": {
+          "title": "Gestión del negocio agrícola",
+          "body": "Reúna la información operativa con inicios de sesión del equipo, informes y estadísticas de producción para decidir sobre los mismos registros.",
+          "cta": "Descubrir Agrocyms"
+        }
+      }
+    },
+    "audiences": {
+      "eyebrow": "Hecho para distintos negocios agrícolas",
+      "title": "Una plataforma de gestión agrícola que crece con su negocio",
+      "lead": "Tanto si gestiona cultivos, ganado o varias actividades, Agrocyms está pensado para un enfoque más organizado de la gestión agrícola.",
+      "items": {
+        "crops": {
+          "title": "Empresas de cultivos",
+          "body": "Organice las actividades de cultivo, mantenga registros de producción y mejore la visibilidad de sus operaciones."
+        },
+        "livestock": {
+          "title": "Empresas ganaderas",
+          "body": "Gestione registros y actividades diarias del ganado con un flujo de trabajo digital más estructurado."
+        },
+        "commercial": {
+          "title": "Granjas comerciales",
+          "body": "Obtenga una visión más clara de las actividades operativas, los recursos y el rendimiento del negocio."
+        },
+        "mixed": {
+          "title": "Granjas multiempresa",
+          "body": "Reúna avicultura, ganado y cultivos en un espacio coordinado, con menús adaptados a la mezcla y a los roles de su cuenta."
+        }
+      }
+    },
+    "value": {
+      "eyebrow": "Gestión agrícola digital",
+      "title": "Sustituya registros dispersos por más visibilidad",
+      "lead": "La gestión se complica cuando la información importante está en cuadernos, hojas de cálculo y herramientas desconectadas. Agrocyms centraliza la información y las operaciones de la granja.",
+      "points": {
+        "organize": "Organice la información importante de la granja en un solo lugar.",
+        "consistency": "Mejore la consistencia del registro diario.",
+        "monitor": "Supervise actividades y recursos de forma más sistemática.",
+        "decisions": "Tome decisiones de negocio con la información operativa disponible.",
+        "growth": "Establezca una base más estructurada para el crecimiento."
+      }
+    },
+    "steps": {
+      "eyebrow": "Cómo funciona",
+      "title": "Empiece a gestionar su granja en tres pasos",
+      "cta": "Cree su cuenta de Agrocyms",
+      "items": {
+        "account": {
+          "step": "1",
+          "title": "Cree su cuenta",
+          "body": "Regístrese en Agrocyms, configure la granja y empiece una prueba de 30 días sin tarjeta."
+        },
+        "farm": {
+          "step": "2",
+          "title": "Configure su granja",
+          "body": "Nombre la granja, elija empresas y cultivos, y añada la primera cuenta de propietario."
+        },
+        "operations": {
+          "step": "3",
+          "title": "Gestione sus operaciones",
+          "body": "Use el espacio de trabajo para organizar las actividades y mantener los registros unidos a esta granja."
+        }
+      }
+    },
+    "close": {
+      "title": "Su granja merece mejores herramientas de gestión",
+      "body": "Aporte más estructura, visibilidad y consistencia a sus operaciones con Agrocyms. Cree su cuenta y dé el siguiente paso hacia una gestión más inteligente.",
+      "primaryCta": "Empezar",
+      "secondaryCta": "Ver precios"
+    }
+  },
+  "faq": {
+    "pageTitle": "Preguntas frecuentes sobre el software de gestión agrícola",
+    "pageLead": "Respuestas sobre el registro en Agrocyms, las funciones, las suscripciones, la configuración de la cuenta y el uso de la plataforma.",
+    "items": {
+      "what": {
+        "question": "¿Qué es Agrocyms?",
+        "answer": "Agrocyms es una plataforma digital de gestión agrícola para organizar operaciones e información de la granja en un solo lugar."
+      },
+      "who": {
+        "question": "¿Quién puede usar Agrocyms?",
+        "answer": "Está pensado para empresas de cultivos, explotaciones ganaderas, gerentes de granja y otros negocios agrícolas cuyas necesidades coincidan con las funciones disponibles. En la configuración elige avicultura, cabras y ovejas, vacuno, cerdos, cultivos o una mezcla."
+      },
+      "account": {
+        "question": "¿Cómo creo una cuenta?",
+        "answer": "Vaya a la página de registro, introduzca la información solicitada, nombre la granja, elija empresas y cultivos, y cree la primera cuenta de propietario. Los pasos adicionales se muestran durante el alta."
+      },
+      "crops": {
+        "question": "¿Agrocyms admite cultivos?",
+        "answer": "Sí. Puede nombrar los cultivos de esta granja durante la configuración para que las listas de campo queden junto a los registros ganaderos. Consulte la página de gestión de cultivos para ver los registros de producción admitidos."
+      },
+      "livestock": {
+        "question": "¿Agrocyms admite ganadería?",
+        "answer": "Sí. Aves, cabras y ovejas, vacuno y cerdos tienen sus propios registros dentro de la misma cuenta. Consulte la página de gestión ganadera para las capacidades de la aplicación."
+      },
+      "multi": {
+        "question": "¿Puedo gestionar más de una empresa?",
+        "answer": "Sí. La configuración permite elegir más de una. Las páginas de avicultura se mantienen separadas de las de vacuno o cultivos, pero comparten el mismo inicio de sesión. Ubicaciones y límites de usuarios dependen de su cuenta."
+      },
+      "free": {
+        "question": "¿Agrocyms es gratis?",
+        "answer": "Las granjas nuevas tienen 30 días de acceso completo sin tarjeta. Después del periodo de prueba, el espacio de trabajo sigue siendo legible y exportable hasta que se suscriba. No hay un plan gratuito ilimitado."
+      },
+      "cost": {
+        "question": "¿Cuánto cuesta Agrocyms?",
+        "answer": "Los primeros 30 días están incluidos con la configuración de la granja. Después, los precios dependen de los planes publicados. Visite la página de precios o contacte con Agrocyms."
+      },
+      "subscribe": {
+        "question": "¿Cómo me suscribo?",
+        "answer": "Cree su cuenta de granja y use la prueba de 30 días. Cuando quiera seguir escribiendo registros, contacte con Agrocyms o complete el pago disponible en el producto."
+      },
+      "cancel": {
+        "question": "¿Puedo cancelar mi suscripción?",
+        "answer": "La cancelación está sujeta a los términos mostrados al comprar. Consulte la facturación de la cuenta o la página de contacto."
+      },
+      "support": {
+        "question": "¿Cómo contacto con soporte?",
+        "answer": "Use la página de contacto para preguntas sobre registro, suscripciones o el funcionamiento de la plataforma."
+      },
+      "inventory": {
+        "question": "¿Agrocyms controla pienso y medicamentos?",
+        "answer": "Sí. El stock de pienso y el uso de medicamentos están en la misma granja que los animales a los que pertenecen, así el inventario no es un cuaderno aparte."
+      }
+    }
+  },
+  "getStarted": {
+    "eyebrow": "Empezar",
+    "title": "Empiece con Agrocyms",
+    "lead": "Cree su cuenta y empiece una prueba de 30 días del espacio de trabajo completo. No se requiere tarjeta. Después del mes, los registros siguen siendo legibles y exportables hasta que se suscriba.",
+    "steps": { "farm": "Granja", "crops": "Cultivos", "details": "Datos de la granja", "account": "Cuenta" },
+    "step0Title": "¿A qué se dedica esta granja?",
+    "step0Lead": "Seleccione cada actividad que quiera en el panel. Puede cambiarlo después en Ajustes de la granja.",
+    "chooseEnterprise": "Elija al menos un tipo de granja.",
+    "step1Title": "¿Qué cultivos cultiva?",
+    "step1LeadCrops": "Los cultivos ya forman parte de esta granja. Elija cada cultivo que produce.",
+    "step1LeadLivestock": "Elija los cultivos, o continúe sin ellos si esta granja solo tiene ganado.",
+    "selectedFarmType": "Tipo de granja seleccionado:",
+    "chooseCrops": "Elija los cultivos de esta granja.",
+    "chooseCropsOrNone": "Elija cultivos, o indique que esta granja no cultiva.",
+    "noCrops": "Esta granja no tiene cultivos",
+    "noCropsSelected": "Esta granja no tiene cultivos. Toque de nuevo para elegir cultivos.",
+    "step2Title": "Nombre la granja",
+    "step2Lead": "Este es el nombre que verá su equipo en todo el sistema.",
+    "farmName": "Nombre de la granja",
+    "farmNamePlaceholder": "Granja Greenfield",
+    "location": "Ubicación",
+    "locationPlaceholder": "Pueblo o región",
+    "enterFarmName": "Introduzca el nombre de la granja.",
+    "dashboardWillCover": "El panel cubrirá",
+    "step3Title": "Cree su cuenta",
+    "step3Lead": "Será el administrador de la granja. Otras personas se pueden añadir después de iniciar sesión.",
+    "yourName": "Su nombre",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Al menos 6 caracteres",
+    "confirmPassword": "Confirmar contraseña",
+    "enterName": "Introduzca su nombre.",
+    "enterValidEmail": "Introduzca un correo electrónico válido.",
+    "passwordMin": "La contraseña debe tener al menos 6 caracteres.",
+    "passwordMismatch": "Las contraseñas no coinciden.",
+    "couldNotCreate": "No se pudo crear la cuenta.",
+    "agreePrefix": "Al crear una cuenta, acepta los",
+    "agreeMiddle": "y reconoce la",
+    "creating": "Creando cuenta",
+    "createFarmAccount": "Crear cuenta de granja",
+    "alreadyHaveAccount": "¿Ya tiene una cuenta?"
+  },
+  "sidebar": {
+    "dashboard": "Panel",
+    "birds": "Gestión de aves",
+    "eggs": "Recogida de huevos",
+    "ruminants": "Pequeños rumiantes",
+    "cattle": "Vacuno",
+    "pigs": "Cerdos",
+    "feed": "Inventario de pienso",
+    "medicine": "Medicinas y vacunas",
+    "reports": "Informes",
+    "statistics": "Estadísticas",
+    "farm": "Ajustes de la granja",
+    "users": "Gestión de usuarios",
+    "profile": "Perfil",
+    "mainNav": "Navegación principal",
+    "collapse": "Contraer barra lateral",
+    "expand": "Expandir barra lateral",
+    "changeLogo": "Cambiar logo de la granja",
+    "addLogo": "Añadir el logo de su granja",
+    "farmLogo": "Logo de la granja",
+    "chooseImage": "Elija un archivo de imagen",
+    "logoUpdated": "Logo de la granja actualizado",
+    "logoFailed": "No se pudo actualizar el logo"
+  },
+  "header": { "searchPlaceholder": "Buscar...", "closeSearch": "Cerrar búsqueda" },
+  "trial": {
+    "expired": "La prueba de 30 días ha terminado. Aún puede ver y exportar registros.",
+    "contactToSubscribe": "Contactar con Agrocyms",
+    "keepWriting": "para suscribirse y seguir escribiendo.",
+    "remaining": "Acceso completo durante {days, plural, one {# día} other {# días}} de su prueba de 30 días. No se requiere tarjeta. Después, los registros siguen siendo legibles y exportables hasta que se suscriba."
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "markAllRead": "Marcar todo como leído",
+    "loading": "Cargando notificaciones…",
+    "empty": "Aún no hay alertas. El stock bajo, los tratamientos y las recogidas aparecerán aquí.",
+    "justNow": "ahora mismo",
+    "minutesAgo": "hace {count} min",
+    "hoursAgo": "hace {count} h",
+    "yesterday": "ayer",
+    "daysAgo": "hace {count} d"
+  },
+  "dashboard": {
+    "title": "Panel de la granja",
+    "defaultFocus": "Supervise las operaciones y las métricas clave de su granja",
+    "loading": "Cargando datos del panel...",
+    "loadErrorTitle": "No se pudieron cargar los datos del panel",
+    "loadErrorBody": "Ocurrió un error al cargar los datos. Intente actualizar la página.",
+    "totalBirds": "Total de aves",
+    "eggsToday": "Huevos de hoy",
+    "crops": "Cultivos",
+    "feedStock": "Stock de pienso",
+    "healthAlerts": "Alertas de salud",
+    "alertsActive": "{count} activas",
+    "alertsNone": "Ninguna",
+    "open": "Abrir",
+    "recordsForFarm": "Registros de {name} para esta granja",
+    "farmFocus": "Enfoque de esta granja",
+    "poultryOff": "La producción avícola no aparece en este panel porque no forma parte de la configuración de la granja.",
+    "addEnterprises": "Añada actividades en Ajustes de la granja para dar forma a este panel.",
+    "productionTrends": "Tendencias de producción",
+    "eggProduction7d": "Producción de huevos de los últimos 7 días",
+    "loadingChart": "Cargando gráfico de producción...",
+    "chartError": "No se pudo cargar el gráfico de producción",
+    "noProduction": "No hay datos de producción",
+    "noProductionHint": "Los datos de producción aparecerán aquí cuando se recojan huevos.",
+    "trendUp": "Tendencia de producción al alza",
+    "trendDown": "Tendencia de producción a la baja",
+    "trendStable": "Tendencia de producción estable",
+    "averageDaily": "Promedio diario",
+    "totalPeriod": "Total del periodo",
+    "actual": "Real",
+    "target": "Objetivo",
+    "difference": "Diferencia",
+    "eggsUnit": "{count} huevos",
+    "performance": "Resumen de rendimiento",
+    "weekSummary": "Resumen de esta semana",
+    "loadingPerformance": "Cargando datos de rendimiento...",
+    "productionRate": "Tasa de producción",
+    "efficiency": "{value}% de eficiencia",
+    "vsLastWeek": "frente a la semana pasada",
+    "feedEfficiency": "Eficiencia del pienso",
+    "kgPerEgg": "{value} kg por huevo",
+    "targetKg": "Objetivo: {value} kg",
+    "mortalityRate": "Tasa de mortalidad",
+    "thisMonth": "{value}% este mes",
+    "targetPct": "Objetivo: <{value}%",
+    "noPerformance": "No hay datos de rendimiento",
+    "noPerformanceHint": "Las métricas aparecerán aquí a medida que se recopilen datos",
+    "quickActions": "Acciones rápidas",
+    "quickActionsLead": "Tareas diarias habituales",
+    "addBirdBatch": "Añadir lote de aves",
+    "addBirdBatchHint": "Registrar un nuevo lote avícola",
+    "logFeed": "Registrar uso de pienso",
+    "logFeedHint": "Anotar el consumo de pienso",
+    "recordEggs": "Registrar huevos",
+    "recordEggsHint": "Anotar la recogida diaria",
+    "ruminantsHint": "Abrir registros del rebaño",
+    "cattleHint": "Abrir el hato vacuno",
+    "pigsHint": "Abrir registros de cerdos",
+    "medicineLog": "Registro de medicamentos",
+    "medicineLogHint": "Seguimiento de vacunas",
+    "recentActivity": "Actividad reciente",
+    "latestOps": "Últimas operaciones de la granja",
+    "noActivity": "Sin actividad reciente",
+    "noActivityHint": "La actividad aparecerá aquí a medida que se realicen operaciones",
+    "viewAllActivity": "Ver toda la actividad"
+  },
+  "enterprises": {
+    "poultry": { "label": "Avicultura", "description": "Ponedoras, pollos de engorde y recogida diaria de huevos" },
+    "small_ruminants": { "label": "Cabras y ovejas", "description": "Rebaños, partos, pesos y ventas" },
+    "cattle": { "label": "Vacuno", "description": "Registros del hato, leche, partos y ventas" },
+    "pigs": { "label": "Cerdos", "description": "Corrales, partos, crecimiento y ventas" },
+    "crops": { "label": "Cultivos", "description": "Campos y los cultivos de esta granja" }
+  },
+  "crops": {
+    "maize": "Maíz",
+    "rice": "Arroz",
+    "cassava": "Yuca",
+    "yam": "Ñame",
+    "plantain": "Plátano",
+    "vegetables": "Hortalizas",
+    "cocoa": "Cacao",
+    "soybean": "Soja",
+    "groundnut": "Cacahuete",
+    "sorghum": "Sorgo"
+  }
+}

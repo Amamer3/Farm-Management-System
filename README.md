@@ -110,7 +110,6 @@ npm install
 Copy `.env.example` to `.env` and adjust values as needed:
 
 ```env
-NEXT_PUBLIC_APP_NAME=Agrocyms
 NEXT_PUBLIC_API_BASE_URL=/api
 API_PROXY_TARGET=http://localhost:5050
 PORT=8080
@@ -386,7 +385,6 @@ Make sure to set the following environment variables in your hosting platform:
 
 - `NEXT_PUBLIC_API_BASE_URL`: Your API base URL
 - `API_PROXY_TARGET`: Backend origin the `/api` rewrite proxies to
-- `NEXT_PUBLIC_APP_NAME`: Application name
 - `PORT`: Frontend dev server port
 
 ### Custom Domain

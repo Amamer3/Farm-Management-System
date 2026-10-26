@@ -1,7 +1,9 @@
 "use client"
 
 import { Menu, Search, User, LogOut, Settings, X } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { NotificationBell } from "@/components/layout/NotificationBell"
+import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -10,6 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useUserRole } from "@/contexts/UserRoleContext"
 import { useFarm } from "@/contexts/FarmContext"
+import { TrialBanner } from "@/components/layout/TrialBanner"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +27,7 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ onMenuToggle }: AppHeaderProps) {
+  const t = useTranslations()
   const [searchValue, setSearchValue] = useState("")
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
   const router = useRouter()
@@ -43,6 +47,7 @@ export function AppHeader({ onMenuToggle }: AppHeaderProps) {
   const initials = user?.name?.split(" ").map(n => n[0]).join("").slice(0, 2) || "U"
 
   return (
+    <>
     <header className="page-header relative gap-2 sm:gap-3 min-w-0">
       {/* Mobile expanded search overlay */}
       {mobileSearchOpen && (
@@ -51,7 +56,7 @@ export function AppHeader({ onMenuToggle }: AppHeaderProps) {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
             <Input
               autoFocus
-              placeholder="Search..."
+              placeholder={t("header.searchPlaceholder")}
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               className="pl-10 h-9 bg-background/50 border-border/50"
@@ -62,7 +67,7 @@ export function AppHeader({ onMenuToggle }: AppHeaderProps) {
             size="icon"
             className="shrink-0"
             onClick={() => setMobileSearchOpen(false)}
-            aria-label="Close search"
+            aria-label={t("header.closeSearch")}
           >
             <X className="w-5 h-5" />
           </Button>
@@ -75,19 +80,19 @@ export function AppHeader({ onMenuToggle }: AppHeaderProps) {
           size="icon"
           className="lg:hidden shrink-0"
           onClick={onMenuToggle}
-          aria-label="Toggle menu"
+          aria-label={t("common.toggleMenu")}
         >
           <Menu className="w-5 h-5" />
         </Button>
 
         {/* Desktop / tablet search — grows with available space */}
         <div className="relative hidden md:block flex-1 max-w-md min-w-0">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
+          <Search className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
           <Input
-            placeholder="Search..."
+            placeholder={t("header.searchPlaceholder")}
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
-            className="pl-10 w-full h-9 bg-background/50 backdrop-blur-sm border-border/50"
+            className="ps-10 w-full h-9 bg-background/50 backdrop-blur-sm border-border/50"
           />
         </div>
       </div>
@@ -98,11 +103,12 @@ export function AppHeader({ onMenuToggle }: AppHeaderProps) {
           size="icon"
           className="md:hidden"
           onClick={() => setMobileSearchOpen(true)}
-          aria-label="Search"
+          aria-label={t("common.search")}
         >
           <Search className="w-5 h-5" />
         </Button>
 
+        <LanguageSwitcher />
         <NotificationBell />
 
         <DropdownMenu>
@@ -130,21 +136,23 @@ export function AppHeader({ onMenuToggle }: AppHeaderProps) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => router.push('/profile')}>
-              <User className="w-4 h-4 mr-2" />
-              Profile
+              <User className="w-4 h-4 me-2" />
+              {t("common.profile")}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push('/farm')}>
-              <Settings className="w-4 h-4 mr-2" />
-              Farm settings
+              <Settings className="w-4 h-4 me-2" />
+              {t("common.farmSettings")}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout} className="text-destructive">
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
+              <LogOut className="w-4 h-4 me-2" />
+              {t("common.logout")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
     </header>
+    <TrialBanner />
+    </>
   )
 }

@@ -29,11 +29,17 @@ type FarmState = {
   enabledEnterprises: string[]
   crops: string[]
   modules: FarmModule[]
+  plan?: string
+  billingStatus?: string
+  trialEndsAt?: string
+  trialDaysRemaining?: number
+  writeAccess: boolean
 }
 
 type FarmContextValue = {
   farm: FarmState | null
   loading: boolean
+  canWrite: boolean
   refresh: () => Promise<void>
   hasEnterprise: (id: string) => boolean
   setLogo: (logo: string | null) => Promise<void>
@@ -57,6 +63,7 @@ function readStoredLogo(id?: string) {
 const FarmContext = createContext<FarmContextValue>({
   farm: null,
   loading: false,
+  canWrite: true,
   refresh: async () => {},
   hasEnterprise: () => false,
   setLogo: async () => {},
@@ -109,6 +116,11 @@ export function FarmProvider({ children }: { children: ReactNode }) {
         enabledEnterprises,
         crops,
         modules: data?.modules || [],
+        plan: data?.plan,
+        billingStatus: data?.billingStatus,
+        trialEndsAt: data?.trialEndsAt,
+        trialDaysRemaining: data?.trialDaysRemaining,
+        writeAccess: data?.writeAccess !== false,
       })
     } catch {
       const pending = readPendingFarm()
@@ -121,6 +133,7 @@ export function FarmProvider({ children }: { children: ReactNode }) {
           enabledEnterprises: enabledEnterprisesForProfile(pending.enterprises),
           crops,
           modules: [],
+          writeAccess: true,
         })
       } else {
         setFarm(null)
@@ -162,7 +175,7 @@ export function FarmProvider({ children }: { children: ReactNode }) {
   }, [farm?.id])
 
   return (
-    <FarmContext.Provider value={{ farm, loading, refresh, hasEnterprise, setLogo, setCrops }}>
+    <FarmContext.Provider value={{ farm, loading, canWrite: farm?.writeAccess !== false, refresh, hasEnterprise, setLogo, setCrops }}>
       {children}
     </FarmContext.Provider>
   )

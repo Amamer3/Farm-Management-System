@@ -3,18 +3,13 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useTranslations } from "next-intl"
 import { ArrowRight, Menu, Search, X } from "lucide-react"
+import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher"
 import { SocialLinks } from "@/components/marketing/SocialLinks"
+import { MARKETING_NAV } from "@/i18n/content"
 import { getAppName, getLogoPath } from "@/lib/env"
 import { searchPublicPages } from "@/lib/marketing"
-
-const homeNav = [
-  { id: "features", label: "Features", href: "/features" },
-  { id: "solutions", label: "Solutions", href: "/solutions" },
-  { id: "pricing", label: "Pricing", href: "/pricing" },
-  { id: "resources", label: "Resources", href: "/resources" },
-  { id: "about", label: "About", href: "/about" },
-]
 
 export function MarketingChrome({
   children,
@@ -23,6 +18,7 @@ export function MarketingChrome({
   home?: boolean
 }) {
   const router = useRouter()
+  const t = useTranslations()
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [query, setQuery] = useState("")
@@ -53,9 +49,9 @@ export function MarketingChrome({
     <div className="min-h-screen overflow-x-clip bg-white text-[#142018]" style={{ fontFamily: "var(--font-manrope), var(--font-inter), sans-serif" }}>
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-[#173528] focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
+        className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-[#173528] focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
       >
-        Skip to content
+        {t("common.skipToContent")}
       </a>
 
       <header className="sticky top-0 z-30 bg-white/95 backdrop-blur">
@@ -66,22 +62,23 @@ export function MarketingChrome({
           </Link>
 
           <nav aria-label="Primary" className="hidden min-w-0 items-center gap-1.5 lg:flex">
-            {homeNav.map((item) => (
+            {MARKETING_NAV.map((item) => (
               <Link
                 key={item.id}
                 href={item.href}
                 className="whitespace-nowrap rounded-full bg-[#F3F4F2] px-2.5 py-2 text-xs font-semibold text-[#1c241f] transition hover:bg-[#E7EAE6] xl:px-4 xl:py-2.5 xl:text-sm"
               >
-                {item.label}
+                {t(`nav.${item.id}`)}
               </Link>
             ))}
           </nav>
 
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
+            <LanguageSwitcher variant="marketing" />
             <div className="relative">
               <button
                 type="button"
-                aria-label="Search the site"
+                aria-label={t("common.searchSite")}
                 aria-expanded={searchOpen}
                 onClick={() => {
                   setMenuOpen(false)
@@ -94,18 +91,18 @@ export function MarketingChrome({
               {searchOpen && (
                 <form
                   onSubmit={onSearch}
-                  className="fixed left-4 right-4 top-[4.25rem] z-40 max-h-[min(70vh,28rem)] overflow-y-auto rounded-2xl border border-black/5 bg-white p-3 shadow-[0_16px_40px_rgba(20,32,24,0.12)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:absolute sm:left-auto sm:right-0 sm:top-14 sm:w-80"
+                  className="fixed start-4 end-4 top-[4.25rem] z-40 max-h-[min(70vh,28rem)] overflow-y-auto rounded-2xl border border-black/5 bg-white p-3 shadow-[0_16px_40px_rgba(20,32,24,0.12)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:absolute sm:start-auto sm:end-0 sm:top-14 sm:w-80"
                 >
                   <input
                     ref={searchRef}
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
-                    placeholder="Search pages"
+                    placeholder={t("common.searchPages")}
                     className="w-full rounded-xl bg-[#F3F4F2] px-3 py-2 text-sm outline-none"
                   />
                   <ul className="mt-2">
                     {results.length === 0 && (
-                      <li className="px-2 py-2 text-sm text-[#66756c]">Nothing matches that.</li>
+                      <li className="px-2 py-2 text-sm text-[#66756c]">{t("common.noSearchResults")}</li>
                     )}
                     {results.map((item) => (
                       <li key={item.id}>
@@ -125,7 +122,7 @@ export function MarketingChrome({
                           className="block rounded-xl px-2 py-2 text-sm font-semibold text-[#173528] hover:bg-[#F3F4F2]"
                           onClick={() => setSearchOpen(false)}
                         >
-                          Search all pages
+                          {t("common.searchAllPages")}
                         </Link>
                       </li>
                     )}
@@ -136,18 +133,18 @@ export function MarketingChrome({
 
             <Link
               href="/get-started"
-              className="inline-flex items-center gap-2 rounded-full bg-[#173528] py-1.5 pl-1.5 pr-1.5 text-sm font-semibold text-white lg:pl-5"
+              className="inline-flex items-center gap-2 rounded-full bg-[#173528] py-1.5 ps-1.5 pe-1.5 text-sm font-semibold text-white lg:ps-5"
             >
-              <span className="hidden lg:inline">Get Started</span>
+              <span className="hidden lg:inline">{t("common.getStarted")}</span>
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#173528]">
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4 rtl:rotate-180" />
               </span>
             </Link>
 
             <button
               type="button"
               className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F3F4F2] sm:h-11 sm:w-11 lg:hidden"
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-label={menuOpen ? t("common.closeMenu") : t("common.openMenu")}
               onClick={() => {
                 setSearchOpen(false)
                 setMenuOpen((open) => !open)
@@ -160,22 +157,22 @@ export function MarketingChrome({
 
         {menuOpen && (
           <div className="mx-auto grid max-w-[1320px] gap-2 px-4 pb-4 lg:hidden">
-            {homeNav.map((item) => (
+            {MARKETING_NAV.map((item) => (
               <Link
                 key={item.id}
                 href={item.href}
-                className="rounded-2xl bg-[#F3F4F2] px-4 py-3 text-left text-sm font-semibold"
+                className="rounded-2xl bg-[#F3F4F2] px-4 py-3 text-start text-sm font-semibold"
                 onClick={() => setMenuOpen(false)}
               >
-                {item.label}
+                {t(`nav.${item.id}`)}
               </Link>
             ))}
             <div className="grid grid-cols-2 gap-2 pt-1">
               <Link href="/login" className="rounded-2xl border border-[#E4E8E4] px-4 py-3 text-center text-sm font-semibold" onClick={() => setMenuOpen(false)}>
-                Sign in
+                {t("common.signIn")}
               </Link>
               <Link href="/get-started" className="rounded-2xl bg-[#173528] px-4 py-3 text-center text-sm font-semibold text-white" onClick={() => setMenuOpen(false)}>
-                Get started
+                {t("common.getStarted")}
               </Link>
             </div>
           </div>
@@ -193,50 +190,50 @@ export function MarketingChrome({
                 <span className="text-[22px] font-extrabold tracking-tight">{appName}</span>
               </Link>
               <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/75">
-                One platform. Every farm. Smarter agriculture — crop and livestock operations in one workspace.
+                {t("footer.blurb")}
               </p>
               <SocialLinks className="mt-5" />
               <Link
                 href="/get-started"
-                className="mt-6 inline-flex items-center gap-3 rounded-full bg-white py-1.5 pl-5 pr-1.5 text-sm font-semibold text-[#173528]"
+                className="mt-6 inline-flex items-center gap-3 rounded-full bg-white py-1.5 ps-5 pe-1.5 text-sm font-semibold text-[#173528]"
               >
-                Get Started
+                {t("common.getStarted")}
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#173528] text-white">
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="h-4 w-4 rtl:rotate-180" />
                 </span>
               </Link>
             </div>
 
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/55">Explore</p>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/55">{t("footer.explore")}</p>
               <ul className="mt-4 space-y-2">
-                <li><Link href="/features" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Features</Link></li>
-                <li><Link href="/solutions" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Solutions</Link></li>
-                <li><Link href="/pricing" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Pricing</Link></li>
-                <li><Link href="/resources" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Resources</Link></li>
-                <li><Link href="/about" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">About</Link></li>
-                <li><Link href="/faq" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">FAQ</Link></li>
-                <li><Link href="/contact" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Contact</Link></li>
+                <li><Link href="/features" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.features")}</Link></li>
+                <li><Link href="/solutions" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.solutions")}</Link></li>
+                <li><Link href="/pricing" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.pricing")}</Link></li>
+                <li><Link href="/resources" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.resources")}</Link></li>
+                <li><Link href="/about" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.about")}</Link></li>
+                <li><Link href="/faq" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.faq")}</Link></li>
+                <li><Link href="/contact" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.contact")}</Link></li>
               </ul>
             </div>
 
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/55">Enterprises</p>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/55">{t("footer.enterprises")}</p>
               <ul className="mt-4 space-y-2">
-                <li><Link href="/features/crop-management" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Crop management</Link></li>
-                <li><Link href="/features/livestock-management" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Livestock</Link></li>
-                <li><Link href="/features/poultry" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Poultry</Link></li>
-                <li><Link href="/features/cattle" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Cattle</Link></li>
-                <li><Link href="/use-cases/feed-inventory" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Inventory</Link></li>
+                <li><Link href="/features/crop-management" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("footer.cropManagement")}</Link></li>
+                <li><Link href="/features/livestock-management" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("footer.livestock")}</Link></li>
+                <li><Link href="/features/poultry" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("footer.poultry")}</Link></li>
+                <li><Link href="/features/cattle" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("footer.cattle")}</Link></li>
+                <li><Link href="/use-cases/feed-inventory" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("footer.inventory")}</Link></li>
               </ul>
             </div>
 
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/55">Account</p>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/55">{t("footer.account")}</p>
               <ul className="mt-4 space-y-2">
-                <li><Link href="/get-started" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Get started</Link></li>
-                <li><Link href="/login" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Sign in</Link></li>
-                <li><Link href="/contact" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">Contact</Link></li>
+                <li><Link href="/get-started" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("common.getStarted")}</Link></li>
+                <li><Link href="/login" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("common.signIn")}</Link></li>
+                <li><Link href="/contact" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.contact")}</Link></li>
               </ul>
             </div>
           </div>
@@ -244,8 +241,8 @@ export function MarketingChrome({
           <div className="flex flex-col gap-3 border-t border-white/10 px-5 py-5 text-sm text-white/60 sm:flex-row sm:items-center sm:justify-between sm:px-10">
             <p>© {new Date().getFullYear()} {appName}</p>
             <div className="flex items-center gap-5">
-              <Link href="/privacy" className="transition hover:text-white">Privacy</Link>
-              <Link href="/terms" className="transition hover:text-white">Terms</Link>
+              <Link href="/privacy" className="transition hover:text-white">{t("common.privacy")}</Link>
+              <Link href="/terms" className="transition hover:text-white">{t("common.terms")}</Link>
             </div>
           </div>
         </div>

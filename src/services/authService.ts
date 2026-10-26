@@ -227,6 +227,16 @@ class AuthService {
         }
 
         if (response.status === 403) {
+          const code = errorData.error?.code
+          const apiMessage = errorData.error?.message || errorData.message
+          if (code === "TRIAL_ENDED") {
+            const error = new Error(
+              apiMessage || "The 30-day trial has ended. You can still view and export records."
+            )
+            ;(error as any).status = 403
+            ;(error as any).code = "TRIAL_ENDED"
+            throw error
+          }
           this.emit("permission_denied")
           const error = new Error("You do not have permission to perform this action.")
           ;(error as any).status = 403

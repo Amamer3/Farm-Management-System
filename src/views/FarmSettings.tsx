@@ -22,14 +22,14 @@ const ALL = [
 
 export default function FarmSettings() {
   const [open, setOpen] = useState(false)
-  const { farm, refresh, setCrops } = useFarm()
+  const { farm, refresh, setCrops, canWrite } = useFarm()
   const { user } = useUserRole()
   const { toast } = useToast()
   const [name, setName] = useState(farm?.name || "")
   const [location, setLocation] = useState(farm?.location || "")
   const [enabled, setEnabled] = useState<string[]>(farm?.enabledEnterprises || ["poultry"])
   const [crops, setSelectedCrops] = useState<string[]>(farm?.crops || [])
-  const canEdit = user?.role === "Admin" || user?.role === "Manager"
+  const canEdit = (user?.role === "Admin" || user?.role === "Manager") && canWrite
 
   useEffect(() => {
     if (!farm) return

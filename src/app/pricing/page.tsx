@@ -60,7 +60,7 @@ export default function PricingPage() {
         </section>
         <MarketingCta
           title="Start Managing Your Farm with Agrocyms"
-          body="Choose the subscription that matches your needs when you create your account."
+          body="Start the 30-day trial when you create your account. Subscribe when you are ready to keep writing records."
           label="View Plans and Subscribe"
           secondaryHref="/contact"
           secondaryLabel="Contact sales"

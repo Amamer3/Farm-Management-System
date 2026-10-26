@@ -23,24 +23,31 @@ export function getPublicApiBaseUrl(): string {
   return envUrl
 }
 
+export const APP_NAME = "Agrocyms"
+export const APP_TAGLINE = "One Platform. Every Farm. Smarter Agriculture."
+export const APP_TITLE = "Farm Management Software for Modern Agriculture | Agrocyms"
+export const APP_DESCRIPTION =
+  "Manage your farming operations with Agrocyms. Bring crop and livestock activities, farm resources, and business management together in one platform."
+export const LOGO_PATH = "/agrocyms-logo.png"
+
 export function getAppName(): string {
-  return requiredValue("NEXT_PUBLIC_APP_NAME", process.env.NEXT_PUBLIC_APP_NAME)
+  return APP_NAME
 }
 
 export function getAppTagline(): string {
-  return requiredValue("NEXT_PUBLIC_APP_TAGLINE", process.env.NEXT_PUBLIC_APP_TAGLINE)
+  return APP_TAGLINE
 }
 
 export function getAppTitle(): string {
-  return requiredValue("NEXT_PUBLIC_APP_TITLE", process.env.NEXT_PUBLIC_APP_TITLE)
+  return APP_TITLE
 }
 
 export function getAppDescription(): string {
-  return requiredValue("NEXT_PUBLIC_APP_DESCRIPTION", process.env.NEXT_PUBLIC_APP_DESCRIPTION)
+  return APP_DESCRIPTION
 }
 
 export function getLogoPath(): string {
-  return requiredValue("NEXT_PUBLIC_LOGO_PATH", process.env.NEXT_PUBLIC_LOGO_PATH)
+  return LOGO_PATH
 }
 
 export function getTwitterHandle(): string {

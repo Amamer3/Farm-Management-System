@@ -1,6 +1,7 @@
 "use client"
 
 import { Bell } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
@@ -13,18 +14,18 @@ import {
 import { useNotifications } from "@/hooks/useNotifications"
 import type { FarmNotification } from "@/services/notificationService"
 
-function timeAgo(value: string) {
+function timeAgo(value: string, t: ReturnType<typeof useTranslations>) {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return ""
   const delta = Date.now() - date.getTime()
   const minutes = Math.floor(delta / 60000)
-  if (minutes < 1) return "just now"
-  if (minutes < 60) return `${minutes}m ago`
+  if (minutes < 1) return t("justNow")
+  if (minutes < 60) return t("minutesAgo", { count: minutes })
   const hours = Math.floor(minutes / 60)
-  if (hours < 24) return `${hours}h ago`
+  if (hours < 24) return t("hoursAgo", { count: hours })
   const days = Math.floor(hours / 24)
-  if (days === 1) return "yesterday"
-  return `${days}d ago`
+  if (days === 1) return t("yesterday")
+  return t("daysAgo", { count: days })
 }
 
 function severityClass(severity: string) {
@@ -36,9 +37,11 @@ function severityClass(severity: string) {
 function NotificationRow({
   item,
   onOpen,
+  timeLabel,
 }: {
   item: FarmNotification
   onOpen: (item: FarmNotification) => void
+  timeLabel: string
 }) {
   return (
     <button
@@ -51,7 +54,7 @@ function NotificationRow({
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold leading-snug text-foreground">{item.title}</p>
           {item.body && <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">{item.body}</p>}
-          <p className="mt-1 text-[11px] text-muted-foreground">{timeAgo(item.createdAt)}</p>
+          <p className="mt-1 text-[11px] text-muted-foreground">{timeLabel}</p>
         </div>
       </div>
     </button>
@@ -59,6 +62,7 @@ function NotificationRow({
 }
 
 export function NotificationBell() {
+  const t = useTranslations("notifications")
   const router = useRouter()
   const { items, unread, loading, refresh, markRead, markAllRead } = useNotifications()
 
@@ -74,7 +78,7 @@ export function NotificationBell() {
       }}
     >
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative" aria-label="Notifications">
+        <Button variant="ghost" size="icon" className="relative" aria-label={t("title")}>
           <Bell className="w-5 h-5" />
           {unread > 0 && (
             <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 bg-red-500 rounded-full text-[10px] leading-none flex items-center justify-center text-white font-medium">
@@ -85,29 +89,29 @@ export function NotificationBell() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[min(24rem,calc(100vw-1.5rem))] p-0">
         <div className="flex items-center justify-between gap-3 px-3 py-2.5">
-          <DropdownMenuLabel className="p-0">Notifications</DropdownMenuLabel>
+          <DropdownMenuLabel className="p-0">{t("title")}</DropdownMenuLabel>
           {unread > 0 && (
             <button
               type="button"
               onClick={() => void markAllRead()}
               className="text-xs font-semibold text-primary hover:underline"
             >
-              Mark all read
+              {t("markAllRead")}
             </button>
           )}
         </div>
         <DropdownMenuSeparator className="m-0" />
         <div className="max-h-[min(24rem,70vh)] overflow-y-auto p-1.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {loading && items.length === 0 && (
-            <p className="px-3 py-8 text-center text-sm text-muted-foreground">Loading notifications…</p>
+            <p className="px-3 py-8 text-center text-sm text-muted-foreground">{t("loading")}</p>
           )}
           {!loading && items.length === 0 && (
             <p className="px-3 py-8 text-center text-sm text-muted-foreground">
-              No farm alerts yet. Low stock, treatments, and collections will show up here.
+              {t("empty")}
             </p>
           )}
           {items.map((item) => (
-            <NotificationRow key={item.id} item={item} onOpen={openItem} />
+            <NotificationRow key={item.id} item={item} onOpen={openItem} timeLabel={timeAgo(item.createdAt, t)} />
           ))}
         </div>
       </DropdownMenuContent>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useUserRole } from "@/contexts/UserRoleContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -27,6 +28,7 @@ export function ProtectedPage({
   requiredPermission,
   requiredPage,
 }: ProtectedPageProps) {
+  const t = useTranslations("common");
   const { isAuthenticated, isLoading } = useUserRole();
   const router = useRouter();
 
@@ -37,7 +39,7 @@ export function ProtectedPage({
   }, [isLoading, isAuthenticated, router]);
 
   if (!isAuthenticated) {
-    return <LoadingScreen message={isLoading ? "Loading..." : "Redirecting..."} />;
+    return <LoadingScreen message={isLoading ? t("loading") : t("redirecting")} />;
   }
 
   return (

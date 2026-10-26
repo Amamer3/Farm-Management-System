@@ -360,3 +360,15 @@
     @apply pb-safe-area-inset-bottom pl-safe-area-inset-left pr-safe-area-inset-right;
   }
 }
+
+html[lang="ar"] body {
+  font-family: var(--font-arabic), var(--font-inter), sans-serif;
+}
+
+html[lang="zh"] body {
+  font-family: var(--font-sc), var(--font-inter), sans-serif;
+}
+
+html[lang="hi"] body {
+  font-family: var(--font-devanagari), var(--font-inter), sans-serif;
+}

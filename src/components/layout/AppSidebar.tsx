@@ -24,23 +24,24 @@ import { Button } from "@/components/ui/button"
 import { useUserRole } from "@/contexts/UserRoleContext"
 import { useFarm } from "@/contexts/FarmContext"
 import { useToast } from "@/hooks/use-toast"
+import { useTranslations } from "next-intl"
 import { getAppName, getAppTagline } from "@/lib/env"
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: Home, enterprise: "" },
-  { name: "Birds Management", href: "/birds", icon: Bird, enterprise: "poultry" },
-  { name: "Egg Collection", href: "/eggs", icon: Egg, enterprise: "poultry" },
-  { name: "Small Ruminants", href: "/ruminants", icon: Users, enterprise: "small_ruminants" },
-  { name: "Cattle", href: "/cattle", icon: Users, enterprise: "cattle" },
-  { name: "Pigs", href: "/pigs", icon: Users, enterprise: "pigs" },
-  { name: "Feed Inventory", href: "/feed", icon: Package, enterprise: "" },
-  { name: "Medicine & Vaccines", href: "/medicine", icon: Syringe, enterprise: "" },
-  { name: "Reports", href: "/reports", icon: FileText, enterprise: "" },
-  { name: "Statistics", href: "/statistics", icon: BarChart3, enterprise: "poultry" },
-  { name: "Farm Settings", href: "/farm", icon: Settings, enterprise: "" },
-  { name: "User Management", href: "/users", icon: Users, enterprise: "" },
-  { name: "Profile", href: "/profile", icon: User, enterprise: "" },
-]
+  { key: "dashboard", href: "/", icon: Home, enterprise: "" },
+  { key: "birds", href: "/birds", icon: Bird, enterprise: "poultry" },
+  { key: "eggs", href: "/eggs", icon: Egg, enterprise: "poultry" },
+  { key: "ruminants", href: "/ruminants", icon: Users, enterprise: "small_ruminants" },
+  { key: "cattle", href: "/cattle", icon: Users, enterprise: "cattle" },
+  { key: "pigs", href: "/pigs", icon: Users, enterprise: "pigs" },
+  { key: "feed", href: "/feed", icon: Package, enterprise: "" },
+  { key: "medicine", href: "/medicine", icon: Syringe, enterprise: "" },
+  { key: "reports", href: "/reports", icon: FileText, enterprise: "" },
+  { key: "statistics", href: "/statistics", icon: BarChart3, enterprise: "poultry" },
+  { key: "farm", href: "/farm", icon: Settings, enterprise: "" },
+  { key: "users", href: "/users", icon: Users, enterprise: "" },
+  { key: "profile", href: "/profile", icon: User, enterprise: "" },
+] as const
 
 interface AppSidebarProps {
   isOpen: boolean
@@ -79,6 +80,7 @@ function readLogoFile(file: File): Promise<string> {
 }
 
 export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
+  const t = useTranslations()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const logoInputRef = useRef<HTMLInputElement>(null)
   const pathname = usePathname()
@@ -120,16 +122,16 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   const onLogoSelected = async (file?: File) => {
     if (!file || !canEditLogo) return
     if (!file.type.startsWith("image/")) {
-      toast({ title: "Choose an image file", variant: "destructive" })
+      toast({ title: t("sidebar.chooseImage"), variant: "destructive" })
       return
     }
     try {
       const logo = await readLogoFile(file)
       await setLogo(logo)
-      toast({ title: "Farm logo updated" })
+      toast({ title: t("sidebar.logoUpdated") })
     } catch (error) {
       toast({
-        title: error instanceof Error ? error.message : "Could not update logo",
+        title: error instanceof Error ? error.message : t("sidebar.logoFailed"),
         variant: "destructive",
       })
     }
@@ -150,13 +152,13 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex h-dvh max-h-dvh flex-col bg-card border-r border-border",
+          "fixed inset-y-0 start-0 z-50 flex h-dvh max-h-dvh flex-col bg-card border-e border-border",
           "transform transition-all duration-300 ease-in-out",
           "lg:sticky lg:top-0 lg:z-auto lg:h-screen lg:max-h-screen lg:translate-x-0 lg:shrink-0",
-          isOpen ? "translate-x-0 shadow-xl lg:shadow-none" : "-translate-x-full lg:translate-x-0",
+          isOpen ? "translate-x-0 shadow-xl lg:shadow-none" : "-translate-x-full rtl:translate-x-full lg:translate-x-0",
           isCollapsed ? "w-[5.5rem]" : "w-[min(16.5rem,85vw)] lg:w-64"
         )}
-        aria-label="Main navigation"
+        aria-label={t("sidebar.mainNav")}
       >
         {/* Header */}
         <div
@@ -181,8 +183,8 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               type="button"
               onClick={() => canEditLogo && logoInputRef.current?.click()}
               disabled={!canEditLogo}
-              title={canEditLogo ? (farm?.logo ? "Change farm logo" : "Add your farm logo") : "Farm logo"}
-              aria-label={canEditLogo ? (farm?.logo ? "Change farm logo" : "Add your farm logo") : "Farm logo"}
+              title={canEditLogo ? (farm?.logo ? t("sidebar.changeLogo") : t("sidebar.addLogo")) : t("sidebar.farmLogo")}
+              aria-label={canEditLogo ? (farm?.logo ? t("sidebar.changeLogo") : t("sidebar.addLogo")) : t("sidebar.farmLogo")}
               className={cn(
                 "h-16 w-16 shrink-0 rounded-md bg-transparent p-0",
                 canEditLogo && "cursor-pointer hover:opacity-90"
@@ -215,7 +217,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                 size="icon"
                 className="lg:hidden h-8 w-8"
                 onClick={onToggle}
-                aria-label="Close menu"
+                aria-label={t("common.closeMenu")}
               >
                 <X className="w-4 h-4" />
               </Button>
@@ -224,9 +226,9 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                 size="icon"
                 className="hidden lg:flex h-8 w-8"
                 onClick={() => setIsCollapsed(true)}
-                aria-label="Collapse sidebar"
+                aria-label={t("sidebar.collapse")}
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
               </Button>
             </div>
           )}
@@ -239,9 +241,9 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               size="icon"
               className="h-8 w-8"
               onClick={() => setIsCollapsed(false)}
-              aria-label="Expand sidebar"
+              aria-label={t("sidebar.expand")}
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </Button>
           </div>
         )}
@@ -256,12 +258,13 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
           {filteredNavigation.map((item) => {
             const isActive = pathname === item.href
             const Icon = item.icon
+            const name = t(`sidebar.${item.key}`)
 
             return (
-              <div key={item.name} className="relative group">
+              <div key={item.key} className="relative group">
                 <Link
                   href={item.href}
-                  title={isCollapsed ? item.name : undefined}
+                  title={isCollapsed ? name : undefined}
                   className={cn(
                     "sidebar-nav-item transition-all duration-200",
                     isActive && "active",
@@ -275,14 +278,14 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                 >
                   <Icon className="w-5 h-5 shrink-0" />
                   {!isCollapsed && (
-                    <span className="truncate text-sm">{item.name}</span>
+                    <span className="truncate text-sm">{name}</span>
                   )}
                 </Link>
 
                 {isCollapsed && (
-                  <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 hidden lg:block border border-border">
-                    {item.name}
-                    <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-popover" />
+                  <div className="absolute start-full top-1/2 -translate-y-1/2 ms-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 hidden lg:block border border-border">
+                    {name}
+                    <div className="absolute end-full top-1/2 -translate-y-1/2 border-4 border-transparent border-e-popover" />
                   </div>
                 )}
               </div>
@@ -301,7 +304,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
             <div className="flex justify-center">
               <div
                 className="w-9 h-9 bg-primary rounded-full flex items-center justify-center"
-                title={user?.name || "User"}
+                title={user?.name || t("common.user")}
               >
                 <span className="text-xs font-medium text-primary-foreground">
                   {user?.name?.charAt(0) || "U"}
@@ -315,10 +318,10 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-foreground truncate">
-                  {user?.name || user?.email?.split("@")[0] || "User"}
+                  {user?.name || user?.email?.split("@")[0] || t("common.user")}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">
-                  {user?.role || "Member"}
+                  {user?.role || t("common.member")}
                 </p>
               </div>
             </div>

@@ -99,7 +99,7 @@ export const HOME_STEPS = {
     {
       step: "1",
       title: "Create your account",
-      body: "Register for Agrocyms and complete the farm setup process.",
+      body: "Register for Agrocyms, set up the farm, and start a 30-day trial with no card required.",
     },
     {
       step: "2",
@@ -264,8 +264,8 @@ export const PRICING = {
   keywords: ["farm management software pricing", "Agrocyms plans", "agriculture software subscription"],
   eyebrow: "Pricing",
   headline: "Choose a Plan for Your Farming Business",
-  lead: "Find an Agrocyms subscription that fits your farming operations, team, and management needs. Whether you manage one farm or coordinate mixed enterprises, review how plans are presented in the product and choose the option that suits your business.",
-  note: "Prices, billing intervals, user limits, and included features are shown in the live product at signup. This page does not list placeholder prices.",
+  lead: "Every new farm gets 30 days of full access, with no card required. After the trial, choose a plan if you want to keep writing records.",
+  note: "New farms start with a 30-day trial of the full workspace. No card is required. When the month ends, records stay readable and exportable until you subscribe. Paid prices, billing intervals, and included features are confirmed when you subscribe — this page does not list placeholder prices.",
   plans: [
     {
       name: "Starter",
@@ -287,10 +287,11 @@ export const PRICING = {
     },
   ],
   checklist: [
-    "Subscription price and billing interval, shown at signup.",
+    "30 days of full access after farm setup, with no card required.",
+    "After the trial, unpaid farms can view and export records but cannot add or change them.",
+    "Subscription price and billing interval, confirmed when you subscribe.",
     "Included features and usage limits for the selected plan.",
     "Number of users the account supports.",
-    "Supported payment methods, where configured.",
     "Cancellation and renewal conditions in the terms.",
     "Available support through the contact page.",
   ],

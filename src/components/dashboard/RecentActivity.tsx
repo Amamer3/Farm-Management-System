@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl"
 import { Clock, Egg, Package, Syringe, AlertTriangle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
@@ -21,13 +22,14 @@ const iconMap: Record<string, typeof Egg> = {
 }
 
 export function RecentActivity({ activities }: RecentActivityProps) {
+  const t = useTranslations("dashboard")
   const activityList = Array.isArray(activities) ? activities : []
   
   return (
     <div className="chart-container min-w-0 self-start">
       <div className="mb-4">
-        <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">Recent Activity</h3>
-        <p className="text-sm text-muted-foreground">Latest farm operations</p>
+        <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">{t("recentActivity")}</h3>
+        <p className="text-sm text-muted-foreground">{t("latestOps")}</p>
       </div>
       
       <div className="space-y-2.5">
@@ -78,8 +80,8 @@ export function RecentActivity({ activities }: RecentActivityProps) {
           })
         ) : (
           <div className="rounded-xl border border-dashed bg-card p-6 text-center">
-            <p className="text-sm text-muted-foreground">No recent activity</p>
-            <p className="text-xs text-muted-foreground mt-1">Activity will appear here as operations are performed</p>
+            <p className="text-sm text-muted-foreground">{t("noActivity")}</p>
+            <p className="text-xs text-muted-foreground mt-1">{t("noActivityHint")}</p>
           </div>
         )}
       </div>
@@ -87,7 +89,7 @@ export function RecentActivity({ activities }: RecentActivityProps) {
       {activityList.length > 0 && (
         <div className="mt-4 pt-3 border-t border-border">
           <button className="text-sm font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1 group">
-            View all activity
+            {t("viewAllActivity")}
             <span className="group-hover:translate-x-1 transition-transform">→</span>
           </button>
         </div>

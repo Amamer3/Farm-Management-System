@@ -1,13 +1,28 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { PRODUCTION_SITE_URL } from "@/lib/env"
+import { LOCALE_COOKIE } from "@/i18n/config"
+import { localeFromCookie, negotiateLocale } from "@/i18n/negotiate"
 
 const canonicalHost = new URL(PRODUCTION_SITE_URL).host
+
+function withLocaleCookie(request: NextRequest, response: NextResponse) {
+  if (localeFromCookie(request.cookies.get(LOCALE_COOKIE)?.value)) {
+    return response
+  }
+  const locale = negotiateLocale(request.headers.get("accept-language"))
+  response.cookies.set(LOCALE_COOKIE, locale, {
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365,
+    sameSite: "lax",
+  })
+  return response
+}
 
 export function middleware(request: NextRequest) {
   const host = (request.headers.get("host") ?? "").split(":")[0].toLowerCase()
   if (host === "localhost" || host === "127.0.0.1") {
-    return NextResponse.next()
+    return withLocaleCookie(request, NextResponse.next())
   }
 
   const proto = (request.headers.get("x-forwarded-proto") ?? request.nextUrl.protocol.replace(":", ""))
@@ -17,7 +32,7 @@ export function middleware(request: NextRequest) {
   const isWww = host === `www.${canonicalHost}`
 
   if (!isHttp && !isWww) {
-    return NextResponse.next()
+    return withLocaleCookie(request, NextResponse.next())
   }
 
   const url = request.nextUrl.clone()
@@ -27,7 +42,7 @@ export function middleware(request: NextRequest) {
     url.hostname = canonicalHost
   }
 
-  return NextResponse.redirect(url, 301)
+  return withLocaleCookie(request, NextResponse.redirect(url, 301))
 }
 
 export const config = {

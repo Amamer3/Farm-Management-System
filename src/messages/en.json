@@ -1,0 +1,439 @@
+{
+  "language": {
+    "label": "Language"
+  },
+  "common": {
+    "appName": "Agrocyms",
+    "tagline": "One Platform. Every Farm. Smarter Agriculture.",
+    "getStarted": "Get Started",
+    "signIn": "Sign in",
+    "search": "Search",
+    "searchSite": "Search the site",
+    "searchPages": "Search pages",
+    "searchAllPages": "Search all pages",
+    "noSearchResults": "Nothing matches that.",
+    "skipToContent": "Skip to content",
+    "loading": "Loading...",
+    "redirecting": "Redirecting...",
+    "back": "Back",
+    "continue": "Continue",
+    "close": "Close",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "toggleMenu": "Toggle menu",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "retry": "Retry...",
+    "refreshPage": "Refresh Page",
+    "somethingWentWrong": "Something went wrong",
+    "unexpectedError": "An unexpected error occurred. Please try one of the options below.",
+    "errorDetails": "Error Details",
+    "unknownError": "Unknown error occurred",
+    "goHome": "Go home",
+    "reload": "Reload page",
+    "accessDenied": "Access Denied",
+    "noPermission": "You don't have permission to perform this action.",
+    "profile": "Profile",
+    "logout": "Logout",
+    "farmSettings": "Farm settings",
+    "user": "User",
+    "member": "Member",
+    "home": "Home"
+  },
+  "nav": {
+    "features": "Features",
+    "solutions": "Solutions",
+    "pricing": "Pricing",
+    "resources": "Resources",
+    "about": "About",
+    "faq": "FAQ",
+    "contact": "Contact"
+  },
+  "footer": {
+    "blurb": "One platform. Every farm. Smarter agriculture — crop and livestock operations in one workspace.",
+    "explore": "Explore",
+    "enterprises": "Enterprises",
+    "account": "Account",
+    "cropManagement": "Crop management",
+    "livestock": "Livestock",
+    "poultry": "Poultry",
+    "cattle": "Cattle",
+    "inventory": "Inventory"
+  },
+  "auth": {
+    "welcomeBack": "Welcome Back",
+    "toBrand": "to {name}",
+    "subtitle": "Sign in to continue managing your farming operations.",
+    "cardTitle": "Sign In",
+    "cardDescription": "Email address and password",
+    "email": "Email Address",
+    "emailPlaceholder": "you@farm.com",
+    "password": "Password",
+    "invalidEmail": "Please enter a valid email address",
+    "passwordMin": "Password must be at least 6 characters",
+    "loginFailed": "Login failed. Please check your credentials.",
+    "signingIn": "Signing in...",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "createAccount": "Create an account",
+    "sessionExpired": "Your session has expired. Please log in again."
+  },
+  "home": {
+    "records": "Your records",
+    "onePlatform": "One platform for every farm",
+    "farmerAlt": "Farmer standing in a greenhouse with arms crossed",
+    "fieldAlt": "Rows of green crops seen from above",
+    "produceAlt": "Green pears, grapes, and apples in a crate",
+    "faqTitle": "Questions farms ask before they switch.",
+    "seeEveryAnswer": "See every answer",
+    "hero": {
+      "eyebrow": "Smarter farm management starts here",
+      "title": "Manage Your Farm Smarter with Agrocyms",
+      "kicker": "Your farm is a business. Give it the tools to run like one.",
+      "body": "Agrocyms helps agricultural businesses bring their farming operations into one digital platform, making it easier to organize activities, monitor resources, and manage farm performance as the business grows.",
+      "primaryCta": "Get Started",
+      "secondaryCta": "Explore Features",
+      "support": "Create your account and discover a smarter way to manage your farming operations."
+    },
+    "platform": {
+      "eyebrow": "One platform",
+      "title": "Everything Your Farm Needs, Connected",
+      "lead": "Managing a farm involves people, resources, daily activities, and business decisions. Agrocyms brings farm management into a centralized digital environment so you can spend less time dealing with scattered records and more time focusing on your operations.",
+      "cards": {
+        "crops": {
+          "title": "Crop Management",
+          "body": "Organize crop production activities, follow planting records, and keep the crops this farm grows visible beside livestock work.",
+          "cta": "Explore Crop Management"
+        },
+        "livestock": {
+          "title": "Livestock Management",
+          "body": "Keep poultry, goats and sheep, cattle, and pigs organized with structured records for the enterprises this farm actually runs.",
+          "cta": "Explore Livestock Management"
+        },
+        "inventory": {
+          "title": "Inventory and Resources",
+          "body": "Track feed stock and medicine use on the same farm as the animals and fields they belong to.",
+          "cta": "Explore Resource Management"
+        },
+        "business": {
+          "title": "Farm Business Management",
+          "body": "Bring operational information together with team logins, reports, and production statistics so decisions sit on the same records.",
+          "cta": "Discover Agrocyms"
+        }
+      }
+    },
+    "audiences": {
+      "eyebrow": "Built for different farming businesses",
+      "title": "A Farm Management Platform That Grows with Your Business",
+      "lead": "Whether you manage a crop farm, a livestock operation, or multiple farming activities, Agrocyms is designed to support a more organized approach to agricultural business management.",
+      "items": {
+        "crops": {
+          "title": "Crop farming businesses",
+          "body": "Organize crop-related activities, maintain production records, and improve visibility across your growing operations."
+        },
+        "livestock": {
+          "title": "Livestock farming businesses",
+          "body": "Manage livestock-related records and daily activities through a more structured digital workflow."
+        },
+        "commercial": {
+          "title": "Commercial farms",
+          "body": "Build a clearer view of operational activities, resources, and business performance."
+        },
+        "mixed": {
+          "title": "Multi-enterprise farms",
+          "body": "Bring poultry, livestock, and crops into one coordinated workspace, with menus shaped around the mix and roles your account supports."
+        }
+      }
+    },
+    "value": {
+      "eyebrow": "Digital farm management",
+      "title": "Replace Scattered Records with Better Visibility",
+      "lead": "Farm management becomes more difficult when important information is spread across notebooks, spreadsheets, and disconnected tools. Agrocyms provides a centralized digital approach to organizing farm information and operations.",
+      "points": {
+        "organize": "Organize important farm information in one place.",
+        "consistency": "Improve consistency in day-to-day record keeping.",
+        "monitor": "Monitor farm activities and resources more systematically.",
+        "decisions": "Make business decisions using available operational information.",
+        "growth": "Establish a more structured foundation for business growth."
+      }
+    },
+    "steps": {
+      "eyebrow": "How it works",
+      "title": "Start Managing Your Farm in Three Steps",
+      "cta": "Create Your Agrocyms Account",
+      "items": {
+        "account": {
+          "step": "1",
+          "title": "Create your account",
+          "body": "Register for Agrocyms, set up the farm, and start a 30-day trial with no card required."
+        },
+        "farm": {
+          "step": "2",
+          "title": "Set up your farm",
+          "body": "Name the farm, choose enterprises and crops, and add the first owner account."
+        },
+        "operations": {
+          "step": "3",
+          "title": "Manage your operations",
+          "body": "Use the workspace to organize farming activities and keep records attached to this farm."
+        }
+      }
+    },
+    "close": {
+      "title": "Your Farm Deserves Better Management Tools",
+      "body": "Bring more structure, visibility, and consistency to your farming operations with Agrocyms. Create your account and take the next step toward smarter farm management.",
+      "primaryCta": "Get Started",
+      "secondaryCta": "View Pricing"
+    }
+  },
+  "faq": {
+    "pageTitle": "Farm management software FAQs",
+    "pageLead": "Answers about Agrocyms registration, farm management features, subscriptions, account setup, and using the platform.",
+    "items": {
+      "what": {
+        "question": "What is Agrocyms?",
+        "answer": "Agrocyms is a digital farm management platform designed to help agricultural businesses organize farm operations and manage farming information in one place."
+      },
+      "who": {
+        "question": "Who can use Agrocyms?",
+        "answer": "Agrocyms is intended for crop farming businesses, livestock operations, farm managers, and other agricultural businesses whose needs match the platform's available functionality. During setup you choose poultry, goats and sheep, cattle, pigs, crops, or a mix."
+      },
+      "account": {
+        "question": "How do I create an account?",
+        "answer": "Visit the registration page, enter the requested information, name the farm, choose enterprises and crops, and create the first owner account. Any additional onboarding steps are shown during signup."
+      },
+      "crops": {
+        "question": "Does Agrocyms support crop farming?",
+        "answer": "Yes. You can name the crops this farm grows during setup so field lists sit beside livestock records. See the crop management page for the production records currently supported."
+      },
+      "livestock": {
+        "question": "Does Agrocyms support livestock farming?",
+        "answer": "Yes. Poultry, goats and sheep, cattle, and pigs each have their own records inside the same farm account. Consult the livestock management page for the capabilities in the live application."
+      },
+      "multi": {
+        "question": "Can I manage more than one enterprise?",
+        "answer": "Yes. Setup lets you pick more than one enterprise. Poultry pages stay separate from cattle or crop lists, but they share the same login. Additional locations and user limits depend on what your account supports."
+      },
+      "free": {
+        "question": "Is Agrocyms free?",
+        "answer": "New farms get 30 days of full access with no card required. After the trial, the workspace stays readable and exportable until you subscribe. There is no unlimited free plan."
+      },
+      "cost": {
+        "question": "How much does Agrocyms cost?",
+        "answer": "The first 30 days are included with farm setup. After that, subscription prices depend on the published plans. Visit the pricing page or contact Agrocyms for current prices, billing intervals, and included features."
+      },
+      "subscribe": {
+        "question": "How do I subscribe?",
+        "answer": "Create your farm account and use the 30-day trial. When you are ready to keep writing records, contact Agrocyms or complete the payment process supported in the product."
+      },
+      "cancel": {
+        "question": "Can I cancel my subscription?",
+        "answer": "Cancellation is subject to the subscription terms displayed when you purchase. Consult the account billing area or the contact page for instructions."
+      },
+      "support": {
+        "question": "How do I contact support?",
+        "answer": "Use the contact page to ask about registration, subscriptions, or platform functionality."
+      },
+      "inventory": {
+        "question": "Does Agrocyms track feed and medicine?",
+        "answer": "Yes. Feed stock and medicine use sit on the same farm as the animals they belong to, so inventory is not a separate notebook."
+      }
+    }
+  },
+  "getStarted": {
+    "eyebrow": "Get started",
+    "title": "Get Started with Agrocyms",
+    "lead": "Create your account and start a 30-day trial of the full workspace. No card is required. After the month, records stay readable and exportable until you subscribe.",
+    "steps": {
+      "farm": "Farm",
+      "crops": "Crops",
+      "details": "Farm details",
+      "account": "Account"
+    },
+    "step0Title": "What does this farm do?",
+    "step0Lead": "Select every enterprise you want on the dashboard. You can change this later in Farm settings.",
+    "chooseEnterprise": "Choose at least one type of farm.",
+    "step1Title": "Which crops do you grow?",
+    "step1LeadCrops": "Crops is already part of this farm. Choose every crop it grows.",
+    "step1LeadLivestock": "Choose the crops, or continue without them if this farm only keeps livestock.",
+    "selectedFarmType": "Selected farm type:",
+    "chooseCrops": "Choose the crops this farm grows.",
+    "chooseCropsOrNone": "Choose crops, or select that this farm does not grow crops.",
+    "noCrops": "This farm has no crops",
+    "noCropsSelected": "This farm has no crops. Tap again to choose crops.",
+    "step2Title": "Name the farm",
+    "step2Lead": "This is the name your team will see across the system.",
+    "farmName": "Farm name",
+    "farmNamePlaceholder": "Greenfield Farm",
+    "location": "Location",
+    "locationPlaceholder": "Town or region",
+    "enterFarmName": "Enter the farm name.",
+    "dashboardWillCover": "Dashboard will cover",
+    "step3Title": "Create your account",
+    "step3Lead": "You will be the farm admin. Other people can be added after you sign in.",
+    "yourName": "Your name",
+    "email": "Email",
+    "password": "Password",
+    "passwordPlaceholder": "At least 6 characters",
+    "confirmPassword": "Confirm password",
+    "enterName": "Enter your name.",
+    "enterValidEmail": "Enter a valid email address.",
+    "passwordMin": "Password must be at least 6 characters.",
+    "passwordMismatch": "Passwords do not match.",
+    "couldNotCreate": "Could not create the account.",
+    "agreePrefix": "By creating an account, you agree to the",
+    "agreeMiddle": "and acknowledge the",
+    "creating": "Creating account",
+    "createFarmAccount": "Create farm account",
+    "alreadyHaveAccount": "Already have an account?"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "birds": "Birds Management",
+    "eggs": "Egg Collection",
+    "ruminants": "Small Ruminants",
+    "cattle": "Cattle",
+    "pigs": "Pigs",
+    "feed": "Feed Inventory",
+    "medicine": "Medicine & Vaccines",
+    "reports": "Reports",
+    "statistics": "Statistics",
+    "farm": "Farm Settings",
+    "users": "User Management",
+    "profile": "Profile",
+    "mainNav": "Main navigation",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar",
+    "changeLogo": "Change farm logo",
+    "addLogo": "Add your farm logo",
+    "farmLogo": "Farm logo",
+    "chooseImage": "Choose an image file",
+    "logoUpdated": "Farm logo updated",
+    "logoFailed": "Could not update logo"
+  },
+  "header": {
+    "searchPlaceholder": "Search...",
+    "closeSearch": "Close search"
+  },
+  "trial": {
+    "expired": "The 30-day trial has ended. You can still view and export records.",
+    "contactToSubscribe": "Contact Agrocyms",
+    "keepWriting": "to subscribe and keep writing.",
+    "remaining": "Full access for {days, plural, one {# day} other {# days}} of your 30-day trial. No card required. After that, records stay readable and exportable until you subscribe."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "loading": "Loading notifications…",
+    "empty": "No farm alerts yet. Low stock, treatments, and collections will show up here.",
+    "justNow": "just now",
+    "minutesAgo": "{count}m ago",
+    "hoursAgo": "{count}h ago",
+    "yesterday": "yesterday",
+    "daysAgo": "{count}d ago"
+  },
+  "dashboard": {
+    "title": "Farm Dashboard",
+    "defaultFocus": "Monitor your farm operations and key metrics",
+    "loading": "Loading dashboard data...",
+    "loadErrorTitle": "Unable to load dashboard data",
+    "loadErrorBody": "An error occurred while loading data. Please try refreshing the page.",
+    "totalBirds": "Total Birds",
+    "eggsToday": "Eggs Today",
+    "crops": "Crops",
+    "feedStock": "Feed Stock",
+    "healthAlerts": "Health Alerts",
+    "alertsActive": "{count} active",
+    "alertsNone": "None",
+    "open": "Open",
+    "recordsForFarm": "{name} records for this farm",
+    "farmFocus": "This farm's focus",
+    "poultryOff": "Poultry production stays off this dashboard because it is not part of the farm setup.",
+    "addEnterprises": "Add enterprises in Farm settings to shape this dashboard.",
+    "productionTrends": "Production Trends",
+    "eggProduction7d": "Egg production over the last 7 days",
+    "loadingChart": "Loading production chart...",
+    "chartError": "Unable to load production chart",
+    "noProduction": "No production data available",
+    "noProductionHint": "Production data will appear here once eggs are collected.",
+    "trendUp": "Increasing production trend",
+    "trendDown": "Decreasing production trend",
+    "trendStable": "Stable production trend",
+    "averageDaily": "Average Daily",
+    "totalPeriod": "Total Period",
+    "actual": "Actual",
+    "target": "Target",
+    "difference": "Difference",
+    "eggsUnit": "{count} eggs",
+    "performance": "Performance Overview",
+    "weekSummary": "This week's summary",
+    "loadingPerformance": "Loading performance data...",
+    "productionRate": "Production Rate",
+    "efficiency": "{value}% efficiency",
+    "vsLastWeek": "vs last week",
+    "feedEfficiency": "Feed Efficiency",
+    "kgPerEgg": "{value}kg per egg",
+    "targetKg": "Target: {value}kg",
+    "mortalityRate": "Mortality Rate",
+    "thisMonth": "{value}% this month",
+    "targetPct": "Target: <{value}%",
+    "noPerformance": "No performance data available",
+    "noPerformanceHint": "Performance metrics will appear here as data is collected",
+    "quickActions": "Quick Actions",
+    "quickActionsLead": "Common daily tasks",
+    "addBirdBatch": "Add Bird Batch",
+    "addBirdBatchHint": "Register new poultry batch",
+    "logFeed": "Log Feed Usage",
+    "logFeedHint": "Record feed consumption",
+    "recordEggs": "Record Eggs",
+    "recordEggsHint": "Log daily egg collection",
+    "ruminantsHint": "Open flock records",
+    "cattleHint": "Open the cattle herd",
+    "pigsHint": "Open pig records",
+    "medicineLog": "Medicine Log",
+    "medicineLogHint": "Track vaccinations",
+    "recentActivity": "Recent Activity",
+    "latestOps": "Latest farm operations",
+    "noActivity": "No recent activity",
+    "noActivityHint": "Activity will appear here as operations are performed",
+    "viewAllActivity": "View all activity"
+  },
+  "enterprises": {
+    "poultry": {
+      "label": "Poultry",
+      "description": "Layers, broilers, and daily egg collection"
+    },
+    "small_ruminants": {
+      "label": "Goats & sheep",
+      "description": "Flocks, births, weights, and sales"
+    },
+    "cattle": {
+      "label": "Cattle",
+      "description": "Herd records, milk, calving, and sales"
+    },
+    "pigs": {
+      "label": "Pigs",
+      "description": "Sties, farrowing, growth, and sales"
+    },
+    "crops": {
+      "label": "Crops",
+      "description": "Fields and the crops this farm grows"
+    }
+  },
+  "crops": {
+    "maize": "Maize",
+    "rice": "Rice",
+    "cassava": "Cassava",
+    "yam": "Yam",
+    "plantain": "Plantain",
+    "vegetables": "Vegetables",
+    "cocoa": "Cocoa",
+    "soybean": "Soybean",
+    "groundnut": "Groundnut",
+    "sorghum": "Sorghum"
+  }
+}

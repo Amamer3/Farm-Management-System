@@ -10,6 +10,7 @@ import {
   ReferenceLine,
 } from 'recharts'
 import { format, parseISO, isValid } from 'date-fns'
+import { useTranslations } from "next-intl"
 import { TrendingUp, TrendingDown, Minus, Egg } from 'lucide-react'
 
 interface ProductionChartProps {
@@ -105,6 +106,7 @@ const formatXAxisLabel = (tickItem: string) => {
 }
 
 export function ProductionChart({ data }: ProductionChartProps) {
+  const t = useTranslations("dashboard")
   const chartData = data || []
 
   const totalEggs = chartData.length > 0 ? chartData.reduce((sum, item) => sum + (item.eggs || 0), 0) : 0
@@ -131,17 +133,17 @@ export function ProductionChart({ data }: ProductionChartProps) {
     return (
       <div className="chart-container min-w-0">
         <div className="mb-4">
-          <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">Production Trends</h3>
-          <p className="text-sm text-muted-foreground">Egg production over the last 7 days</p>
+          <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">{t("productionTrends")}</h3>
+          <p className="text-sm text-muted-foreground">{t("eggProduction7d")}</p>
         </div>
         <div className="flex flex-col items-center justify-center h-48 sm:h-64 text-muted-foreground">
           <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mb-3">
             <Egg className="w-8 h-8 text-muted-foreground/50" />
           </div>
           <div className="text-center space-y-1 px-2">
-            <p className="text-sm font-medium text-foreground">No production data available</p>
+            <p className="text-sm font-medium text-foreground">{t("noProduction")}</p>
             <p className="text-xs text-muted-foreground max-w-xs">
-              Production data will appear here once eggs are collected.
+              {t("noProductionHint")}
             </p>
           </div>
         </div>
@@ -154,23 +156,23 @@ export function ProductionChart({ data }: ProductionChartProps) {
       <div className="mb-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
           <div className="min-w-0">
-            <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">Production Trends</h3>
-            <p className="text-sm text-muted-foreground">Egg production over the last 7 days</p>
+            <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">{t("productionTrends")}</h3>
+            <p className="text-sm text-muted-foreground">{t("eggProduction7d")}</p>
             <div className="flex items-center gap-2 text-sm mt-2">
               <TrendIcon className={`w-4 h-4 shrink-0 ${trendColor}`} />
               <span className={`font-medium ${trendColor}`}>
-                {trend === 'up' ? 'Increasing' : trend === 'down' ? 'Decreasing' : 'Stable'} production trend
+                {trend === 'up' ? t("trendUp") : trend === 'down' ? t("trendDown") : t("trendStable")}
               </span>
             </div>
           </div>
           <div className="flex items-center gap-3 sm:gap-4 shrink-0">
             <div className="text-left sm:text-right">
-              <p className="text-xs text-muted-foreground">Average Daily</p>
+              <p className="text-xs text-muted-foreground">{t("averageDaily")}</p>
               <p className="text-base sm:text-lg font-bold text-foreground">{avgEggs.toLocaleString()}</p>
             </div>
             <div className="h-8 sm:h-10 w-px bg-border" />
             <div className="text-left sm:text-right">
-              <p className="text-xs text-muted-foreground">Total Period</p>
+              <p className="text-xs text-muted-foreground">{t("totalPeriod")}</p>
               <p className="text-base sm:text-lg font-bold text-foreground">{totalEggs.toLocaleString()}</p>
             </div>
           </div>
@@ -294,18 +296,18 @@ export function ProductionChart({ data }: ProductionChartProps) {
         <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-xs sm:text-sm">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-sm bg-primary/40 border-2 border-primary"></div>
-            <span className="text-muted-foreground font-medium">Actual</span>
+            <span className="text-muted-foreground font-medium">{t("actual")}</span>
           </div>
           {hasTarget && (
             <div className="flex items-center gap-2">
               <div className="w-3 h-0.5 bg-muted-foreground opacity-60" style={{ borderBottom: '2px dashed' }}></div>
-              <span className="text-muted-foreground font-medium">Target</span>
+              <span className="text-muted-foreground font-medium">{t("target")}</span>
             </div>
           )}
           {avgEggs > 0 && (
             <div className="flex items-center gap-2">
               <div className="w-3 h-px bg-muted-foreground opacity-50" style={{ borderBottom: '1px dashed' }}></div>
-              <span className="text-muted-foreground font-medium">Average</span>
+              <span className="text-muted-foreground font-medium">{t("averageDaily")}</span>
             </div>
           )}
         </div>

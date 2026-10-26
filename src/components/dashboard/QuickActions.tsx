@@ -1,12 +1,14 @@
 "use client"
 
 import { Plus, Package, Egg, Syringe, Users } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import { useUserRole } from "@/contexts/UserRoleContext"
 import { useFarm } from "@/contexts/FarmContext"
 
 export function QuickActions() {
+  const t = useTranslations()
   const router = useRouter()
   const { toast } = useToast()
   const { hasPermission } = useUserRole()
@@ -16,65 +18,65 @@ export function QuickActions() {
 
   const showPermissionError = () => {
     toast({
-      title: "Access Denied",
-      description: "You don't have permission to perform this action.",
+      title: t("common.accessDenied"),
+      description: t("common.noPermission"),
       variant: "destructive"
     })
   }
 
   const actions = [
     showPoultry ? {
-      label: "Add Bird Batch",
+      label: t("dashboard.addBirdBatch"),
       icon: Plus,
-      description: "Register new poultry batch",
+      description: t("dashboard.addBirdBatchHint"),
       variant: "default" as const,
       onClick: () => hasPermission("manage_birds") ? router.push("/birds") : showPermissionError(),
       permission: "manage_birds"
     } : null,
     {
-      label: "Log Feed Usage",
+      label: t("dashboard.logFeed"),
       icon: Package,
-      description: "Record feed consumption",
+      description: t("dashboard.logFeedHint"),
       variant: "secondary" as const,
       onClick: () => hasPermission("manage_feed") ? router.push("/feed") : showPermissionError(),
       permission: "manage_feed"
     },
     showPoultry ? {
-      label: "Record Eggs",
+      label: t("dashboard.recordEggs"),
       icon: Egg,
-      description: "Log daily egg collection",
+      description: t("dashboard.recordEggsHint"),
       variant: "secondary" as const,
       onClick: () => hasPermission("collect_eggs") ? router.push("/eggs") : showPermissionError(),
       permission: "collect_eggs"
     } : null,
     enterprises?.includes("small_ruminants") ? {
-      label: "Small ruminants",
+      label: t("enterprises.small_ruminants.label"),
       icon: Users,
-      description: "Open flock records",
+      description: t("dashboard.ruminantsHint"),
       variant: "default" as const,
       onClick: () => router.push("/ruminants"),
       permission: "view_dashboard"
     } : null,
     enterprises?.includes("cattle") ? {
-      label: "Cattle",
+      label: t("enterprises.cattle.label"),
       icon: Users,
-      description: "Open the cattle herd",
+      description: t("dashboard.cattleHint"),
       variant: "default" as const,
       onClick: () => router.push("/cattle"),
       permission: "view_dashboard"
     } : null,
     enterprises?.includes("pigs") ? {
-      label: "Pigs",
+      label: t("enterprises.pigs.label"),
       icon: Users,
-      description: "Open pig records",
+      description: t("dashboard.pigsHint"),
       variant: "default" as const,
       onClick: () => router.push("/pigs"),
       permission: "view_dashboard"
     } : null,
     {
-      label: "Medicine Log",
+      label: t("dashboard.medicineLog"),
       icon: Syringe,
-      description: "Track vaccinations",
+      description: t("dashboard.medicineLogHint"),
       variant: "secondary" as const,
       onClick: () => hasPermission("manage_medicine") ? router.push("/medicine") : showPermissionError(),
       permission: "manage_medicine"
@@ -84,8 +86,8 @@ export function QuickActions() {
   return (
     <div className="chart-container">
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-foreground mb-1">Quick Actions</h3>
-        <p className="text-sm text-muted-foreground">Common daily tasks</p>
+        <h3 className="text-lg font-semibold text-foreground mb-1">{t("dashboard.quickActions")}</h3>
+        <p className="text-sm text-muted-foreground">{t("dashboard.quickActionsLead")}</p>
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

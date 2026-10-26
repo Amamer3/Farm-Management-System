@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useTranslations } from "next-intl"
 import { Bird, Egg, Package, AlertTriangle, TrendingUp, Activity, Sprout } from "lucide-react"
 import { AppSidebar } from "@/components/layout/AppSidebar"
 import { AppHeader } from "@/components/layout/AppHeader"
@@ -12,10 +13,11 @@ import { RecentActivity } from "@/components/dashboard/RecentActivity"
 import { Button } from "@/components/ui/button"
 import { useUserRole } from "@/contexts/UserRoleContext"
 import { useFarm } from "@/contexts/FarmContext"
-import { cropLabel, enterpriseLabel, farmFocusLine } from "@/lib/farmProfile"
+import { farmFocusLine } from "@/lib/farmProfile"
 import { useDashboardOverview, useDashboardActivity, useDashboardPerformance, useDashboardAlerts, useProductionChart } from "@/hooks/useApiData"
 
 const Index = () => {
+  const t = useTranslations()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { isAuthenticated } = useUserRole()
   const { farm } = useFarm()
@@ -23,10 +25,12 @@ const Index = () => {
   const crops = farm?.crops || []
   const showPoultry = !enterprises || enterprises.length === 0 || enterprises.includes("poultry")
   const livestock = [
-    { id: "small_ruminants", href: "/ruminants", label: "Small ruminants" },
-    { id: "cattle", href: "/cattle", label: "Cattle" },
-    { id: "pigs", href: "/pigs", label: "Pigs" },
+    { id: "small_ruminants", href: "/ruminants" },
+    { id: "cattle", href: "/cattle" },
+    { id: "pigs", href: "/pigs" },
   ].filter((item) => enterprises?.includes(item.id))
+  const cropName = (id: string) => t(`crops.${id}`)
+  const enterpriseName = (id: string) => t(`enterprises.${id}.label`)
    
   // Only fetch dashboard data if user is authenticated
   const { data: overview, loading: overviewLoading, error: overviewError } = useDashboardOverview()
@@ -49,8 +53,8 @@ const Index = () => {
         <main className="flex-1 responsive-container responsive-spacing mobile-content overflow-y-auto">
           <div className="responsive-flex items-start sm:items-center justify-between mb-6">
             <div className="flex-1">
-              <h1 className="responsive-title text-foreground pt-10">{farm?.name || "Farm Dashboard"}</h1>
-              <p className="responsive-subtitle">{farmFocusLine(enterprises, crops)}</p>
+              <h1 className="responsive-title text-foreground pt-10">{farm?.name || t("dashboard.title")}</h1>
+              <p className="responsive-subtitle">{farmFocusLine(enterprises, crops, enterpriseName, cropName) || t("dashboard.defaultFocus")}</p>
             </div>
           </div>
 
@@ -58,7 +62,7 @@ const Index = () => {
           {isLoading && !hasError && (
             <div className="flex items-center justify-center py-8">
               <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-              <span className="ml-2 text-muted-foreground">Loading dashboard data...</span>
+              <span className="ms-2 text-muted-foreground">{t("dashboard.loading")}</span>
             </div>
           )}
 
@@ -68,9 +72,9 @@ const Index = () => {
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-destructive mt-0.5" />
                 <div className="flex-1">
-                  <h3 className="font-semibold text-destructive mb-1">Unable to load dashboard data</h3>
+                  <h3 className="font-semibold text-destructive mb-1">{t("dashboard.loadErrorTitle")}</h3>
                   <p className="text-sm text-muted-foreground">
-                    {overviewError || activitiesError || performanceError || alertsError || 'An error occurred while loading data. Please try refreshing the page.'}
+                    {overviewError || activitiesError || performanceError || alertsError || t("dashboard.loadErrorBody")}
                   </p>
                   <Button 
                     variant="outline" 
@@ -78,7 +82,7 @@ const Index = () => {
                     className="mt-3"
                     onClick={() => window.location.reload()}
                   >
-                    Refresh Page
+                    {t("common.refreshPage")}
                   </Button>
                 </div>
               </div>
@@ -90,7 +94,7 @@ const Index = () => {
             <div className="responsive-card-grid mb-8 gap-6">
               {showPoultry && (
                 <MetricCard
-                  title="Total Birds"
+                  title={t("dashboard.totalBirds")}
                   value={(overview.totalBirds ?? overview.activeBirds ?? 0).toLocaleString()}
                   change={{ value: "+0%", trend: "up" }}
                   icon={Bird}
@@ -99,7 +103,7 @@ const Index = () => {
               )}
               {showPoultry && (
                 <MetricCard
-                  title="Eggs Today"
+                  title={t("dashboard.eggsToday")}
                   value={(overview.todayEggCount ?? overview.todayEggs ?? 0).toLocaleString()}
                   change={{ value: "+0%", trend: "up" }}
                   icon={Egg}
@@ -108,24 +112,24 @@ const Index = () => {
               )}
               {crops.length > 0 && (
                 <MetricCard
-                  title="Crops"
+                  title={t("dashboard.crops")}
                   value={String(crops.length)}
-                  change={{ value: crops.map(cropLabel).slice(0, 2).join(", "), trend: "up" }}
+                  change={{ value: crops.map(cropName).slice(0, 2).join(", "), trend: "up" }}
                   icon={Sprout}
                   gradient="green"
                 />
               )}
               <MetricCard
-                title="Feed Stock"
+                title={t("dashboard.feedStock")}
                 value={(overview.feedItems ?? overview.feedStock ?? 0).toLocaleString()}
                 change={{ value: "+0%", trend: "up" }}
                 icon={Package}
                 gradient="orange"
               />
               <MetricCard
-                title="Health Alerts"
+                title={t("dashboard.healthAlerts")}
                 value={alerts?.length?.toString() || "0"}
-                change={{ value: alerts?.length > 0 ? `${alerts.length} active` : "None", trend: alerts?.length > 0 ? "down" : "up" }}
+                change={{ value: alerts?.length > 0 ? t("dashboard.alertsActive", { count: alerts.length }) : t("dashboard.alertsNone"), trend: alerts?.length > 0 ? "down" : "up" }}
                 icon={AlertTriangle}
                 gradient={alerts?.length > 0 ? "red" : "green"}
               />
@@ -137,9 +141,9 @@ const Index = () => {
             <div className="grid gap-3 sm:grid-cols-3 mb-8">
               {livestock.map((item) => (
                 <Link key={item.id} href={item.href} className="rounded-xl border bg-card p-4 hover:border-primary/40">
-                  <p className="text-sm text-muted-foreground">Open</p>
-                  <p className="font-semibold">{item.label}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">{enterpriseLabel(item.id)} records for this farm</p>
+                  <p className="text-sm text-muted-foreground">{t("dashboard.open")}</p>
+                  <p className="font-semibold">{enterpriseName(item.id)}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{t("dashboard.recordsForFarm", { name: enterpriseName(item.id) })}</p>
                 </Link>
               ))}
             </div>
@@ -148,49 +152,49 @@ const Index = () => {
           <div className="responsive-chart-grid gap-6 mb-8">
             {!showPoultry ? (
               <div className="chart-container">
-                <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">This farm&apos;s focus</h3>
+                <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">{t("dashboard.farmFocus")}</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Poultry production stays off this dashboard because it is not part of the farm setup.
+                  {t("dashboard.poultryOff")}
                 </p>
                 <div className="space-y-2">
                   {livestock.map((item) => (
                     <Link key={item.id} href={item.href} className="block rounded-xl border px-4 py-3 text-sm font-medium hover:border-primary/40">
-                      {item.label}
+                      {enterpriseName(item.id)}
                     </Link>
                   ))}
                   {crops.length > 0 && (
                     <div className="rounded-xl border px-4 py-3 text-sm">
-                      <p className="font-medium">Crops</p>
-                      <p className="mt-1 text-muted-foreground">{crops.map(cropLabel).join(", ")}</p>
+                      <p className="font-medium">{t("dashboard.crops")}</p>
+                      <p className="mt-1 text-muted-foreground">{crops.map(cropName).join(", ")}</p>
                     </div>
                   )}
                   {livestock.length === 0 && crops.length === 0 && (
-                    <p className="text-sm text-muted-foreground">Add enterprises in Farm settings to shape this dashboard.</p>
+                    <p className="text-sm text-muted-foreground">{t("dashboard.addEnterprises")}</p>
                   )}
                 </div>
               </div>
             ) : chartLoading ? (
               <div className="chart-container">
                 <div className="mb-4">
-                  <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">Production Trends</h3>
-                  <p className="text-sm text-muted-foreground">Egg production over the last 7 days</p>
+                  <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">{t("dashboard.productionTrends")}</h3>
+                  <p className="text-sm text-muted-foreground">{t("dashboard.eggProduction7d")}</p>
                 </div>
                 <div className="flex flex-col items-center justify-center h-48 sm:h-64">
                   <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mb-4" />
-                  <p className="text-sm text-muted-foreground">Loading production chart...</p>
+                  <p className="text-sm text-muted-foreground">{t("dashboard.loadingChart")}</p>
                 </div>
               </div> 
             ) : chartError ? (
               <div className="chart-container">
                 <div className="mb-4">
-                  <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">Production Trends</h3>
-                  <p className="text-sm text-muted-foreground">Egg production over the last 7 days</p>
+                  <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">{t("dashboard.productionTrends")}</h3>
+                  <p className="text-sm text-muted-foreground">{t("dashboard.eggProduction7d")}</p>
                 </div>
                 <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-6 text-center">
                   <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-3">
                     <AlertTriangle className="h-6 w-6 text-destructive" />
                   </div>
-                  <p className="text-sm font-medium text-destructive mb-1">Unable to load production chart</p>
+                  <p className="text-sm font-medium text-destructive mb-1">{t("dashboard.chartError")}</p>
                   <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">{chartError}</p>
                   <Button
                     variant="outline"
@@ -198,7 +202,7 @@ const Index = () => {
                     onClick={() => window.location.reload()}
                     className="border-destructive/20 hover:bg-destructive/10"
                   >
-                    Retry...
+                    {t("common.retry")}
                   </Button>
                 </div>
               </div>
@@ -233,14 +237,14 @@ const Index = () => {
             {/* Performance overview */}
             <div className="chart-container min-w-0 self-start">
               <div className="mb-4">
-                <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">Performance Overview</h3>
-                <p className="text-sm text-muted-foreground">This week's summary</p>
+                <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">{t("dashboard.performance")}</h3>
+                <p className="text-sm text-muted-foreground">{t("dashboard.weekSummary")}</p>
               </div>
               
               {performanceLoading ? (
                 <div className="flex items-center justify-center py-8">
                   <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                  <span className="ml-2 text-sm text-muted-foreground">Loading performance data...</span>
+                  <span className="ms-2 text-sm text-muted-foreground">{t("dashboard.loadingPerformance")}</span>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -254,7 +258,7 @@ const Index = () => {
                             <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 dark:text-green-400" />
                           </div>
                           <div className="min-w-0">
-                            <p className="font-semibold text-sm sm:text-base text-foreground">Production Rate</p>
+                            <p className="font-semibold text-sm sm:text-base text-foreground">{t("dashboard.productionRate")}</p>
                             <p className="text-xs text-muted-foreground">{performance.productionRate.efficiency || '0'}% efficiency</p>
                           </div>
                         </div>
@@ -285,7 +289,7 @@ const Index = () => {
                             <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400" />
                           </div>
                           <div className="min-w-0">
-                            <p className="font-semibold text-sm sm:text-base text-foreground">Feed Efficiency</p>
+                            <p className="font-semibold text-sm sm:text-base text-foreground">{t("dashboard.feedEfficiency")}</p>
                             <p className="text-xs text-muted-foreground">{performance.feedEfficiency.value || '0'}kg per egg</p>
                           </div>
                         </div>
@@ -320,7 +324,7 @@ const Index = () => {
                             <Bird className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600 dark:text-orange-400" />
                           </div>
                           <div className="min-w-0">
-                            <p className="font-semibold text-sm sm:text-base text-foreground">Mortality Rate</p>
+                            <p className="font-semibold text-sm sm:text-base text-foreground">{t("dashboard.mortalityRate")}</p>
                             <p className="text-xs text-muted-foreground">{performance.mortalityRate.value || '0'}% this month</p>
                           </div>
                         </div>
@@ -350,8 +354,8 @@ const Index = () => {
                       <div className="w-12 h-12 rounded-full bg-muted/50 flex items-center justify-center mx-auto mb-3">
                         <Activity className="w-6 h-6 text-muted-foreground/50" />
                       </div>
-                      <p className="text-sm font-medium text-foreground mb-1">No performance data available</p>
-                      <p className="text-xs text-muted-foreground">Performance metrics will appear here as data is collected</p>
+                      <p className="text-sm font-medium text-foreground mb-1">{t("dashboard.noPerformance")}</p>
+                      <p className="text-xs text-muted-foreground">{t("dashboard.noPerformanceHint")}</p>
                     </div>
                   )}
                 </div>

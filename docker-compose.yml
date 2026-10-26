@@ -5,11 +5,6 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME:-Agrocyms}
-        NEXT_PUBLIC_APP_TAGLINE: ${NEXT_PUBLIC_APP_TAGLINE:-One Platform. Every Farm. Smarter Agriculture.}
-        NEXT_PUBLIC_APP_TITLE: ${NEXT_PUBLIC_APP_TITLE:-Farm Management Software for Modern Agriculture | Agrocyms}
-        NEXT_PUBLIC_APP_DESCRIPTION: ${NEXT_PUBLIC_APP_DESCRIPTION:-Manage your farming operations with Agrocyms. Bring crop and livestock activities, farm resources, and business management together in one platform.}
-        NEXT_PUBLIC_LOGO_PATH: ${NEXT_PUBLIC_LOGO_PATH:-/agrocyms-logo.png}
         NEXT_PUBLIC_TWITTER_HANDLE: ${NEXT_PUBLIC_TWITTER_HANDLE:-@agrocyms}
         NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://agrocyms.com}
         NEXT_PUBLIC_SITE_LOCALE: ${NEXT_PUBLIC_SITE_LOCALE:-en}

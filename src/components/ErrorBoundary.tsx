@@ -1,6 +1,7 @@
 "use client";
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { useTranslations } from "next-intl";
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -72,76 +73,95 @@ class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
-      // Use custom fallback if provided
       if (this.props.fallback) {
         return this.props.fallback;
       }
 
-      // Default error UI
       return (
-        <div className="min-h-screen bg-background flex items-center justify-center p-4">
-          <Card className="w-full max-w-2xl">
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5 text-destructive" />
-                <CardTitle>Something went wrong</CardTitle>
-              </div>
-              <CardDescription>
-                An unexpected error occurred. Please try one of the options below.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Alert variant="destructive">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Error Details</AlertTitle>
-                <AlertDescription className="mt-2">
-                  <p className="font-mono text-sm break-all">
-                    {this.state.error?.message || 'Unknown error occurred'}
-                  </p>
-                  {process.env.NODE_ENV === "development" && this.state.errorInfo && (
-                    <details className="mt-2">
-                      <summary className="cursor-pointer text-sm font-semibold">
-                        Stack Trace (Development Only)
-                      </summary>
-                      <pre className="mt-2 text-xs overflow-auto max-h-48 p-2 bg-muted rounded">
-                        {this.state.error?.stack}
-                        {'\n\n'}
-                        {this.state.errorInfo.componentStack}
-                      </pre>
-                    </details>
-                  )}
-                </AlertDescription>
-              </Alert>
-
-              <div className="flex flex-wrap gap-2">
-                <Button onClick={this.handleReset} variant="outline">
-                  <RefreshCw className="mr-2 h-4 w-4" />
-                  Try Again
-                </Button>
-                <Button onClick={this.handleReload} variant="outline">
-                  <RefreshCw className="mr-2 h-4 w-4" />
-                  Reload Page
-                </Button>
-                <Button onClick={this.handleGoHome} variant="default">
-                  <Home className="mr-2 h-4 w-4" />
-                  Go Home
-                </Button>
-              </div>
-
-              {process.env.NODE_ENV === "development" && (
-                <div className="mt-4 p-3 bg-muted rounded text-sm text-muted-foreground">
-                  <p className="font-semibold mb-1">Development Mode:</p>
-                  <p>This error boundary is only visible in development. In production, users will see a more user-friendly message.</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <ErrorFallback
+          message={this.state.error?.message}
+          stack={this.state.error?.stack}
+          componentStack={this.state.errorInfo?.componentStack}
+          onReset={this.handleReset}
+          onReload={this.handleReload}
+          onGoHome={this.handleGoHome}
+        />
       );
     }
 
     return this.props.children;
   }
+}
+
+function ErrorFallback({
+  message,
+  stack,
+  componentStack,
+  onReset,
+  onReload,
+  onGoHome,
+}: {
+  message?: string
+  stack?: string
+  componentStack?: string
+  onReset: () => void
+  onReload: () => void
+  onGoHome: () => void
+}) {
+  const t = useTranslations("common")
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <Card className="w-full max-w-2xl">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-destructive" />
+            <CardTitle>{t("somethingWentWrong")}</CardTitle>
+          </div>
+          <CardDescription>
+            {t("unexpectedError")}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Alert variant="destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>{t("errorDetails")}</AlertTitle>
+            <AlertDescription className="mt-2">
+              <p className="font-mono text-sm break-all">
+                {message || t("unknownError")}
+              </p>
+              {process.env.NODE_ENV === "development" && componentStack && (
+                <details className="mt-2">
+                  <summary className="cursor-pointer text-sm font-semibold">
+                    Stack Trace (Development Only)
+                  </summary>
+                  <pre className="mt-2 text-xs overflow-auto max-h-48 p-2 bg-muted rounded">
+                    {stack}
+                    {'\n\n'}
+                    {componentStack}
+                  </pre>
+                </details>
+              )}
+            </AlertDescription>
+          </Alert>
+
+          <div className="flex flex-wrap gap-2">
+            <Button onClick={onReset} variant="outline">
+              <RefreshCw className="me-2 h-4 w-4" />
+              {t("retry")}
+            </Button>
+            <Button onClick={onReload} variant="outline">
+              <RefreshCw className="me-2 h-4 w-4" />
+              {t("reload")}
+            </Button>
+            <Button onClick={onGoHome} variant="default">
+              <Home className="me-2 h-4 w-4" />
+              {t("goHome")}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
 }
 
 export default ErrorBoundary;

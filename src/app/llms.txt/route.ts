@@ -32,7 +32,7 @@ ${name} is farm management software for crop and livestock businesses. Farms cho
 
 ## Product
 
-${name} tracks bird batches, egg collection, feed and medicine stock, livestock events, crop lists, team logins, reports, and statistics. Authenticated workspace routes are private and should not be treated as public documentation. Subscription prices are shown in the product at signup.
+${name} tracks bird batches, egg collection, feed and medicine stock, livestock events, crop lists, team logins, reports, and statistics. New farms receive a 30-day trial of the full workspace with no card required. After the trial, records stay readable and exportable until the farm subscribes. Authenticated workspace routes are private and should not be treated as public documentation.
 `
 
   return new Response(body, {

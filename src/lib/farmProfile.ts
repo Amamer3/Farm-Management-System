@@ -199,15 +199,20 @@ export function enabledEnterprisesForProfile(enterprises: string[]) {
   return ["poultry"]
 }
 
-export function farmFocusLine(enterprises: string[] | undefined, crops: string[] | undefined) {
+export function farmFocusLine(
+  enterprises: string[] | undefined,
+  crops: string[] | undefined,
+  labelEnterprise: (id: string) => string = enterpriseLabel,
+  labelCrop: (id: string) => string = cropLabel,
+) {
   const parts = (enterprises || [])
     .filter((id) => id !== "crops")
-    .map(enterpriseLabel)
+    .map(labelEnterprise)
   if ((crops || []).length) {
-    parts.push(crops!.map(cropLabel).join(", "))
+    parts.push(crops!.map(labelCrop).join(", "))
   } else if ((enterprises || []).includes("crops")) {
-    parts.push("Crops")
+    parts.push(labelEnterprise("crops"))
   }
-  if (!parts.length) return "Monitor your farm operations and key metrics"
+  if (!parts.length) return ""
   return parts.join(" · ")
 }

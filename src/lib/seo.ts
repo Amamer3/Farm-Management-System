@@ -350,11 +350,21 @@ export function softwareJsonLd(): JsonLd {
       audienceType: "Farm owners and farm staff",
     },
     provider: { "@id": organizationId() },
-    offers: {
-      "@type": "Offer",
-      url: absoluteUrl("/pricing"),
-      availability: "https://schema.org/OnlineOnly",
-    },
+    offers: [
+      {
+        "@type": "Offer",
+        name: "30-day trial",
+        price: "0",
+        priceCurrency: "USD",
+        description: "30 days of full farm workspace access with no card required. After the trial, records stay readable and exportable until you subscribe.",
+        url: absoluteUrl("/get-started"),
+      },
+      {
+        "@type": "Offer",
+        url: absoluteUrl("/pricing"),
+        availability: "https://schema.org/OnlineOnly",
+      },
+    ],
     featureList: [
       "Poultry and egg collection records",
       "Goat, sheep, cattle, and pig herd events",

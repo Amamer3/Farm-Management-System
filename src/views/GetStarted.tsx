@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, ArrowRight, Check, Eye, EyeOff, Loader2 } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher"
 import { useUserRole } from "@/contexts/UserRoleContext"
 import { authService } from "@/services/authService"
 import {
@@ -11,19 +13,24 @@ import {
   FARM_ENTERPRISES,
   clearPendingFarm,
   clearSignupDraft,
-  cropLabel,
-  enterpriseLabel,
   readSignupDraft,
   writePendingFarm,
   writeSignupDraft,
 } from "@/lib/farmProfile"
 import { getAppName, getLogoPath } from "@/lib/env"
 
-const steps = ["Farm", "Crops", "Farm details", "Account"]
-
 export default function GetStarted() {
+  const t = useTranslations()
   const { register } = useUserRole()
   const router = useRouter()
+  const steps = [
+    t("getStarted.steps.farm"),
+    t("getStarted.steps.crops"),
+    t("getStarted.steps.details"),
+    t("getStarted.steps.account"),
+  ]
+  const enterpriseName = (id: string) => t(`enterprises.${id}.label`)
+  const cropName = (id: string) => t(`crops.${id}`)
   const [step, setStep] = useState(0)
   const [enterprises, setEnterprises] = useState<string[]>([])
   const [crops, setCrops] = useState<string[]>([])
@@ -95,7 +102,7 @@ export default function GetStarted() {
   const goNext = () => {
     setError(null)
     if (step === 0 && enterprises.length === 0) {
-      setError("Choose at least one type of farm.")
+      setError(t("getStarted.chooseEnterprise"))
       return
     }
     if (step === 0) {
@@ -108,16 +115,16 @@ export default function GetStarted() {
     }
     if (step === 1) {
       if (growsCrops && crops.length === 0) {
-        setError("Choose the crops this farm grows.")
+        setError(t("getStarted.chooseCrops"))
         return
       }
       if (!growsCrops && !noCrops && crops.length === 0) {
-        setError("Choose crops, or select that this farm does not grow crops.")
+        setError(t("getStarted.chooseCropsOrNone"))
         return
       }
     }
     if (step === 2 && farmName.trim().length < 2) {
-      setError("Enter the farm name.")
+      setError(t("getStarted.enterFarmName"))
       return
     }
     setStep((current) => Math.min(current + 1, steps.length - 1))
@@ -126,19 +133,19 @@ export default function GetStarted() {
   const submit = async () => {
     setError(null)
     if (ownerName.trim().length < 2) {
-      setError("Enter your name.")
+      setError(t("getStarted.enterName"))
       return
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      setError("Enter a valid email address.")
+      setError(t("getStarted.enterValidEmail"))
       return
     }
     if (password.length < 6) {
-      setError("Password must be at least 6 characters.")
+      setError(t("getStarted.passwordMin"))
       return
     }
     if (password !== confirmPassword) {
-      setError("Passwords do not match.")
+      setError(t("getStarted.passwordMismatch"))
       return
     }
 
@@ -174,13 +181,13 @@ export default function GetStarted() {
           router.replace("/")
           return
         } catch (fallbackError: unknown) {
-          const message = fallbackError instanceof Error ? fallbackError.message : "Could not create the account."
+          const message = fallbackError instanceof Error ? fallbackError.message : t("getStarted.couldNotCreate")
           setError(message)
           setSubmitting(false)
           return
         }
       }
-      const message = err instanceof Error ? err.message : "Could not create the account."
+      const message = err instanceof Error ? err.message : t("getStarted.couldNotCreate")
       setError(message)
       setSubmitting(false)
     }
@@ -196,17 +203,20 @@ export default function GetStarted() {
             <img src={getLogoPath()} alt={`${getAppName()} logo`} className="h-8 w-8 shrink-0 object-contain sm:h-11 sm:w-11" />
             <span className="truncate text-base font-extrabold tracking-tight text-[#173528] sm:text-[22px]">{getAppName()}</span>
           </Link>
-          <Link href="/login" className="rounded-full bg-[#F3F4F2] px-4 py-2 text-sm font-semibold text-[#1c241f] transition hover:bg-[#E7EAE6]">
-            Sign in
-          </Link>
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher variant="plain" />
+            <Link href="/login" className="rounded-full bg-[#F3F4F2] px-4 py-2 text-sm font-semibold text-[#1c241f] transition hover:bg-[#E7EAE6]">
+              {t("common.signIn")}
+            </Link>
+          </div>
         </div>
       </header>
 
       <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#3d6b4a]">Get started</p>
-        <h1 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-5xl">Get Started with Agrocyms</h1>
+        <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#3d6b4a]">{t("getStarted.eyebrow")}</p>
+        <h1 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-5xl">{t("getStarted.title")}</h1>
         <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#526057] sm:text-base">
-          Create your account and take the first step toward a more organized approach to farm management.
+          {t("getStarted.lead")}
         </p>
 
         <ol className="mt-8 grid grid-cols-4 gap-2 sm:gap-3">
@@ -226,8 +236,8 @@ export default function GetStarted() {
           ) : null}
           {draftReady && step === 0 && (
             <div>
-              <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">What does this farm do?</h2>
-              <p className="mt-2 text-sm leading-relaxed text-[#526057]">Select every enterprise you want on the dashboard. You can change this later in Farm settings.</p>
+              <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">{t("getStarted.step0Title")}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-[#526057]">{t("getStarted.step0Lead")}</p>
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {FARM_ENTERPRISES.map((item) => {
                   const selected = enterprises.includes(item.id)
@@ -242,8 +252,8 @@ export default function GetStarted() {
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <p className="font-bold">{item.label}</p>
-                          <p className="mt-1 text-sm leading-relaxed text-[#526057]">{item.description}</p>
+                          <p className="font-bold">{enterpriseName(item.id)}</p>
+                          <p className="mt-1 text-sm leading-relaxed text-[#526057]">{t(`enterprises.${item.id}.description`)}</p>
                         </div>
                         <span className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${selected ? "border-[#173528] bg-[#173528] text-white" : "border-[#D5DBD6] bg-white"}`}>
                           {selected && <Check className="h-3.5 w-3.5" />}
@@ -258,15 +268,13 @@ export default function GetStarted() {
 
           {draftReady && step === 1 && (
             <div>
-              <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">Which crops do you grow?</h2>
+              <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">{t("getStarted.step1Title")}</h2>
               <p className="mt-2 text-sm leading-relaxed text-[#526057]">
-                {growsCrops
-                  ? "Crops is already part of this farm. Choose every crop it grows."
-                  : "Choose the crops, or continue without them if this farm only keeps livestock."}
+                {growsCrops ? t("getStarted.step1LeadCrops") : t("getStarted.step1LeadLivestock")}
               </p>
               <p className="mt-3 text-sm">
-                <span className="text-[#526057]">Selected farm type: </span>
-                <span className="font-bold">{enterprises.map(enterpriseLabel).join(", ")}</span>
+                <span className="text-[#526057]">{t("getStarted.selectedFarmType")} </span>
+                <span className="font-bold">{enterprises.map(enterpriseName).join(", ")}</span>
               </p>
               <div className={`mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 ${cropsLocked ? "opacity-45" : ""}`}>
                 {CROP_OPTIONS.map((crop) => {
@@ -286,7 +294,7 @@ export default function GetStarted() {
                             : "border-[#E4E8E4] bg-[#F7F8F7] text-[#142018] hover:border-[#173528]/30"
                       }`}
                     >
-                      {crop.label}
+                      {cropName(crop.id)}
                     </button>
                   )
                 })}
@@ -306,7 +314,7 @@ export default function GetStarted() {
                     noCrops ? "border-[#173528] bg-[#E7F3E4]" : "border-[#E4E8E4] bg-[#F7F8F7] text-[#526057]"
                   }`}
                 >
-                  {noCrops ? "This farm has no crops. Tap again to choose crops." : "This farm has no crops"}
+                  {noCrops ? t("getStarted.noCropsSelected") : t("getStarted.noCrops")}
                 </button>
               )}
             </div>
@@ -315,22 +323,22 @@ export default function GetStarted() {
           {draftReady && step === 2 && (
             <div className="space-y-5">
               <div>
-                <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">Name the farm</h2>
-                <p className="mt-2 text-sm leading-relaxed text-[#526057]">This is the name your team will see across the system.</p>
+                <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">{t("getStarted.step2Title")}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-[#526057]">{t("getStarted.step2Lead")}</p>
               </div>
               <div className="space-y-2">
-                <label htmlFor="farm-name" className="text-sm font-semibold">Farm name</label>
-                <input id="farm-name" value={farmName} onChange={(e) => setFarmName(e.target.value)} placeholder="Greenfield Farm" className={fieldClass} />
+                <label htmlFor="farm-name" className="text-sm font-semibold">{t("getStarted.farmName")}</label>
+                <input id="farm-name" value={farmName} onChange={(e) => setFarmName(e.target.value)} placeholder={t("getStarted.farmNamePlaceholder")} className={fieldClass} />
               </div>
               <div className="space-y-2">
-                <label htmlFor="farm-location" className="text-sm font-semibold">Location</label>
-                <input id="farm-location" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Town or region" className={fieldClass} />
+                <label htmlFor="farm-location" className="text-sm font-semibold">{t("getStarted.location")}</label>
+                <input id="farm-location" value={location} onChange={(e) => setLocation(e.target.value)} placeholder={t("getStarted.locationPlaceholder")} className={fieldClass} />
               </div>
               <div className="rounded-[22px] bg-[#E7F3E4] p-4 text-sm">
-                <p className="font-bold">Dashboard will cover</p>
+                <p className="font-bold">{t("getStarted.dashboardWillCover")}</p>
                 <p className="mt-1 text-[#3e4b43]">
-                  {enterprises.map(enterpriseLabel).join(", ")}
-                  {crops.length > 0 && !noCrops ? ` · ${crops.map(cropLabel).join(", ")}` : ""}
+                  {enterprises.map(enterpriseName).join(", ")}
+                  {crops.length > 0 && !noCrops ? ` · ${crops.map(cropName).join(", ")}` : ""}
                 </p>
               </div>
             </div>
@@ -339,45 +347,45 @@ export default function GetStarted() {
           {draftReady && step === 3 && (
             <div className="space-y-5">
               <div>
-                <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">Create your account</h2>
-                <p className="mt-2 text-sm leading-relaxed text-[#526057]">You will be the farm admin. Other people can be added after you sign in.</p>
+                <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">{t("getStarted.step3Title")}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-[#526057]">{t("getStarted.step3Lead")}</p>
               </div>
               <div className="space-y-2">
-                <label htmlFor="owner-name" className="text-sm font-semibold">Your name</label>
+                <label htmlFor="owner-name" className="text-sm font-semibold">{t("getStarted.yourName")}</label>
                 <input id="owner-name" value={ownerName} onChange={(e) => setOwnerName(e.target.value)} placeholder="Ama Mensah" className={fieldClass} autoComplete="name" />
               </div>
               <div className="space-y-2">
-                <label htmlFor="owner-email" className="text-sm font-semibold">Email</label>
+                <label htmlFor="owner-email" className="text-sm font-semibold">{t("getStarted.email")}</label>
                 <input id="owner-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@farm.com" className={fieldClass} autoComplete="email" />
               </div>
               <div className="space-y-2">
-                <label htmlFor="owner-password" className="text-sm font-semibold">Password</label>
+                <label htmlFor="owner-password" className="text-sm font-semibold">{t("getStarted.password")}</label>
                 <div className="relative">
                   <input
                     id="owner-password"
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="At least 6 characters"
-                    className={`${fieldClass} pr-12`}
+                    placeholder={t("getStarted.passwordPlaceholder")}
+                    className={`${fieldClass} pe-12`}
                     autoComplete="new-password"
                   />
-                  <button type="button" className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-[#526057]" onClick={() => setShowPassword((current) => !current)} aria-label={showPassword ? "Hide password" : "Show password"}>
+                  <button type="button" className="absolute end-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-[#526057]" onClick={() => setShowPassword((current) => !current)} aria-label={showPassword ? t("auth.hidePassword") : t("auth.showPassword")}>
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
               </div>
               <div className="space-y-2">
-                <label htmlFor="owner-confirm" className="text-sm font-semibold">Confirm password</label>
+                <label htmlFor="owner-confirm" className="text-sm font-semibold">{t("getStarted.confirmPassword")}</label>
                 <input id="owner-confirm" type={showPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className={fieldClass} autoComplete="new-password" />
               </div>
               <p className="text-xs leading-relaxed text-[#66756c]">
-                By creating an account, you agree to the{" "}
+                {t("getStarted.agreePrefix")}{" "}
                 <Link href="/terms" className="font-semibold text-[#173528] underline-offset-4 hover:underline">
-                  Terms of Service
+                  {t("common.termsOfService")}
                 </Link>{" "}
-                and acknowledge the{" "}
-                <Link href="/privacy" className="font-semibold text-[#173528] underline-offset-4 hover:underline">Privacy Policy</Link>.
+                {t("getStarted.agreeMiddle")}{" "}
+                <Link href="/privacy" className="font-semibold text-[#173528] underline-offset-4 hover:underline">{t("common.privacyPolicy")}</Link>.
               </p>
             </div>
           )}
@@ -389,31 +397,31 @@ export default function GetStarted() {
           <div className="mt-8 flex items-center justify-between gap-3">
             {step === 0 ? (
               <Link href="/" className="inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold text-[#526057] hover:bg-[#F3F4F2]">
-                <ArrowLeft className="h-4 w-4" /> Back
+                <ArrowLeft className="h-4 w-4 rtl:rotate-180" /> {t("common.back")}
               </Link>
             ) : (
               <button type="button" className="inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold text-[#526057] hover:bg-[#F3F4F2] disabled:opacity-50" onClick={() => { setError(null); setStep((current) => current - 1) }} disabled={submitting}>
-                <ArrowLeft className="h-4 w-4" /> Back
+                <ArrowLeft className="h-4 w-4 rtl:rotate-180" /> {t("common.back")}
               </button>
             )}
             {step < steps.length - 1 ? (
               <button type="button" onClick={goNext} className="inline-flex items-center gap-3 rounded-full bg-[#173528] py-1.5 pl-5 pr-1.5 text-sm font-semibold text-white">
-                Continue
+                {t("common.continue")}
                 <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#173528]">
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="h-4 w-4 rtl:rotate-180" />
                 </span>
               </button>
             ) : (
               <button type="button" onClick={submit} disabled={submitting} className="inline-flex items-center gap-3 rounded-full bg-[#173528] py-2 pl-5 pr-5 text-sm font-semibold text-white disabled:opacity-60">
-                {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Creating account</> : "Create farm account"}
+                {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> {t("getStarted.creating")}</> : t("getStarted.createFarmAccount")}
               </button>
             )}
           </div>
         </div>
 
         <p className="mt-6 text-center text-sm text-[#526057]">
-          Already have an account?{" "}
-          <Link href="/login" className="font-bold text-[#173528]">Sign in</Link>
+          {t("getStarted.alreadyHaveAccount")}{" "}
+          <Link href="/login" className="font-bold text-[#173528]">{t("common.signIn")}</Link>
         </p>
       </main>
     </div>

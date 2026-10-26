@@ -1,4 +1,4 @@
-import { useCaseBySlug } from "@/lib/marketing"
+import { getUseCaseBySlug } from "@/lib/marketing"
 import { getAppName } from "@/lib/env"
 import { ogContentType, ogSize, renderOgImage } from "@/lib/og"
 
@@ -13,7 +13,7 @@ export default async function UseCaseOpenGraphImage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const useCase = useCaseBySlug(slug)
+  const useCase = getUseCaseBySlug(slug)
 
   return renderOgImage({
     eyebrow: getAppName(),

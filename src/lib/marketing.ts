@@ -593,7 +593,7 @@ export function searchPublicPages(query: string): SearchEntry[] {
   })
 }
 
-export function useCaseBySlug(slug: string): UseCasePage | undefined {
+export function getUseCaseBySlug(slug: string): UseCasePage | undefined {
   return USE_CASE_PAGES.find((item) => item.slug === slug)
 }
 

@@ -3,7 +3,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { MarketingCta, MarketingPage } from "@/components/marketing/MarketingPage"
 import { JsonLd } from "@/components/seo/JsonLd"
-import { FEATURE_PAGES, USE_CASE_PAGES, useCaseBySlug } from "@/lib/marketing"
+import { FEATURE_PAGES, USE_CASE_PAGES, getUseCaseBySlug } from "@/lib/marketing"
 import { breadcrumbJsonLd, createPageMetadata, faqJsonLd, webPageJsonLd } from "@/lib/seo"
 
 type PageProps = {
@@ -18,7 +18,7 @@ export const dynamicParams = false
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const useCase = useCaseBySlug(slug)
+  const useCase = getUseCaseBySlug(slug)
   if (!useCase) return {}
 
   return createPageMetadata({
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function UseCaseDetailPage({ params }: PageProps) {
   const { slug } = await params
-  const useCase = useCaseBySlug(slug)
+  const useCase = getUseCaseBySlug(slug)
   if (!useCase) notFound()
 
   const related = FEATURE_PAGES.filter((item) => useCase.relatedFeatures.includes(item.slug))

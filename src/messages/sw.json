@@ -86,6 +86,12 @@
     "farmerAlt": "Mkulima amesimama kwenye chafu akiwa amekunja mikono",
     "fieldAlt": "Safu za mazao ya kijani zilizoonekana kutoka juu",
     "produceAlt": "Peari, zabibu na tufaha kijani kwenye kasha",
+    "overview": {
+      "eyebrow": "Kwa mtazamo mmoja",
+      "title": "Mazao, mifugo, rasilimali na biashara ya shamba — pamoja",
+      "lead": "Kutoka rekodi za kupanda na utunzaji wa wanyama hadi chakula, dawa na ripoti, Agrocyms huweka kila sehemu ya shamba katika nafasi moja ya kazi.",
+      "alt": "Muhtasari wa Agrocyms unaoonyesha usimamizi wa mazao, rekodi za mifugo, orodha na rasilimali, zana za biashara ya shamba, dashibodi, mazao na mifugo mchanganyiko"
+    },
     "faqTitle": "Maswali mashamba huuliza kabla ya kubadili.",
     "seeEveryAnswer": "Tazama majibu yote",
     "hero": {

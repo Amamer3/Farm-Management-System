@@ -86,6 +86,12 @@
     "farmerAlt": "Agricultor em pé em uma estufa com os braços cruzados",
     "fieldAlt": "Fileiras de culturas verdes vistas de cima",
     "produceAlt": "Peras, uvas e maçãs verdes em uma caixa",
+    "overview": {
+      "eyebrow": "Em um relance",
+      "title": "Culturas, pecuária, recursos e o negócio da fazenda — juntos",
+      "lead": "Dos registros de plantio e do cuidado animal até ração, medicamentos e relatórios, o Agrocyms reúne cada parte da fazenda em um só espaço de trabalho.",
+      "alt": "Visão geral do Agrocyms mostrando gestão de culturas, registros pecuários, inventário e recursos, ferramentas de negócio, painel, produtos e pecuária mista"
+    },
     "faqTitle": "Perguntas que as fazendas fazem antes de mudar.",
     "seeEveryAnswer": "Ver todas as respostas",
     "hero": {

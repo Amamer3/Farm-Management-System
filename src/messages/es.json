@@ -86,6 +86,12 @@
     "farmerAlt": "Agricultor de pie en un invernadero con los brazos cruzados",
     "fieldAlt": "Hileras de cultivos verdes vistas desde arriba",
     "produceAlt": "Peras, uvas y manzanas verdes en un cajón",
+    "overview": {
+      "eyebrow": "De un vistazo",
+      "title": "Cultivos, ganado, recursos y el negocio agrícola — juntos",
+      "lead": "Desde los registros de siembra y el cuidado animal hasta el pienso, los medicamentos y los informes, Agrocyms reúne cada parte de la granja en un solo espacio de trabajo.",
+      "alt": "Panorama de Agrocyms con gestión de cultivos, registros de ganado, inventario y recursos, herramientas de negocio agrícola, panel, productos y ganado mixto"
+    },
     "faqTitle": "Preguntas que se hacen las granjas antes de cambiar.",
     "seeEveryAnswer": "Ver todas las respuestas",
     "hero": {

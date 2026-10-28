@@ -86,6 +86,12 @@
     "farmerAlt": "Agriculteur debout dans une serre, les bras croisés",
     "fieldAlt": "Rangées de cultures vertes vues du dessus",
     "produceAlt": "Poires, raisins et pommes verts dans une caisse",
+    "overview": {
+      "eyebrow": "En un coup d'œil",
+      "title": "Cultures, élevage, ressources et gestion de l'exploitation — ensemble",
+      "lead": "Des registres de plantation et des soins aux animaux jusqu'à l'alimentation, les médicaments et les rapports, Agrocyms rassemble chaque partie de la ferme dans un seul espace de travail.",
+      "alt": "Aperçu d'Agrocyms montrant la gestion des cultures, les registres d'élevage, l'inventaire et les ressources, les outils de gestion, le tableau de bord, les produits et un élevage mixte"
+    },
     "faqTitle": "Les questions que se posent les fermes avant de changer.",
     "seeEveryAnswer": "Voir toutes les réponses",
     "hero": {

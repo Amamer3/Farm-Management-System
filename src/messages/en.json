@@ -88,6 +88,12 @@
     "farmerAlt": "Farmer standing in a greenhouse with arms crossed",
     "fieldAlt": "Rows of green crops seen from above",
     "produceAlt": "Green pears, grapes, and apples in a crate",
+    "overview": {
+      "eyebrow": "At a glance",
+      "title": "Crops, livestock, resources, and the farm business — together",
+      "lead": "From planting records and animal care to feed, medicine, and reporting, Agrocyms keeps every part of the farm in one workspace.",
+      "alt": "Agrocyms overview showing crop management, livestock records, inventory and resources, farm business tools, the dashboard, produce, and mixed livestock"
+    },
     "faqTitle": "Questions farms ask before they switch.",
     "seeEveryAnswer": "See every answer",
     "hero": {

@@ -30,81 +30,83 @@ export default function Landing() {
       <main>
         <section className="mx-auto max-w-[1320px] px-4 pb-6 sm:px-6">
           <div className="grid items-stretch gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)]">
-            <div className="flex h-full min-w-0 flex-col items-center justify-center rounded-[28px] bg-[#E7F3E4] px-5 py-10 text-center sm:rounded-[32px] sm:px-8 sm:py-14 md:min-h-[420px] md:px-6 lg:min-h-[440px] lg:px-10 xl:py-16">
-              <p className="max-w-full rounded-full bg-white/80 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#3d4a42] sm:px-4 sm:text-[11px] sm:tracking-[0.16em]">
-                {t("home.hero.eyebrow")}
-              </p>
-              <h1 className="mt-6 max-w-xl text-balance text-[2rem] font-extrabold leading-[0.95] tracking-[-0.04em] text-[#121815] min-[400px]:text-4xl sm:mt-8 sm:text-5xl lg:text-6xl">
-                {t("home.hero.title")}
-              </h1>
-              <p className="mt-5 max-w-md text-base font-semibold leading-relaxed text-[#173528] sm:mt-6 sm:text-lg">
-                {t("home.hero.kicker")}
-              </p>
-              <p className="mt-3 max-w-md text-base leading-relaxed text-[#3e4b43] sm:text-lg">{t("home.hero.body")}</p>
-              <div className="mt-8 flex w-full max-w-md flex-col items-center gap-3 sm:mt-10">
-                <Link
-                  href="/get-started"
-                  className="inline-flex max-w-full items-center gap-3 rounded-full bg-[#173528] py-2 ps-5 pe-2 text-base font-semibold text-white shadow-[0_10px_24px_rgba(23,53,40,0.18)] sm:ps-6"
-                >
-                  {t("home.hero.primaryCta")}
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-[#173528]">
-                    <ArrowRight className="h-5 w-5 rtl:rotate-180" />
-                  </span>
-                </Link>
-                <Link href="/features" className="text-sm font-semibold text-[#173528] underline-offset-4 hover:underline">
-                  {t("home.hero.secondaryCta")}
-                </Link>
-                <p className="text-xs leading-relaxed text-[#66756c]">{t("home.hero.support")}</p>
+            <div className="flex min-w-0 flex-col gap-3 sm:gap-4">
+              <div className="flex min-w-0 flex-col items-center justify-center rounded-[28px] bg-[#E7F3E4] px-5 py-10 text-center sm:rounded-[32px] sm:px-8 sm:py-12 md:px-6 lg:px-10 lg:py-14">
+                <p className="max-w-full rounded-full bg-white/80 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#3d4a42] sm:px-4 sm:text-[11px] sm:tracking-[0.16em]">
+                  {t("home.hero.eyebrow")}
+                </p>
+                <h1 className="mt-6 max-w-xl text-balance text-[2rem] font-extrabold leading-[0.95] tracking-[-0.04em] text-[#121815] min-[400px]:text-4xl sm:mt-8 sm:text-5xl lg:text-[3.5rem] xl:text-6xl">
+                  {t("home.hero.title")}
+                </h1>
+                <p className="mt-5 max-w-md text-base font-semibold leading-relaxed text-[#173528] sm:mt-6 sm:text-lg">
+                  {t("home.hero.kicker")}
+                </p>
+                <p className="mt-3 max-w-md text-base leading-relaxed text-[#3e4b43] sm:text-lg">{t("home.hero.body")}</p>
+                <div className="mt-8 flex w-full max-w-md flex-col items-center gap-3 sm:mt-10">
+                  <Link
+                    href="/get-started"
+                    className="inline-flex max-w-full items-center gap-3 rounded-full bg-[#173528] py-2 ps-5 pe-2 text-base font-semibold text-white shadow-[0_10px_24px_rgba(23,53,40,0.18)] sm:ps-6"
+                  >
+                    {t("home.hero.primaryCta")}
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-[#173528]">
+                      <ArrowRight className="h-5 w-5 rtl:rotate-180" />
+                    </span>
+                  </Link>
+                  <Link href="/features" className="text-sm font-semibold text-[#173528] underline-offset-4 hover:underline">
+                    {t("home.hero.secondaryCta")}
+                  </Link>
+                  <p className="text-xs leading-relaxed text-[#66756c]">{t("home.hero.support")}</p>
+                </div>
+              </div>
+
+              <div className="grid min-w-0 grid-cols-1 gap-3 min-[360px]:grid-cols-2 sm:gap-4">
+                <article className="relative min-h-[200px] overflow-hidden rounded-[24px] sm:min-h-[230px] sm:rounded-[28px]">
+                  <Image
+                    src="/landing/field.png"
+                    alt={t("home.fieldAlt")}
+                    fill
+                    sizes="(min-width: 1024px) 28vw, (min-width: 480px) 46vw, 100vw"
+                    className="object-cover"
+                  />
+                  {pins.map((pin) => (
+                    <span key={`${pin.top}-${pin.left}`} className="absolute -translate-x-1/2 -translate-y-1/2" style={{ top: pin.top, left: pin.left }}>
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white shadow-[0_2px_8px_rgba(0,0,0,0.28)]">
+                        <span className="h-2.5 w-2.5 rounded-full bg-[#248046]" />
+                      </span>
+                    </span>
+                  ))}
+                </article>
+
+                <article className="relative min-h-[200px] overflow-hidden rounded-[24px] sm:min-h-[230px] sm:rounded-[28px]">
+                  <Image
+                    src="/landing/produce.png"
+                    alt={t("home.produceAlt")}
+                    fill
+                    sizes="(min-width: 1024px) 24vw, (min-width: 480px) 46vw, 100vw"
+                    className="object-cover"
+                  />
+                  <p className="absolute bottom-3 start-3 end-3 line-clamp-3 text-sm font-bold leading-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)] sm:bottom-4 sm:start-4 sm:end-4 sm:text-base lg:text-lg">
+                    {t("home.onePlatform")}
+                  </p>
+                </article>
               </div>
             </div>
 
-            <article className="relative order-3 min-h-[300px] overflow-hidden rounded-[28px] sm:min-h-[420px] sm:rounded-[32px] md:order-none md:col-start-2 md:row-start-1 md:h-full md:min-h-full lg:row-span-2">
+            <article className="relative min-h-[300px] overflow-hidden rounded-[28px] sm:min-h-[420px] sm:rounded-[32px] md:min-h-full">
               <Image
                 src="/landing/farmer.png"
                 alt={t("home.farmerAlt")}
                 fill
                 priority
                 sizes="(min-width: 1024px) 42vw, (min-width: 768px) 48vw, 100vw"
-                className="object-cover object-[center_18%]"
+                className="object-cover object-[center_top]"
               />
-              <div className="absolute bottom-4 start-4 inline-flex max-w-[calc(100%-2rem)] items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-bold text-[#173528] shadow-[0_10px_24px_rgba(16,24,20,0.16)] sm:bottom-6 lg:start-[12%]">
+              <div className="absolute bottom-4 start-4 inline-flex max-w-[calc(100%-2rem)] items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-bold text-[#173528] shadow-[0_10px_24px_rgba(16,24,20,0.16)] sm:bottom-6">
                 {t("home.records")}
                 <Leaf className="h-4 w-4 shrink-0 text-[#2F7D46]" />
                 <Sprout className="h-4 w-4 shrink-0 text-[#2F7D46]" />
               </div>
             </article>
-
-            <div className="order-2 grid min-w-0 grid-cols-1 gap-3 min-[360px]:grid-cols-2 sm:gap-4 md:order-none md:col-span-2 lg:col-span-1 lg:col-start-1 lg:row-start-2 lg:grid-cols-[1.15fr_0.9fr]">
-              <article className="relative min-h-[200px] overflow-hidden rounded-[24px] sm:min-h-[230px] sm:rounded-[28px]">
-                <Image
-                  src="/landing/field.png"
-                  alt={t("home.fieldAlt")}
-                  fill
-                  sizes="(min-width: 1024px) 28vw, (min-width: 480px) 46vw, 100vw"
-                  className="object-cover"
-                />
-                {pins.map((pin) => (
-                  <span key={`${pin.top}-${pin.left}`} className="absolute -translate-x-1/2 -translate-y-1/2" style={{ top: pin.top, left: pin.left }}>
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white shadow-[0_2px_8px_rgba(0,0,0,0.28)]">
-                      <span className="h-2.5 w-2.5 rounded-full bg-[#248046]" />
-                    </span>
-                  </span>
-                ))}
-              </article>
-
-              <article className="relative z-10 min-h-[200px] overflow-hidden rounded-[24px] sm:min-h-[230px] sm:rounded-[28px] lg:-me-6">
-                <Image
-                  src="/landing/produce.png"
-                  alt={t("home.produceAlt")}
-                  fill
-                  sizes="(min-width: 1024px) 24vw, (min-width: 480px) 46vw, 100vw"
-                  className="object-cover"
-                />
-                <p className="absolute bottom-3 start-3 end-3 line-clamp-3 text-sm font-bold leading-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)] sm:bottom-4 sm:start-4 sm:end-4 sm:text-base lg:text-lg">
-                  {t("home.onePlatform")}
-                </p>
-              </article>
-            </div>
           </div>
         </section>
 
@@ -124,6 +126,25 @@ export default function Landing() {
               </article>
             ))}
           </div>
+        </section>
+
+        <section className="mx-auto max-w-[1320px] px-4 pb-10 sm:px-6 sm:pb-16">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#3d6b4a]">{t("home.overview.eyebrow")}</p>
+          <h2 className="mt-2 max-w-3xl text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
+            {t("home.overview.title")}
+          </h2>
+          <p className="mt-4 max-w-3xl text-base leading-relaxed text-[#3e4b43]">{t("home.overview.lead")}</p>
+          <figure className="mt-8 overflow-hidden rounded-[28px] border border-[#E4E8E4] bg-white shadow-[0_16px_40px_rgba(16,24,20,0.08)] sm:rounded-[32px]">
+            <Image
+              src="/landing/overview.jpg"
+              alt={t("home.overview.alt")}
+              width={1024}
+              height={576}
+              sizes="(min-width: 1320px) 1320px, calc(100vw - 2rem)"
+              className="h-auto w-full"
+              unoptimized
+            />
+          </figure>
         </section>
 
         <section id="solutions" className="scroll-mt-24 bg-[#E7F3E4]">
@@ -159,11 +180,21 @@ export default function Landing() {
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#3d6b4a]">{t("home.steps.eyebrow")}</p>
           <h2 className="mt-2 max-w-3xl text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">{t("home.steps.title")}</h2>
           <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {HOME_STEP_KEYS.map((key) => (
-              <article key={key} className="rounded-[28px] bg-[#F3F4F2] p-6">
-                <p className="text-sm font-bold text-[#3d6b4a]">{t(`home.steps.items.${key}.step`)}</p>
-                <h3 className="mt-2 text-xl font-bold">{t(`home.steps.items.${key}.title`)}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-[#526057]">{t(`home.steps.items.${key}.body`)}</p>
+            {HOME_STEP_KEYS.map((key, index) => (
+              <article
+                key={key}
+                className="relative isolate min-h-[250px] overflow-hidden rounded-[28px] bg-[#F3F4F2] p-6"
+              >
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute -bottom-10 -end-3 select-none text-[9.5rem] font-black leading-none tracking-[-0.08em] text-[#173528]/[0.12] sm:text-[11rem]"
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <div className="relative z-10">
+                  <h3 className="text-xl font-bold">{t(`home.steps.items.${key}.title`)}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-[#526057]">{t(`home.steps.items.${key}.body`)}</p>
+                </div>
               </article>
             ))}
           </div>

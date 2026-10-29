@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useToast } from './use-toast'
 import { statisticsService } from '../services/dataService'
-import { getUserFriendlyMessage, parseApiError, ErrorType } from '@/utils/errorHandler'
+import { getUserFriendlyMessage, parseApiError, ErrorType, isAbortError } from '@/utils/errorHandler'
 import {
   DashboardStats,
   DailyStats,
@@ -43,6 +43,7 @@ function useStatisticsData<T>(fetchFunction: () => Promise<T>, dependencies: any
       const result = await fetchFunction()
       setData(result)
     } catch (err) {
+      if (isAbortError(err)) return
       const appError = parseApiError(err)
       const errorMessage = getUserFriendlyMessage(err)
       setError(errorMessage)
@@ -185,6 +186,7 @@ export const useExportReport = () => {
         description: 'Report exported successfully',
       })
     } catch (err) {
+      if (isAbortError(err)) return
       const errorMessage = getUserFriendlyMessage(err)
       setError(errorMessage)
       const appError = parseApiError(err)

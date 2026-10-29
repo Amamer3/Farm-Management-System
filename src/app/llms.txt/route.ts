@@ -2,6 +2,7 @@ import { getAppDescription, getAppName } from "@/lib/env"
 import { absoluteUrl, LLMS_FULL_PATH } from "@/lib/seo"
 
 export function GET() {
+  try {
   const name = getAppName()
   const body = `# ${name}
 
@@ -44,4 +45,10 @@ ${name} tracks bird batches, egg collection, feed and medicine stock, livestock 
       "Cache-Control": "public, max-age=3600",
     },
   })
+  } catch {
+    return new Response("Unable to generate this file right now.", {
+      status: 500,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    })
+  }
 }

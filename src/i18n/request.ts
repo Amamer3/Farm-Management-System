@@ -46,21 +46,28 @@ function loadMessages(locale: string) {
 }
 
 export default getRequestConfig(async () => {
-  const requestHeaders = await headers()
-  if (isSearchCrawler(requestHeaders.get("user-agent"))) {
+  try {
+    const requestHeaders = await headers()
+    if (isSearchCrawler(requestHeaders.get("user-agent"))) {
+      return {
+        locale: defaultLocale,
+        messages: loadMessages(defaultLocale),
+      }
+    }
+
+    const cookieLocale = (await cookies()).get(LOCALE_COOKIE)?.value
+    const locale = isLocale(cookieLocale)
+      ? cookieLocale
+      : negotiateLocale(requestHeaders.get("accept-language"))
+
+    return {
+      locale: locale || defaultLocale,
+      messages: loadMessages(locale || defaultLocale),
+    }
+  } catch {
     return {
       locale: defaultLocale,
       messages: loadMessages(defaultLocale),
     }
-  }
-
-  const cookieLocale = (await cookies()).get(LOCALE_COOKIE)?.value
-  const locale = isLocale(cookieLocale)
-    ? cookieLocale
-    : negotiateLocale(requestHeaders.get("accept-language"))
-
-  return {
-    locale: locale || defaultLocale,
-    messages: loadMessages(locale || defaultLocale),
   }
 })

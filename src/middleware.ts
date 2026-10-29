@@ -24,29 +24,33 @@ function withLocaleCookie(request: NextRequest, response: NextResponse) {
 }
 
 export function middleware(request: NextRequest) {
-  const host = (request.headers.get("host") ?? "").split(":")[0].toLowerCase()
-  if (host === "localhost" || host === "127.0.0.1") {
-    return withLocaleCookie(request, NextResponse.next())
+  try {
+    const host = (request.headers.get("host") ?? "").split(":")[0].toLowerCase()
+    if (host === "localhost" || host === "127.0.0.1") {
+      return withLocaleCookie(request, NextResponse.next())
+    }
+
+    const proto = (request.headers.get("x-forwarded-proto") ?? request.nextUrl.protocol.replace(":", ""))
+      .split(",")[0]
+      .trim()
+    const isHttp = proto === "http"
+    const isWww = host === `www.${canonicalHost}`
+
+    if (!isHttp && !isWww) {
+      return withLocaleCookie(request, NextResponse.next())
+    }
+
+    const url = request.nextUrl.clone()
+    url.protocol = "https:"
+    url.port = ""
+    if (isWww) {
+      url.hostname = canonicalHost
+    }
+
+    return withLocaleCookie(request, NextResponse.redirect(url, 301))
+  } catch {
+    return NextResponse.next()
   }
-
-  const proto = (request.headers.get("x-forwarded-proto") ?? request.nextUrl.protocol.replace(":", ""))
-    .split(",")[0]
-    .trim()
-  const isHttp = proto === "http"
-  const isWww = host === `www.${canonicalHost}`
-
-  if (!isHttp && !isWww) {
-    return withLocaleCookie(request, NextResponse.next())
-  }
-
-  const url = request.nextUrl.clone()
-  url.protocol = "https:"
-  url.port = ""
-  if (isWww) {
-    url.hostname = canonicalHost
-  }
-
-  return withLocaleCookie(request, NextResponse.redirect(url, 301))
 }
 
 export const config = {

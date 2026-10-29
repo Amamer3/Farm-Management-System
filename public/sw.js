@@ -13,10 +13,10 @@ const PRECACHE_URLS = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches
-      .open(CACHE_NAME)
-      .then((cache) => cache.addAll(PRECACHE_URLS))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(async (cache) => {
+      await Promise.all(PRECACHE_URLS.map((url) => cache.add(url).catch(() => undefined)))
+      await self.skipWaiting()
+    })
   )
 })
 
@@ -68,13 +68,19 @@ async function networkFirst(request) {
 async function cacheFirst(request) {
   const cached = await caches.match(request)
   if (cached) return cached
-  const response = await fetch(request)
-  if (response && response.ok && response.type === "basic") {
-    const copy = response.clone()
-    const cache = await caches.open(CACHE_NAME)
-    await cache.put(request, copy)
+  try {
+    const response = await fetch(request)
+    if (response && response.ok && response.type === "basic") {
+      const copy = response.clone()
+      const cache = await caches.open(CACHE_NAME)
+      await cache.put(request, copy)
+    }
+    return response
+  } catch (error) {
+    const fallback = await caches.match(request)
+    if (fallback) return fallback
+    throw error
   }
-  return response
 }
 
 self.addEventListener("fetch", (event) => {
@@ -87,7 +93,12 @@ self.addEventListener("fetch", (event) => {
   if (url.pathname.startsWith("/_next/")) return
 
   if (request.mode === "navigate") {
-    event.respondWith(networkFirst(request))
+    event.respondWith(
+      networkFirst(request).catch(async () => {
+        const offline = await caches.match(OFFLINE_URL)
+        return offline || new Response("Offline", { status: 503, headers: { "Content-Type": "text/plain" } })
+      })
+    )
     return
   }
 

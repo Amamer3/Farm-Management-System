@@ -26,7 +26,7 @@ const StatisticsDashboard: React.FC = () => {
   const [exportFormat, setExportFormat] = useState<'pdf' | 'excel' | 'csv'>('pdf')
 
   // Statistics hooks
-  const { data: dashboardStats, loading: dashboardLoading, error: dashboardError } = useDashboardStats()
+  const { data: dashboardStats, loading: dashboardLoading, error: dashboardError, refetch: refetchDashboard } = useDashboardStats()
   const { data: trends, loading: trendsLoading } = useTrends()
   const { data: gradeDistribution, loading: gradeLoading } = useGradeDistribution()
   const { data: penPerformance, loading: penLoading } = usePenPerformance()
@@ -78,8 +78,12 @@ const StatisticsDashboard: React.FC = () => {
 
   if (dashboardError) {
     return (
-      <div className="text-center text-red-500 p-8">
-        <p>Error loading statistics: {dashboardError}</p>
+      <div className="rounded-lg border border-destructive/20 bg-destructive/10 p-8 text-center">
+        <p className="font-semibold text-destructive">Could not load statistics</p>
+        <p className="mt-2 text-sm text-muted-foreground">{dashboardError}</p>
+        <Button variant="outline" className="mt-4" onClick={() => void refetchDashboard()}>
+          Try again
+        </Button>
       </div>
     )
   }

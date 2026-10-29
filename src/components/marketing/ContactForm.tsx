@@ -51,8 +51,12 @@ export function ContactForm() {
       values.message.trim(),
     ].join("\n")
 
-    window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    setSent(true)
+    try {
+      window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+      setSent(true)
+    } catch {
+      setError(`Could not open your email app. Write to ${to} instead.`)
+    }
   }
 
   if (sent) {

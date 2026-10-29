@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { getAppName, getAppTagline, getLogoPath } from "@/lib/env"
+import { getUserFriendlyMessage } from "@/utils/errorHandler"
 import { MARKETING_PHOTOS } from "@/lib/marketingImages"
 
 type LoginFormData = {
@@ -53,8 +54,8 @@ function LoginForm({ isRedirecting = false }: { isRedirecting?: boolean }) {
     setError(null)
     try {
       await login(data.email, data.password)
-    } catch (err: any) {
-      setError(err.message || t("loginFailed"))
+    } catch (err: unknown) {
+      setError(getUserFriendlyMessage(err) || t("loginFailed"))
     }
   }
 

@@ -33,10 +33,10 @@ const Index = () => {
   const enterpriseName = (id: string) => t(`enterprises.${id}.label`)
    
   // Only fetch dashboard data if user is authenticated
-  const { data: overview, loading: overviewLoading, error: overviewError } = useDashboardOverview()
-  const { data: activities, loading: activitiesLoading, error: activitiesError } = useDashboardActivity()
-  const { data: performance, loading: performanceLoading, error: performanceError } = useDashboardPerformance()
-  const { data: alerts, loading: alertsLoading, error: alertsError } = useDashboardAlerts()
+  const { data: overview, loading: overviewLoading, error: overviewError, refetch: refetchOverview } = useDashboardOverview()
+  const { data: activities, loading: activitiesLoading, error: activitiesError, refetch: refetchActivities } = useDashboardActivity()
+  const { data: performance, loading: performanceLoading, error: performanceError, refetch: refetchPerformance } = useDashboardPerformance()
+  const { data: alerts, loading: alertsLoading, error: alertsError, refetch: refetchAlerts } = useDashboardAlerts()
   const { data: productionChartData, loading: chartLoading, error: chartError } = useProductionChart('7d')
 
   // Loading state for any of the stats (chart loading is handled separately)
@@ -80,9 +80,14 @@ const Index = () => {
                     variant="outline" 
                     size="sm" 
                     className="mt-3"
-                    onClick={() => window.location.reload()}
+                    onClick={() => {
+                      void refetchOverview()
+                      void refetchActivities()
+                      void refetchPerformance()
+                      void refetchAlerts()
+                    }}
                   >
-                    {t("common.refreshPage")}
+                    {t("common.tryAgain")}
                   </Button>
                 </div>
               </div>

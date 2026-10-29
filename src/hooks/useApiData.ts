@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useToast } from './use-toast'
 import { useUserRole } from '@/contexts/UserRoleContext'
 import dataServices from '@/services/dataService'
-import { getUserFriendlyMessage, parseApiError, ErrorType } from '@/utils/errorHandler'
+import { getUserFriendlyMessage, parseApiError, ErrorType, isAbortError } from '@/utils/errorHandler'
 import type {
   BirdsStats, Bird, EggStats, EggCollection, FeedStats, FeedItem,
   MedicineStats, Medicine, DashboardStats, ProductionReport,
@@ -37,6 +37,7 @@ export function useApiData<T>(serviceName: keyof typeof dataServices, method: st
       const result = await service[method](params)
       setData(result)
     } catch (err) {
+      if (isAbortError(err)) return
       const appError = parseApiError(err)
       const errorMessage = getUserFriendlyMessage(err)
       setError(errorMessage)

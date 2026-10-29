@@ -1,22 +1,5 @@
-function requiredValue(name: string, value: string | undefined): string {
-  if (!value) {
-    throw new Error(
-      `${name} environment variable is not set. Please configure it in your .env file.`
-    )
-  }
-  return value
-}
-
-function requiredPositiveNumber(name: string, value: string | undefined): number {
-  const parsed = Number(requiredValue(name, value))
-  if (!Number.isFinite(parsed) || parsed <= 0) {
-    throw new Error(`${name} must be a positive number.`)
-  }
-  return parsed
-}
-
 export function getPublicApiBaseUrl(): string {
-  const envUrl = requiredValue("NEXT_PUBLIC_API_BASE_URL", process.env.NEXT_PUBLIC_API_BASE_URL)
+  const envUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "/api"
   if (envUrl.startsWith("http")) {
     return envUrl.endsWith("/api") ? envUrl : `${envUrl.replace(/\/$/, "")}/api`
   }
@@ -51,7 +34,7 @@ export function getLogoPath(): string {
 }
 
 export function getTwitterHandle(): string {
-  return requiredValue("NEXT_PUBLIC_TWITTER_HANDLE", process.env.NEXT_PUBLIC_TWITTER_HANDLE)
+  return process.env.NEXT_PUBLIC_TWITTER_HANDLE || "@agrocyms"
 }
 
 function socialHandle(): string {
@@ -125,10 +108,9 @@ export function getContactEmail(): string {
 }
 
 export function getRequestTimeoutMs(): number {
-  return requiredPositiveNumber(
-    "NEXT_PUBLIC_REQUEST_TIMEOUT_MS",
-    process.env.NEXT_PUBLIC_REQUEST_TIMEOUT_MS
-  )
+  const parsed = Number(process.env.NEXT_PUBLIC_REQUEST_TIMEOUT_MS || "30000")
+  if (!Number.isFinite(parsed) || parsed <= 0) return 30000
+  return parsed
 }
 
 export const isDev = process.env.NODE_ENV === "development"

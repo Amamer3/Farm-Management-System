@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { farmService } from "@/services/dataService"
 import { useFarm } from "@/contexts/FarmContext"
 import { useToast } from "@/hooks/use-toast"
+import { getUserFriendlyMessage } from "@/utils/errorHandler"
 import { useUserRole } from "@/contexts/UserRoleContext"
 import { CROP_OPTIONS, clearPendingFarm } from "@/lib/farmProfile"
 
@@ -99,8 +100,12 @@ export default function FarmSettings() {
       clearPendingFarm()
       await refresh()
       toast({ title: t("farmSettings.saved") })
-    } catch {
-      toast({ title: t("farmSettings.saveFailed"), variant: "destructive" })
+    } catch (error) {
+      toast({
+        title: t("farmSettings.saveFailed"),
+        description: getUserFriendlyMessage(error),
+        variant: "destructive",
+      })
     }
   }
 
@@ -114,8 +119,8 @@ export default function FarmSettings() {
       const logo = await readLogoFile(file)
       await setLogo(logo)
       toast({ title: t("sidebar.logoUpdated") })
-    } catch {
-      toast({ title: t("sidebar.logoFailed"), variant: "destructive" })
+    } catch (error) {
+      toast({ title: t("sidebar.logoFailed"), description: getUserFriendlyMessage(error), variant: "destructive" })
     }
   }
 

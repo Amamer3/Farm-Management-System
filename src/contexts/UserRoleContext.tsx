@@ -147,40 +147,47 @@ export function UserRoleProvider({ children }: { children: ReactNode }) {
     let isMounted = true
 
     const init = async () => {
-      // Don't initialize if user just logged in
-      if (hasLoggedInRef.current) {
-        return
-      }
-
-      // Always check for stored user first - use as fallback
-      const storedUser = authService.getCurrentUser()
-      if (storedUser) {
-        // Set stored user immediately so app can render
-        setUser(storedUser)
-        setIsLoading(false)
-        
-        // Try to refresh/validate in background, but don't block on it
-        // Only update if we get a fresh user, don't clear on error
-        try {
-          const freshUser = await authService.initializeAuth()
-          if (isMounted && !hasLoggedInRef.current && freshUser) {
-            setUser(freshUser)
-          }
-        } catch (error) {
-          // Keep using stored user even if refresh fails
-          // Only log error, don't clear user
-          console.warn('Failed to refresh auth, using stored user:', error)
+      try {
+        // Don't initialize if user just logged in
+        if (hasLoggedInRef.current) {
+          return
         }
-        return
-      }
 
-      if (isMounted && !hasLoggedInRef.current) {
-        setUser(null)
-        setIsLoading(false)
+        // Always check for stored user first - use as fallback
+        const storedUser = authService.getCurrentUser()
+        if (storedUser) {
+          // Set stored user immediately so app can render
+          setUser(storedUser)
+          setIsLoading(false)
+          
+          // Try to refresh/validate in background, but don't block on it
+          // Only update if we get a fresh user, don't clear on error
+          try {
+            const freshUser = await authService.initializeAuth()
+            if (isMounted && !hasLoggedInRef.current && freshUser) {
+              setUser(freshUser)
+            }
+          } catch (error) {
+            // Keep using stored user even if refresh fails
+            console.warn('Failed to refresh auth, using stored user:', error)
+          }
+          return
+        }
+
+        if (isMounted && !hasLoggedInRef.current) {
+          setUser(null)
+          setIsLoading(false)
+        }
+      } catch (error) {
+        console.warn("Auth initialization failed:", error)
+        if (isMounted) {
+          setUser(null)
+          setIsLoading(false)
+        }
       }
     }
 
-    init()
+    void init()
 
     // Subscribe to auth events
     const unsubLogin = authService.on("login", () => {

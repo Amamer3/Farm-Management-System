@@ -15,6 +15,8 @@ import { farmService } from "@/services/dataService"
 import { useFarm } from "@/contexts/FarmContext"
 import { useUserRole } from "@/contexts/UserRoleContext"
 import { useToast } from "@/hooks/use-toast"
+import { getUserFriendlyMessage } from "@/utils/errorHandler"
+import { InlineError } from "@/components/errors/InlineError"
 
 export type LivestockConfig = {
   enterprise: string
@@ -53,26 +55,36 @@ export default function Livestock({ config }: { config: LivestockConfig }) {
   const [groupForm, setGroupForm] = useState({ name: "", species: config.species[0] || "", breed: "", count: "1" })
   const [animalForm, setAnimalForm] = useState({ tagId: "", name: "", sex: "female", breed: "", purpose: "dairy", species: config.species[0] || "", animalGroupId: "" })
   const [eventForm, setEventForm] = useState({ eventType: config.events[0] || "", animalGroupId: "", quantity: "1", weightKg: "", volumeLiters: "", stillborn: "0", price: "", notes: "" })
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
   const speciesLabel = (value: string) => t(`livestock.speciesLabel.${value}` as never)
   const eventLabel = (value: string) => t(`livestock.events.${value}` as never)
 
   const load = async () => {
     if (!enabled) return
-    const [s, g, a, e] = await Promise.all([
-      farmService.stats(config.module),
-      farmService.groups({ enterprise: config.enterprise }),
-      farmService.animals({ enterprise: config.enterprise }),
-      farmService.events(config.module),
-    ])
-    setStats(s)
-    setGroups(asList(g))
-    setAnimals(asList(a))
-    setEvents(asList(e))
+    setLoading(true)
+    setLoadError(null)
+    try {
+      const [s, g, a, e] = await Promise.all([
+        farmService.stats(config.module),
+        farmService.groups({ enterprise: config.enterprise }),
+        farmService.animals({ enterprise: config.enterprise }),
+        farmService.events(config.module),
+      ])
+      setStats(s)
+      setGroups(asList(g))
+      setAnimals(asList(a))
+      setEvents(asList(e))
+    } catch (error) {
+      setLoadError(getUserFriendlyMessage(error))
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
-    load().catch(() => {})
+    void load()
   }, [enabled, config.module])
 
   const addGroup = async () => {
@@ -87,8 +99,8 @@ export default function Livestock({ config }: { config: LivestockConfig }) {
       setGroupForm({ ...groupForm, name: "" })
       await load()
       toast({ title: t("livestock.groupSaved") })
-    } catch {
-      toast({ title: t("livestock.groupFailed"), variant: "destructive" })
+    } catch (error) {
+      toast({ title: t("livestock.groupFailed"), description: getUserFriendlyMessage(error), variant: "destructive" })
     }
   }
 
@@ -107,8 +119,8 @@ export default function Livestock({ config }: { config: LivestockConfig }) {
       setAnimalForm({ ...animalForm, tagId: "", name: "" })
       await load()
       toast({ title: t("livestock.animalSaved") })
-    } catch {
-      toast({ title: t("livestock.animalFailed"), variant: "destructive" })
+    } catch (error) {
+      toast({ title: t("livestock.animalFailed"), description: getUserFriendlyMessage(error), variant: "destructive" })
     }
   }
 
@@ -127,8 +139,8 @@ export default function Livestock({ config }: { config: LivestockConfig }) {
       await farmService.createEvent(config.module, body)
       await load()
       toast({ title: t("livestock.eventSaved") })
-    } catch {
-      toast({ title: t("livestock.eventFailed"), variant: "destructive" })
+    } catch (error) {
+      toast({ title: t("livestock.eventFailed"), description: getUserFriendlyMessage(error), variant: "destructive" })
     }
   }
 
@@ -151,6 +163,17 @@ export default function Livestock({ config }: { config: LivestockConfig }) {
           </div>
           {enabled && (
             <>
+              {loadError ? (
+                <InlineError
+                  title={t("common.loadErrorTitle")}
+                  message={loadError}
+                  onRetry={() => void load()}
+                  retryLabel={t("common.tryAgain")}
+                />
+              ) : null}
+              {loading && !stats ? (
+                <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
+              ) : null}
               {stats && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {STAT_KEYS.filter((k) => typeof stats[k] === "number").map((k) => (

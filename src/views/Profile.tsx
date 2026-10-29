@@ -20,6 +20,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useUserRole } from "@/contexts/UserRoleContext"
 import { authService } from "@/services/authService"
 import { useToast } from "@/hooks/use-toast"
+import { getUserFriendlyMessage } from "@/utils/errorHandler"
 import { format } from "date-fns"
 import { 
   User, 
@@ -174,8 +175,7 @@ const Profile = () => {
           employeeId: apiProfile.id || apiProfile.employeeId || prev.employeeId,
         }))
       } catch (error) {
-        console.error('Failed to fetch full profile:', error)
-        setProfileError('Some profile data could not be loaded')
+        setProfileError(getUserFriendlyMessage(error) || "Some profile data could not be loaded")
       }
     }
 
@@ -238,7 +238,7 @@ const Profile = () => {
         description: "Your profile has been successfully updated.",
       })
     } catch (error) {
-      const msg = error instanceof Error ? error.message : "Failed to update profile"
+      const msg = getUserFriendlyMessage(error) || "Failed to update profile"
       setProfileError(msg)
       toast({
         title: "Update failed",
@@ -288,7 +288,7 @@ const Profile = () => {
           : "Your password has been set successfully.",
       })
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to change password"
+      const errorMessage = getUserFriendlyMessage(error) || "Failed to change password"
       setPasswordError(errorMessage)
       
       // Show toast with the error message (especially for "Password not set" case)
@@ -341,7 +341,7 @@ const Profile = () => {
       setProfile(prev => ({ ...prev, avatar: result.avatar }))
       toast({ title: "Avatar updated", description: "Your profile picture has been changed." })
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Could not upload image"
+      const errorMessage = getUserFriendlyMessage(error) || "Could not upload image"
       toast({ title: "Upload failed", description: errorMessage, variant: "destructive" })
     } finally {
       setUploadingAvatar(false)
@@ -357,7 +357,7 @@ const Profile = () => {
       setProfile(prev => ({ ...prev, avatar: "" }))
       toast({ title: "Avatar removed", description: "Your profile picture has been removed." })
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Could not delete avatar"
+      const errorMessage = getUserFriendlyMessage(error) || "Could not delete avatar"
       toast({ title: "Delete failed", description: errorMessage, variant: "destructive" })
     } finally {
       setUploadingAvatar(false)

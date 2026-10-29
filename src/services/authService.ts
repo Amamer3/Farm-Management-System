@@ -1,6 +1,6 @@
 import { User, LoginCredentials, RegisterData, UserRole } from "@/types/auth"
 import { getPublicApiBaseUrl, getRequestTimeoutMs, isProd } from "@/lib/env"
-import { parseApiError, storage, withTimeout, retryWithBackoff } from "@/utils/errorHandler"
+import { isAbortError, storage, toUserError, withTimeout, retryWithBackoff } from "@/utils/errorHandler"
 
 function getApiBaseUrl(): string {
   return getPublicApiBaseUrl()
@@ -285,8 +285,8 @@ class AuthService {
       const text = await response.text()
       return text as unknown as T
     } catch (error) {
-      const appError = parseApiError(error)
-      throw new Error(appError.message)
+      if (isAbortError(error)) throw error
+      throw toUserError(error)
     }
   }
 
@@ -557,11 +557,19 @@ class AuthService {
       ? endpoint
       : `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`
 
-    const response = await fetch(url, {
-      method: "GET",
-      mode: "cors",
-      credentials: "include",
-    })
+    let response: Response
+    try {
+      response = await withTimeout(
+        fetch(url, {
+          method: "GET",
+          mode: "cors",
+          credentials: "include",
+        }),
+        REQUEST_TIMEOUT
+      )
+    } catch (error) {
+      throw toUserError(error)
+    }
 
     if (!response.ok) {
       let message = `Download failed (${response.status})`

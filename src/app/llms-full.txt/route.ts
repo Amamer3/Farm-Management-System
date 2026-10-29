@@ -14,6 +14,7 @@ import { absoluteUrl, LLMS_PATH } from "@/lib/seo"
 export const revalidate = 3600
 
 export function GET() {
+  try {
   const name = getAppName()
   const articles = RESOURCE_ARTICLES.map((article) => {
     const sections = article.sections.map((section) => `### ${section.heading}\n\n${section.body}`).join("\n\n")
@@ -91,4 +92,10 @@ Authenticated workspace routes are private and should not be treated as public d
       "Cache-Control": "public, max-age=3600, s-maxage=86400",
     },
   })
+  } catch {
+    return new Response("Unable to generate this file right now.", {
+      status: 500,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    })
+  }
 }

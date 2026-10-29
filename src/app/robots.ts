@@ -7,6 +7,7 @@ const publicRules = {
 }
 
 export default function robots(): MetadataRoute.Robots {
+  try {
   return {
     rules: [
       { userAgent: "Googlebot", ...publicRules },
@@ -24,5 +25,11 @@ export default function robots(): MetadataRoute.Robots {
     ],
     sitemap: absoluteUrl("/sitemap.xml"),
     host: absoluteUrl("/"),
+  }
+  } catch {
+    return {
+      rules: { userAgent: "*", allow: "/", disallow: [...ROBOTS_DISALLOW] },
+      sitemap: absoluteUrl("/sitemap.xml"),
+    }
   }
 }

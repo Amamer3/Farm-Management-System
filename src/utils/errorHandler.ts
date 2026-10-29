@@ -28,7 +28,58 @@ export interface AppError {
  * Check if the browser is online
  */
 export function isOnline(): boolean {
+  if (typeof navigator === "undefined") return true;
   return navigator.onLine;
+}
+
+/**
+ * Request was cancelled (route change, unmount, or abort controller)
+ */
+export function isAbortError(error: unknown): boolean {
+  if (!error) return false;
+  if (typeof DOMException !== "undefined" && error instanceof DOMException && error.name === "AbortError") {
+    return true;
+  }
+  if (error instanceof Error) {
+    return error.name === "AbortError" || /aborted|abort error|the operation was aborted/i.test(error.message);
+  }
+  return false;
+}
+
+/**
+ * Old JS chunks after a deploy — the user needs a reload, not a bug report
+ */
+export function isStaleClientError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error ?? "");
+  return /loading chunk|chunkloaderror|failed to fetch dynamically imported|importing a module script failed/i.test(
+    message
+  );
+}
+
+function isTechnicalMessage(message: string): boolean {
+  const value = message.toLowerCase();
+  return (
+    value.includes("cannot read") ||
+    value.includes("undefined is not") ||
+    value.includes("null is not") ||
+    value.includes("unexpected token") ||
+    value.includes("failed to execute") ||
+    value.includes("minmax") ||
+    /at\s+\S+\s+\(/.test(message) ||
+    message.length > 280
+  );
+}
+
+/**
+ * Log failures without interrupting the UI
+ */
+export function logClientError(context: string, error: unknown): void {
+  if (typeof console === "undefined") return;
+  if (process.env.NODE_ENV === "development") {
+    console.error(`[${context}]`, error);
+    return;
+  }
+  console.error(`[${context}]`, error instanceof Error ? error.message : "Unknown error");
 }
 
 /**
@@ -86,6 +137,24 @@ export function isRetryableError(error: unknown): boolean {
  * Parse error from API response
  */
 export function parseApiError(error: unknown): AppError {
+  if (isAbortError(error)) {
+    return {
+      type: ErrorType.CLIENT,
+      message: "The request was cancelled.",
+      originalError: error instanceof Error ? error : undefined,
+      retryable: false,
+    };
+  }
+
+  if (isStaleClientError(error)) {
+    return {
+      type: ErrorType.CLIENT,
+      message: "The app was updated. Reload to load the latest version.",
+      originalError: error instanceof Error ? error : undefined,
+      retryable: true,
+    };
+  }
+
   // Network errors
   if (isNetworkError(error)) {
     return {
@@ -275,13 +344,27 @@ export function parseApiError(error: unknown): AppError {
       };
     }
 
-    // Generic error
+    // Generic error — never show stack traces or engine messages to users
+    const raw = error.message || "An unexpected error occurred. Please try again.";
     return {
       type: ErrorType.UNKNOWN,
-      message: error.message || 'An unexpected error occurred. Please try again.',
+      message: isTechnicalMessage(raw) ? "An unexpected error occurred. Please try again." : raw,
       originalError: error,
       retryable: isRetryableError(error),
     };
+  }
+
+  if (error && typeof error === "object" && "message" in error) {
+    const wrapped = new Error(String((error as { message: unknown }).message || "An unexpected error occurred. Please try again."));
+    const status = (error as { status?: number }).status;
+    if (typeof status === "number") {
+      (wrapped as { status?: number }).status = status;
+    }
+    const code = (error as { code?: string }).code;
+    if (code) {
+      (wrapped as { code?: string }).code = code;
+    }
+    return parseApiError(wrapped);
   }
 
   // Unknown error type
@@ -349,6 +432,7 @@ export const storage = {
   },
 
   clear(): boolean {
+    if (typeof window === "undefined") return false;
     try {
       localStorage.clear();
       return true;
@@ -395,14 +479,41 @@ export async function retryWithBackoff<T>(
 }
 
 /**
- * Create a timeout promise
+ * Race a promise against a timeout without leaving an unhandled rejection
  */
 export function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
-  return Promise.race([
-    promise,
-    new Promise<T>((_, reject) =>
-      setTimeout(() => reject(new Error(`Request timeout after ${timeoutMs}ms`)), timeoutMs)
-    ),
-  ]);
+  return new Promise<T>((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      reject(new Error(`Request timeout after ${timeoutMs}ms`));
+    }, timeoutMs);
+
+    promise.then(
+      (value) => {
+        clearTimeout(timeoutId);
+        resolve(value);
+      },
+      (error) => {
+        clearTimeout(timeoutId);
+        reject(error);
+      }
+    );
+  });
+}
+
+type ErrorWithMeta = Error & { status?: number; code?: string; retryable?: boolean; type?: ErrorType }
+
+/**
+ * Convert any thrown value into a user-facing Error while keeping HTTP metadata
+ */
+export function toUserError(error: unknown): ErrorWithMeta {
+  const appError = parseApiError(error)
+  const next = new Error(appError.message) as ErrorWithMeta
+  next.status = appError.statusCode ?? (typeof (error as { status?: number })?.status === "number"
+    ? (error as { status: number }).status
+    : undefined)
+  next.code = (error as { code?: string })?.code
+  next.retryable = appError.retryable
+  next.type = appError.type
+  return next
 }
 

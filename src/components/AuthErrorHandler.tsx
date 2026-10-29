@@ -1,63 +1,67 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { authService } from '@/services/authService';
-import { storage } from '@/utils/errorHandler';
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { authService } from "@/services/authService";
+import { storage } from "@/utils/errorHandler";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-const AuthErrorHandler: React.FC = () => {
+const AUTH_PAGES = new Set(["/login", "/forgot-password", "/get-started"]);
+
+const AuthErrorHandler = () => {
   const [showError, setShowError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string>('Your session has expired or is invalid. Please log in again to continue.');
+  const t = useTranslations("common");
+  const ta = useTranslations("auth");
+  const [errorMessage, setErrorMessage] = useState(ta("sessionExpired"));
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    // Listen for authentication errors
-    const handleAuthError = (event: CustomEvent) => {
-      const message = event.detail?.message || 'Your session has expired or is invalid. Please log in again to continue.';
-      setErrorMessage(message);
+    const handleAuthError = (event: Event) => {
+      const detail = (event as CustomEvent<{ message?: string }>).detail;
+      setErrorMessage(detail?.message || ta("sessionExpired"));
       setShowError(true);
     };
 
-    // Create a custom event listener for auth errors
-    window.addEventListener('auth-error' as any, handleAuthError);
+    const unsubExpired = authService.on("session_expired", () => {
+      setErrorMessage(ta("sessionExpired"));
+      setShowError(true);
+    });
+
+    window.addEventListener("auth-error", handleAuthError as EventListener);
 
     return () => {
-      window.removeEventListener('auth-error' as any, handleAuthError);
+      unsubExpired();
+      window.removeEventListener("auth-error", handleAuthError as EventListener);
     };
-  }, []);
+  }, [ta]);
 
   const handleLogout = async () => {
     try {
       await authService.logout();
-    } catch (error) {
-      console.error('Logout failed:', error);
+    } catch {
+      storage.removeItem("auth");
     } finally {
-      storage.removeItem('auth');
-      
-      // Redirect to home - AppContent will show AuthPage if not authenticated
-      router.push('/');
       setShowError(false);
+      router.replace("/login?reason=expired");
     }
   };
 
-  if (!showError) return null;
+  if (!showError || AUTH_PAGES.has(pathname)) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-xl font-bold text-red-600 mb-4">Authentication Error</h2>
-        <p className="mb-4">
-          {errorMessage}
-        </p>
-        <div className="flex justify-end">
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-          >
-            Log In Again
-          </button>
-        </div>
-      </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>{t("sessionExpiredTitle")}</CardTitle>
+          <CardDescription>{errorMessage}</CardDescription>
+        </CardHeader>
+        <CardContent className="flex justify-end">
+          <Button onClick={() => void handleLogout()}>{t("logInAgain")}</Button>
+        </CardContent>
+      </Card>
     </div>
   );
 };

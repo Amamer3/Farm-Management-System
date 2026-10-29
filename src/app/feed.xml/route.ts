@@ -5,6 +5,7 @@ import { absoluteUrl, RSS_PATH, SITE_CONTENT_UPDATED, xmlEscape } from "@/lib/se
 export const revalidate = 3600
 
 export function GET() {
+  try {
   const name = getAppName()
   const site = absoluteUrl("/")
   const feedUrl = absoluteUrl(RSS_PATH)
@@ -41,4 +42,10 @@ ${items}
       "Cache-Control": "public, max-age=3600, s-maxage=86400",
     },
   })
+  } catch {
+    return new Response("Unable to generate the feed right now.", {
+      status: 500,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    })
+  }
 }

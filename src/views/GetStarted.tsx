@@ -19,6 +19,7 @@ import {
   writeSignupDraft,
 } from "@/lib/farmProfile"
 import { getAppName, getLogoPath } from "@/lib/env"
+import { getUserFriendlyMessage } from "@/utils/errorHandler"
 import { photoForEnterprise } from "@/lib/marketingImages"
 
 export default function GetStarted() {
@@ -198,14 +199,12 @@ export default function GetStarted() {
           router.replace("/dashboard")
           return
         } catch (fallbackError: unknown) {
-          const message = fallbackError instanceof Error ? fallbackError.message : t("getStarted.couldNotCreate")
-          setError(message)
+          setError(getUserFriendlyMessage(fallbackError) || t("getStarted.couldNotCreate"))
           setSubmitting(false)
           return
         }
       }
-      const message = err instanceof Error ? err.message : t("getStarted.couldNotCreate")
-      setError(message)
+      setError(getUserFriendlyMessage(err) || t("getStarted.couldNotCreate"))
       setSubmitting(false)
     }
   }

@@ -4,6 +4,7 @@ import { absoluteUrl, PUBLIC_ROUTES, SITE_CONTENT_UPDATED } from "@/lib/seo"
 export const revalidate = 3600
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  try {
   return PUBLIC_ROUTES.map((route) => ({
     url: absoluteUrl(route.path),
     lastModified: SITE_CONTENT_UPDATED,
@@ -13,4 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ? { images: route.images.map((image) => absoluteUrl(image)) }
       : {}),
   }))
+  } catch {
+    return [{ url: absoluteUrl("/"), lastModified: new Date() }]
+  }
 }

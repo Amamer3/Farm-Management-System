@@ -113,7 +113,11 @@ export function PwaProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return
-    void navigator.serviceWorker.register("/sw.js", { scope: "/", updateViaCache: "none" })
+    void navigator.serviceWorker
+      .register("/sw.js", { scope: "/", updateViaCache: "none" })
+      .catch(() => {
+        /* private mode / blocked SW should not break the app */
+      })
   }, [])
 
   useEffect(() => {
@@ -156,13 +160,17 @@ export function PwaProvider({ children }: { children: ReactNode }) {
   const promptInstall = useCallback(async () => {
     if (isInstalled) return
     if (deferredPrompt) {
-      await deferredPrompt.prompt()
-      const choice = await deferredPrompt.userChoice
-      setDeferredPrompt(null)
-      if (choice.outcome === "accepted") {
-        setIsInstalled(true)
-        setBannerOpen(false)
-        return
+      try {
+        await deferredPrompt.prompt()
+        const choice = await deferredPrompt.userChoice
+        setDeferredPrompt(null)
+        if (choice.outcome === "accepted") {
+          setIsInstalled(true)
+          setBannerOpen(false)
+          return
+        }
+      } catch {
+        setDeferredPrompt(null)
       }
     }
     setHelpOpen(true)

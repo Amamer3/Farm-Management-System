@@ -4,8 +4,9 @@ import { NextIntlClientProvider } from "next-intl"
 import { getLocale, getMessages } from "next-intl/server"
 import { Providers } from "./providers"
 import { JsonLd } from "@/components/seo/JsonLd"
-import { isRtl } from "@/i18n/config"
+import { defaultLocale, isRtl } from "@/i18n/config"
 import { rootMetadata, siteGraphJsonLd } from "@/lib/seo"
+import en from "../messages/en.json"
 import "../index.css"
 
 const inter = Inter({
@@ -42,7 +43,26 @@ const hindi = Noto_Sans_Devanagari({
   display: "swap",
 })
 
-export const metadata: Metadata = rootMetadata()
+function safeRootMetadata(): Metadata {
+  try {
+    return rootMetadata()
+  } catch {
+    return {
+      title: "Agrocyms",
+      description: "Farm management software for crop and livestock businesses.",
+    }
+  }
+}
+
+export const metadata: Metadata = safeRootMetadata()
+
+function safeSiteGraph() {
+  try {
+    return siteGraphJsonLd()
+  } catch {
+    return []
+  }
+}
 
 export const viewport: Viewport = {
   themeColor: [
@@ -59,8 +79,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const locale = await getLocale()
-  const messages = await getMessages()
+  let locale = defaultLocale
+  let messages: Record<string, unknown> = en
+  try {
+    locale = await getLocale()
+    messages = await getMessages()
+  } catch {
+    locale = defaultLocale
+    messages = en
+  }
 
   return (
     <html
@@ -71,7 +98,7 @@ export default async function RootLayout({
     >
       <body className="font-inter antialiased" suppressHydrationWarning>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <JsonLd data={siteGraphJsonLd()} />
+          <JsonLd data={safeSiteGraph()} />
           <Providers>{children}</Providers>
         </NextIntlClientProvider>
       </body>

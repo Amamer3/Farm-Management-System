@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Download, Share, X } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { getAppName, getLogoPath } from "@/lib/env"
@@ -96,10 +97,14 @@ function rememberDismissed() {
   }
 }
 
+const QUIET_PATHS = ["/login", "/get-started", "/forgot-password"]
+
 export function PwaProvider({ children }: { children: ReactNode }) {
   const t = useTranslations()
+  const pathname = usePathname()
   const appName = getAppName()
   const logoPath = getLogoPath()
+  const quiet = QUIET_PATHS.includes(pathname)
   const [isInstalled, setIsInstalled] = useState(false)
   const [platform, setPlatform] = useState<Platform>("other")
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
@@ -133,7 +138,7 @@ export function PwaProvider({ children }: { children: ReactNode }) {
     window.addEventListener("appinstalled", onInstalled)
 
     let timer: number | undefined
-    if (!installed && !wasRecentlyDismissed()) {
+    if (!installed && !wasRecentlyDismissed() && !quiet) {
       timer = window.setTimeout(() => setBannerOpen(true), BANNER_DELAY_MS)
     }
 
@@ -142,7 +147,11 @@ export function PwaProvider({ children }: { children: ReactNode }) {
       window.removeEventListener("appinstalled", onInstalled)
       if (timer) window.clearTimeout(timer)
     }
-  }, [])
+  }, [quiet])
+
+  useEffect(() => {
+    if (quiet) setBannerOpen(false)
+  }, [quiet])
 
   const promptInstall = useCallback(async () => {
     if (isInstalled) return

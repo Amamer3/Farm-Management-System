@@ -8,13 +8,15 @@ interface MetricCardProps {
   change?: {
     value: string
     trend: "up" | "down" | "neutral"
+    label?: string
   }
+  hint?: string
   icon: LucideIcon
   className?: string
   gradient?: "blue" | "green" | "orange" | "purple" | "red"
 }
 
-export function MetricCard({ title, value, change, icon: Icon, className, gradient = "blue" }: MetricCardProps) {
+export function MetricCard({ title, value, change, hint, icon: Icon, className, gradient = "blue" }: MetricCardProps) {
   const gradientClasses = {
     blue: "from-blue-500/20 via-blue-400/10 to-transparent",
     green: "from-green-500/20 via-green-400/10 to-transparent",
@@ -58,22 +60,28 @@ export function MetricCard({ title, value, change, icon: Icon, className, gradie
           </div>
         </div>
         
-        {change && (
+        {(change || hint) && (
           <div className="flex items-center gap-2 pt-3 border-t border-border/50">
-            <div className={cn(
-              "flex items-center gap-1.5 text-sm font-medium",
-              change.trend === "up" && "text-green-600 dark:text-green-400",
-              change.trend === "down" && "text-red-600 dark:text-red-400",
-              change.trend === "neutral" && "text-muted-foreground"
-            )}>
-              <TrendIcon className={cn(
-                "w-4 h-4",
-                change.trend === "up" && "text-green-600 dark:text-green-400",
-                change.trend === "down" && "text-red-600 dark:text-red-400"
-              )} />
-              {change.value}
-            </div>
-            <span className="text-xs text-muted-foreground">vs last week</span>
+            {change ? (
+              <>
+                <div className={cn(
+                  "flex items-center gap-1.5 text-sm font-medium",
+                  change.trend === "up" && "text-green-600 dark:text-green-400",
+                  change.trend === "down" && "text-red-600 dark:text-red-400",
+                  change.trend === "neutral" && "text-muted-foreground"
+                )}>
+                  <TrendIcon className={cn(
+                    "w-4 h-4",
+                    change.trend === "up" && "text-green-600 dark:text-green-400",
+                    change.trend === "down" && "text-red-600 dark:text-red-400"
+                  )} />
+                  {change.value}
+                </div>
+                {change.label && <span className="text-xs text-muted-foreground">{change.label}</span>}
+              </>
+            ) : (
+              <span className="text-xs text-muted-foreground">{hint}</span>
+            )}
           </div>
         )}
       </div>

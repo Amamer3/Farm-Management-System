@@ -220,6 +220,11 @@ export function AuthPage() {
                 </Alert>
               )}
               <LoginForm isRedirecting={isRedirecting} />
+              <p className="mt-4 text-center text-sm">
+                <Link href="/forgot-password" className="font-medium text-primary hover:underline">
+                  {t("forgotPassword")}
+                </Link>
+              </p>
               <p className="mt-6 text-center text-sm text-muted-foreground">
                 <Link href="/get-started" className="font-medium text-primary hover:underline">
                   {t("createAccount")}

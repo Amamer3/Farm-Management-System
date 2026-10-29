@@ -606,6 +606,14 @@ export class FarmService extends BaseApiService {
   stats(module: 'ruminants' | 'pigs' | 'cattle') {
     return this.get<any>(`/${module}/stats`)
   }
+
+  cropEvents() {
+    return this.get<any[]>('/crop-events')
+  }
+
+  createCropEvent(data: Record<string, unknown>) {
+    return this.post('/crop-events', data)
+  }
 }
 
 export const farmService = new FarmService()

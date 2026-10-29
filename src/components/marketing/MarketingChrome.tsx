@@ -57,8 +57,8 @@ export function MarketingChrome({
         {t("common.skipToContent")}
       </a>
 
-      <header className="sticky top-0 z-30 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-[1320px] items-center justify-between gap-2 px-4 sm:h-[84px] sm:gap-3 sm:px-6">
+      <header className="sticky top-0 z-30 px-3 pt-3 pb-2 sm:px-5 sm:pt-4 sm:pb-3">
+        <div className="mx-auto flex h-14 max-w-[1320px] items-center justify-between gap-2 rounded-[22px] border border-black/[0.06] bg-white/90 px-3 shadow-[0_8px_28px_rgba(20,32,24,0.08)] backdrop-blur-md sm:h-16 sm:gap-3 sm:rounded-full sm:px-5">
           <Link href="/" className="flex min-w-0 items-center gap-2">
             <img src={logoPath} alt={`${appName} logo`} className="h-8 w-8 shrink-0 object-contain sm:h-10 sm:w-10 lg:h-11 lg:w-11" />
             <span className="truncate text-base font-extrabold tracking-tight text-[#173528] sm:text-lg lg:text-[22px]">{appName}</span>
@@ -94,7 +94,7 @@ export function MarketingChrome({
               {searchOpen && (
                 <form
                   onSubmit={onSearch}
-                  className="fixed start-4 end-4 top-[4.25rem] z-40 max-h-[min(70vh,28rem)] overflow-y-auto rounded-2xl border border-black/5 bg-white p-3 shadow-[0_16px_40px_rgba(20,32,24,0.12)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:absolute sm:start-auto sm:end-0 sm:top-14 sm:w-80"
+                  className="fixed start-4 end-4 top-[5.25rem] z-40 max-h-[min(70vh,28rem)] overflow-y-auto rounded-2xl border border-black/5 bg-white p-3 shadow-[0_16px_40px_rgba(20,32,24,0.12)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:absolute sm:start-auto sm:end-0 sm:top-12 sm:w-80"
                 >
                   <input
                     ref={searchRef}
@@ -135,10 +135,10 @@ export function MarketingChrome({
             </div>
 
             <Link
-              href="/get-started"
-              className="inline-flex items-center gap-2 rounded-full bg-[#173528] py-1.5 ps-1.5 pe-1.5 text-sm font-semibold text-white lg:ps-5"
+              href="/login"
+              className="inline-flex items-center gap-2 rounded-full bg-[#173528] py-1.5 ps-4 pe-1.5 text-sm font-semibold text-white"
             >
-              <span className="hidden lg:inline">{t("common.getStarted")}</span>
+              <span>{t("common.signIn")}</span>
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#173528]">
                 <ArrowRight className="h-4 w-4 rtl:rotate-180" />
               </span>
@@ -194,18 +194,18 @@ export function MarketingChrome({
           </nav>
           <div className="grid grid-cols-2 gap-2 border-t border-[#E4E8E4] p-4">
             <Link
-              href="/login"
+              href="/get-started"
               className="rounded-2xl border border-[#E4E8E4] px-4 py-3 text-center text-sm font-semibold"
               onClick={() => setMenuOpen(false)}
             >
-              {t("common.signIn")}
+              {t("common.getStarted")}
             </Link>
             <Link
-              href="/get-started"
+              href="/login"
               className="rounded-2xl bg-[#173528] px-4 py-3 text-center text-sm font-semibold text-white"
               onClick={() => setMenuOpen(false)}
             >
-              {t("common.getStarted")}
+              {t("common.signIn")}
             </Link>
           </div>
         </SheetContent>

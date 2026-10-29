@@ -53,7 +53,7 @@ const Index = () => {
         <main className="flex-1 responsive-container responsive-spacing mobile-content overflow-y-auto">
           <div className="responsive-flex items-start sm:items-center justify-between mb-6">
             <div className="flex-1">
-              <h1 className="responsive-title text-foreground pt-10">{farm?.name || t("dashboard.title")}</h1>
+              <h1 className="responsive-title text-foreground">{farm?.name || t("dashboard.title")}</h1>
               <p className="responsive-subtitle">{farmFocusLine(enterprises, crops, enterpriseName, cropName) || t("dashboard.defaultFocus")}</p>
             </div>
           </div>
@@ -96,7 +96,6 @@ const Index = () => {
                 <MetricCard
                   title={t("dashboard.totalBirds")}
                   value={(overview.totalBirds ?? overview.activeBirds ?? 0).toLocaleString()}
-                  change={{ value: "+0%", trend: "up" }}
                   icon={Bird}
                   gradient="blue"
                 />
@@ -105,31 +104,31 @@ const Index = () => {
                 <MetricCard
                   title={t("dashboard.eggsToday")}
                   value={(overview.todayEggCount ?? overview.todayEggs ?? 0).toLocaleString()}
-                  change={{ value: "+0%", trend: "up" }}
                   icon={Egg}
                   gradient="green"
                 />
               )}
               {crops.length > 0 && (
-                <MetricCard
-                  title={t("dashboard.crops")}
-                  value={String(crops.length)}
-                  change={{ value: crops.map(cropName).slice(0, 2).join(", "), trend: "up" }}
-                  icon={Sprout}
-                  gradient="green"
-                />
+                <Link href="/crops" className="block">
+                  <MetricCard
+                    title={t("dashboard.crops")}
+                    value={String(crops.length)}
+                    hint={crops.map(cropName).slice(0, 3).join(", ")}
+                    icon={Sprout}
+                    gradient="green"
+                  />
+                </Link>
               )}
               <MetricCard
                 title={t("dashboard.feedStock")}
                 value={(overview.feedItems ?? overview.feedStock ?? 0).toLocaleString()}
-                change={{ value: "+0%", trend: "up" }}
                 icon={Package}
                 gradient="orange"
               />
               <MetricCard
                 title={t("dashboard.healthAlerts")}
                 value={alerts?.length?.toString() || "0"}
-                change={{ value: alerts?.length > 0 ? t("dashboard.alertsActive", { count: alerts.length }) : t("dashboard.alertsNone"), trend: alerts?.length > 0 ? "down" : "up" }}
+                hint={alerts?.length > 0 ? t("dashboard.alertsActive", { count: alerts.length }) : t("dashboard.alertsNone")}
                 icon={AlertTriangle}
                 gradient={alerts?.length > 0 ? "red" : "green"}
               />
@@ -137,7 +136,7 @@ const Index = () => {
           )}
 
           {/* Charts and actions */}
-          {livestock.length > 0 && (
+          {(livestock.length > 0 || crops.length > 0) && (
             <div className="grid gap-3 sm:grid-cols-3 mb-8">
               {livestock.map((item) => (
                 <Link key={item.id} href={item.href} className="rounded-xl border bg-card p-4 hover:border-primary/40">
@@ -146,6 +145,13 @@ const Index = () => {
                   <p className="mt-1 text-xs text-muted-foreground">{t("dashboard.recordsForFarm", { name: enterpriseName(item.id) })}</p>
                 </Link>
               ))}
+              {crops.length > 0 && (
+                <Link href="/crops" className="rounded-xl border bg-card p-4 hover:border-primary/40">
+                  <p className="text-sm text-muted-foreground">{t("dashboard.open")}</p>
+                  <p className="font-semibold">{t("dashboard.openCrops")}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{crops.map(cropName).join(", ")}</p>
+                </Link>
+              )}
             </div>
           )}
 
@@ -236,9 +242,9 @@ const Index = () => {
             
             {/* Performance overview */}
             <div className="chart-container min-w-0 self-start">
-              <div className="mb-4">
+            <div className="mb-4">
                 <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">{t("dashboard.performance")}</h3>
-                <p className="text-sm text-muted-foreground">{t("dashboard.weekSummary")}</p>
+                <p className="text-sm text-muted-foreground">{showPoultry ? t("dashboard.weekSummary") : t("dashboard.farmFocus")}</p>
               </div>
               
               {performanceLoading ? (

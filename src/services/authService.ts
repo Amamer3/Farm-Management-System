@@ -128,6 +128,7 @@ class AuthService {
       endpoint.startsWith("/auth/login") ||
       endpoint.startsWith("/auth/register") ||
       endpoint.startsWith("/auth/setup") ||
+      endpoint.startsWith("/auth/forgot-password") ||
       endpoint.startsWith("/auth/refresh-token")
 
     const headers: Record<string, string> = {}
@@ -369,6 +370,13 @@ class AuthService {
       createdAt,
       lastLogin: new Date().toISOString(),
     }
+  }
+
+  async requestPasswordReset(email: string): Promise<void> {
+    await this.makeRequest("/auth/forgot-password", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    })
   }
 
   async login(credentials: LoginCredentials): Promise<User> {

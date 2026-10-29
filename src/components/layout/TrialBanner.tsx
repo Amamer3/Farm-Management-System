@@ -13,7 +13,7 @@ export function TrialBanner() {
     return (
       <div className="border-b border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-950 sm:px-6">
         {t("expired")}{" "}
-        <Link href="/contact" className="font-semibold underline underline-offset-2">
+        <Link href="/pricing" className="font-semibold underline underline-offset-2">
           {t("contactToSubscribe")}
         </Link>{" "}
         {t("keepWriting")}

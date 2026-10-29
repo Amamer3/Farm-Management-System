@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 import GetStarted from "@/views/GetStarted"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { getAppName } from "@/lib/env"
@@ -33,7 +34,9 @@ export default function GetStartedPage() {
           howToJsonLd(),
         ])}
       />
-      <GetStarted />
+      <Suspense>
+        <GetStarted />
+      </Suspense>
     </>
   )
 }

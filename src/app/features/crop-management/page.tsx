@@ -49,11 +49,12 @@ export default function CropManagementPage() {
             ))}
           </div>
           <p className="mt-8 max-w-2xl text-sm leading-relaxed text-[#3e4b43]">
-            See the{" "}
+            After signup, the workspace crop page holds planting, fertilizer, spray, irrigation, and harvest
+            records for the crops named on this farm. See also the{" "}
             <Link href="/features/crops" className="font-semibold text-[#173528] underline-offset-4 hover:underline">
-              crop records
-            </Link>{" "}
-            currently attached to a farm profile, including the crop list chosen at signup.
+              crop feature overview
+            </Link>
+            .
           </p>
         </section>
         <MarketingCta

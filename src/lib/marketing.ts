@@ -198,9 +198,9 @@ export const FEATURE_PAGES: FeaturePage[] = [
       },
     ],
     records: [
-      "Farm-level crop list",
-      "Maize, rice, cassava, yam, plantain",
-      "Vegetables, cocoa, soybean, groundnut, sorghum",
+      "Crops named at setup",
+      "Planting, fertilizer, spray, irrigation",
+      "Harvest and loss records",
       "Shared team access",
       "Dashboard shaped around the mix",
     ],
@@ -487,7 +487,7 @@ export const FEATURE_FAQS: Record<string, { question: string; answer: string }[]
     {
       question: "Is this a full field operations suite?",
       answer:
-        "Agrocyms keeps the farm-level crop list beside livestock records so staff see what this place grows. It is not a separate agronomy planner.",
+        "Agrocyms keeps crop records beside livestock so staff can log planting, fertilizer, spray, irrigation, and harvest in the same login.",
     },
   ],
 }

@@ -134,7 +134,7 @@ export default function FeedInventory() {
         <main className="flex-1 responsive-container responsive-spacing mobile-content overflow-y-auto">
           <div className="responsive-flex items-start sm:items-center justify-between mb-6">
             <div className="flex-1">
-              <h1 className="responsive-title text-foreground pt-10">Feed Inventory</h1>
+              <h1 className="responsive-title text-foreground">Feed Inventory</h1>
               <p className="responsive-subtitle">Manage feed stock levels and monitor consumption</p>
             </div>
             <Button className="gap-2 w-full sm:w-auto" onClick={() => setAddFeedDialogOpen(true)}>

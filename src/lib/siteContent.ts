@@ -183,7 +183,7 @@ export const CROP_HUB = {
   sections: [
     {
       title: "Organize crop production activities",
-      body: "Name the crops this farm grows during setup — including maize, rice, cassava, yam, vegetables, cocoa, and more — so field work sits beside livestock records instead of in another notebook.",
+      body: "Name the crops this farm grows, then record planting, fertilizer, spray, irrigation, and harvest on the crop records page beside livestock work.",
     },
     {
       title: "Improve visibility across your operations",
@@ -283,14 +283,14 @@ export const PRICING = {
     {
       name: "Starter",
       body: "For smaller farming operations beginning their digital management journey.",
-      cta: "Choose Starter",
-      href: "/get-started",
+      cta: "Start with Starter",
+      href: "/get-started?plan=starter",
     },
     {
       name: "Professional",
       body: "For growing farming businesses that need additional workspace capabilities.",
-      cta: "Choose Professional",
-      href: "/get-started",
+      cta: "Start with Professional",
+      href: "/get-started?plan=professional",
     },
     {
       name: "Enterprise",

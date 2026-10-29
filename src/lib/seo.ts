@@ -24,10 +24,12 @@ import { appleStartupImages } from "@/lib/pwa"
 import { PRICING } from "@/lib/siteContent"
 
 export const WORKSPACE_PATHS = [
+  "/dashboard",
   "/birds",
   "/eggs",
   "/feed",
   "/medicine",
+  "/crops",
   "/reports",
   "/statistics",
   "/users",
@@ -38,9 +40,9 @@ export const WORKSPACE_PATHS = [
   "/ruminants",
 ] as const
 
-export const PRIVATE_PATHS = ["/login", "/search", ...WORKSPACE_PATHS] as const
+export const PRIVATE_PATHS = ["/login", "/forgot-password", "/search", ...WORKSPACE_PATHS] as const
 
-export const ROBOTS_DISALLOW = ["/login", ...WORKSPACE_PATHS] as const
+export const ROBOTS_DISALLOW = ["/login", "/forgot-password", ...WORKSPACE_PATHS] as const
 
 export const SITE_CONTENT_UPDATED = new Date("2026-10-29")
 export const SITE_CONTENT_PUBLISHED = new Date("2026-01-15")

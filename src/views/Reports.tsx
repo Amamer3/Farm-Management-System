@@ -162,7 +162,7 @@ export default function Reports() {
         <main className="flex-1 responsive-container responsive-spacing overflow-y-auto">
           <div className="responsive-flex items-start sm:items-center justify-between mb-6">
             <div className="flex-1">
-              <h1 className="responsive-title text-foreground pt-10">Reports & Analytics</h1>
+              <h1 className="responsive-title text-foreground">Reports & Analytics</h1>
               <p className="responsive-subtitle">Generate insights and track farm performance</p>
             </div>
             <Button className="gap-2 w-full sm:w-auto" onClick={() => setGenerateOpen(true)}>

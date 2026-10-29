@@ -24,7 +24,7 @@ export function MarketingPage({
   return (
     <MarketingChrome>
       <main>
-        <section className="mx-auto max-w-[1320px] px-4 pb-6 pt-8 sm:px-6 sm:pt-12">
+        <section className="mx-auto max-w-[1320px] px-4 pb-6 pt-4 sm:px-6 sm:pt-6">
           {breadcrumbs ? <Breadcrumbs items={breadcrumbs} /> : null}
           {image && imageAlt ? (
             <div className="grid items-center gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)] lg:gap-10">

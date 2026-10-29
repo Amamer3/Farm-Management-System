@@ -48,7 +48,7 @@ export default function PricingPage() {
               <article key={plan.name} className="flex flex-col rounded-[28px] border border-[#E4E8E4] bg-white p-6">
                 <h2 className="text-2xl font-extrabold tracking-tight">{plan.name}</h2>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-[#526057]">{plan.body}</p>
-                <p className="mt-4 text-sm font-semibold text-[#173528]">Price shown at signup</p>
+                <p className="mt-4 text-sm font-semibold text-[#173528]">30-day trial, then subscribe</p>
                 <Link
                   href={plan.href}
                   className="mt-6 inline-flex items-center justify-center rounded-full bg-[#173528] px-5 py-3 text-sm font-semibold text-white"

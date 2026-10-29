@@ -13,11 +13,25 @@ import pt from "../messages/pt.json"
 import sw from "../messages/sw.json"
 import zh from "../messages/zh.json"
 
-const catalogs: Record<Locale, typeof en> = { ar, en, es, fr, hi, pt, sw, zh }
+const catalogs = { ar, en, es, fr, hi, pt, sw, zh } as Record<Locale, typeof en>
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === "object" && !Array.isArray(value)
+}
+
+function deepMerge<T>(base: T, overlay: T): T {
+  if (!isPlainObject(base) || !isPlainObject(overlay)) return overlay
+  const out: Record<string, unknown> = { ...base }
+  for (const [key, value] of Object.entries(overlay)) {
+    const current = out[key]
+    out[key] = isPlainObject(current) && isPlainObject(value) ? deepMerge(current, value) : value
+  }
+  return out as T
+}
 
 function loadMessages(locale: string) {
   const safe = isLocale(locale) ? locale : defaultLocale
-  const base = catalogs[safe]
+  const base = safe === defaultLocale ? en : deepMerge(en, catalogs[safe])
   return {
     ...base,
     pwa: pwaMessages[safe],

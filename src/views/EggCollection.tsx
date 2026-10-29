@@ -116,7 +116,7 @@ export default function EggCollection() {
         <main className="flex-1 p-3 sm:p-6 space-y-4 sm:space-y-6 mobile-content overflow-y-auto">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="min-w-0">
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground pt-10">Egg Collection</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Egg Collection</h1>
               <p className="text-sm sm:text-base text-muted-foreground">Track daily egg collection and quality grading</p>
             </div>
             <Button className="gap-2 w-full sm:w-auto" onClick={() => setRecordCollectionDialogOpen(true)}>

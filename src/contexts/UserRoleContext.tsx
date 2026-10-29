@@ -49,14 +49,30 @@ const rolePermissions: Record<UserRole, string[]> = {
     "collect_eggs",
     "view_birds",
     "view_feed",
+    "manage_medicine",
     "basic_reports",
   ],
 }
 
+const SHARED_PAGES = [
+  "/",
+  "/dashboard",
+  "/birds",
+  "/feed",
+  "/eggs",
+  "/medicine",
+  "/crops",
+  "/ruminants",
+  "/pigs",
+  "/cattle",
+  "/farm",
+  "/profile",
+]
+
 const pageAccess: Record<UserRole, string[]> = {
-  Admin: ["/", "/birds", "/feed", "/eggs", "/medicine", "/reports", "/users", "/settings", "/profile"],
-  Manager: ["/", "/birds", "/feed", "/eggs", "/medicine", "/reports", "/users", "/profile", "/ruminants", "/pigs", "/cattle", "/farm"],
-  Worker: ["/", "/eggs", "/birds", "/feed", "/profile", "/ruminants", "/pigs", "/cattle"],
+  Admin: [...SHARED_PAGES, "/reports", "/statistics", "/users", "/settings"],
+  Manager: [...SHARED_PAGES, "/reports", "/statistics", "/users"],
+  Worker: [...SHARED_PAGES],
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -75,7 +91,7 @@ export function UserRoleProvider({ children }: { children: ReactNode }) {
   const handleLogin = useCallback((loggedInUser: User) => {
     setUser(loggedInUser)
     setIsLoading(false)
-    router.replace("/")
+    router.replace("/dashboard")
   }, [router])
 
   const handleLogout = useCallback(() => {
@@ -104,22 +120,11 @@ export function UserRoleProvider({ children }: { children: ReactNode }) {
   }, [router])
 
   const redirectToSafePage = useCallback(() => {
-    const currentUser = user
-    if (!currentUser) {
-      routerRef.current.replace("/")
+    if (!user) {
+      routerRef.current.replace("/login")
       return
     }
-    
-    // Try to redirect to profile first, then dashboard
-    // Profile is accessible to all authenticated users
-    // Check if user can access profile (all authenticated users should be able to)
-    const canAccessProfile = currentUser.role === 'Admin' || (pageAccess[currentUser.role]?.includes("/profile") ?? false)
-    if (canAccessProfile) {
-      routerRef.current.replace("/profile")
-    } else {
-      // Fallback to dashboard (home) - all authenticated users can access dashboard
-      routerRef.current.replace("/")
-    }
+    routerRef.current.replace("/dashboard")
   }, [user])
 
   // Use refs for callbacks used in event handlers to avoid re-subscriptions
@@ -305,7 +310,7 @@ export function UserRoleProvider({ children }: { children: ReactNode }) {
     // Normalize page path (ensure it starts with /)
     const normalizedPage = page.startsWith('/') ? page : `/${page}`
     // All authenticated users can access home page
-    if (normalizedPage === '/' || normalizedPage === '/profile') return true
+    if (normalizedPage === '/' || normalizedPage === '/dashboard' || normalizedPage === '/profile') return true
     // Admin has access to all pages
     if (user.role === 'Admin') return true
     return pageAccess[user.role as UserRole]?.includes(normalizedPage) ?? false

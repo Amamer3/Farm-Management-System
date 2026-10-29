@@ -12,16 +12,9 @@ export default function CattlePage() {
         config={{
           enterprise: "cattle",
           module: "cattle",
-          title: "Cattle",
-          housingKind: "kraal",
-          species: [{ value: "cattle", label: "Cattle" }],
-          events: [
-            { value: "calving", label: "Calving" },
-            { value: "milk", label: "Milk" },
-            { value: "weight", label: "Weight" },
-            { value: "sale", label: "Sale" },
-            { value: "mortality", label: "Mortality" },
-          ],
+          titleKey: "sidebar.cattle",
+          species: ["cattle"],
+          events: ["calving", "milk", "weight", "sale", "mortality"],
         }}
       />
     </ProtectedPage>

@@ -4,7 +4,8 @@ import { Menu, Search, User, LogOut, Settings, X, Download } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { NotificationBell } from "@/components/layout/NotificationBell"
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher"
-import { useState } from "react"
+import { ThemeToggle } from "@/components/layout/ThemeToggle"
+import { useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,6 +15,7 @@ import { useUserRole } from "@/contexts/UserRoleContext"
 import { useFarm } from "@/contexts/FarmContext"
 import { TrialBanner } from "@/components/layout/TrialBanner"
 import { usePwaInstall } from "@/components/pwa/PwaProvider"
+import { APP_NAV, searchAppNav } from "@/lib/appNav"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,85 +34,106 @@ export function AppHeader({ onMenuToggle }: AppHeaderProps) {
   const [searchValue, setSearchValue] = useState("")
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
   const router = useRouter()
-  const { user, logout } = useUserRole()
-  const { farm } = useFarm()
+  const { user, logout, canAccess } = useUserRole()
+  const { farm, hasEnterprise } = useFarm()
   const { canInstall, promptInstall } = usePwaInstall()
+
+  const visibleNav = useMemo(
+    () =>
+      APP_NAV.filter((item) => {
+        if (!canAccess(item.href)) return false
+        if (item.enterprise === "crops") return hasEnterprise("crops") || (farm?.crops?.length ?? 0) > 0
+        if (!item.enterprise) return true
+        if (!farm) return item.enterprise === "poultry"
+        return hasEnterprise(item.enterprise)
+      }),
+    [canAccess, farm, hasEnterprise]
+  )
+
+  const results = useMemo(() => searchAppNav(searchValue, visibleNav).slice(0, 8), [searchValue, visibleNav])
+
+  const goTo = (href: string) => {
+    setSearchValue("")
+    setMobileSearchOpen(false)
+    router.push(href)
+  }
+
+  const submitSearch = (event: React.FormEvent) => {
+    event.preventDefault()
+    if (results[0]) goTo(results[0].href)
+  }
 
   const handleLogout = async () => {
     try {
       await logout()
-      router.push('/')
-    } catch (error) {
-      console.error('Logout failed:', error)
-      router.push('/')
+    } catch {
+      router.push("/login")
     }
   }
 
-  const initials = user?.name?.split(" ").map(n => n[0]).join("").slice(0, 2) || "U"
+  const initials = user?.name?.split(" ").map((n) => n[0]).join("").slice(0, 2) || "U"
+
+  const searchField = (
+    <form onSubmit={submitSearch} className="relative flex-1 min-w-0">
+      <Search className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
+      <Input
+        autoFocus={mobileSearchOpen}
+        placeholder={t("header.searchPlaceholder")}
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+        aria-label={t("header.searchAria")}
+        className="ps-10 h-9 bg-background/50 border-border/50"
+      />
+      {searchValue.trim() && (
+        <ul className="absolute start-0 end-0 top-full z-30 mt-1 overflow-hidden rounded-xl border bg-popover text-popover-foreground">
+          {results.length === 0 && (
+            <li className="px-3 py-2 text-sm text-muted-foreground">{t("header.noResults")}</li>
+          )}
+          {results.map((item) => (
+            <li key={item.href}>
+              <button
+                type="button"
+                className="w-full px-3 py-2 text-start text-sm hover:bg-muted"
+                onMouseDown={(event) => {
+                  event.preventDefault()
+                  goTo(item.href)
+                }}
+              >
+                {t(`sidebar.${item.key}`)}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </form>
+  )
 
   return (
     <>
     <header className="page-header relative gap-2 sm:gap-3 min-w-0">
-      {/* Mobile expanded search overlay */}
       {mobileSearchOpen && (
         <div className="absolute inset-0 z-20 flex items-center gap-2 px-3 sm:px-4 bg-card md:hidden">
-          <div className="relative flex-1 min-w-0">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
-            <Input
-              autoFocus
-              placeholder={t("header.searchPlaceholder")}
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              className="pl-10 h-9 bg-background/50 border-border/50"
-            />
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="shrink-0"
-            onClick={() => setMobileSearchOpen(false)}
-            aria-label={t("header.closeSearch")}
-          >
+          {searchField}
+          <Button variant="ghost" size="icon" className="shrink-0" onClick={() => setMobileSearchOpen(false)} aria-label={t("header.closeSearch")}>
             <X className="w-5 h-5" />
           </Button>
         </div>
       )}
 
       <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="lg:hidden shrink-0"
-          onClick={onMenuToggle}
-          aria-label={t("common.toggleMenu")}
-        >
+        <Button variant="ghost" size="icon" className="lg:hidden shrink-0" onClick={onMenuToggle} aria-label={t("common.toggleMenu")}>
           <Menu className="w-5 h-5" />
         </Button>
-
-        {/* Desktop / tablet search — grows with available space */}
-        <div className="relative hidden md:block flex-1 max-w-md min-w-0">
-          <Search className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
-          <Input
-            placeholder={t("header.searchPlaceholder")}
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            className="ps-10 w-full h-9 bg-background/50 backdrop-blur-sm border-border/50"
-          />
-        </div>
+        <div className="relative hidden md:block flex-1 max-w-md min-w-0">{searchField}</div>
       </div>
 
       <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          onClick={() => setMobileSearchOpen(true)}
-          aria-label={t("common.search")}
-        >
+        <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileSearchOpen(true)} aria-label={t("common.search")}>
           <Search className="w-5 h-5" />
         </Button>
 
         <LanguageSwitcher />
+        <ThemeToggle />
         <NotificationBell />
 
         <DropdownMenu>
@@ -131,17 +154,15 @@ export function AppHeader({ onMenuToggle }: AppHeaderProps) {
               <div className="min-w-0">
                 <p className="font-medium truncate">{user?.name}</p>
                 <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
-                <Badge variant="secondary" className="text-xs mt-1">
-                  {user?.role}
-                </Badge>
+                <Badge variant="secondary" className="text-xs mt-1">{user?.role}</Badge>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => router.push('/profile')}>
+            <DropdownMenuItem onClick={() => router.push("/profile")}>
               <User className="w-4 h-4 me-2" />
               {t("common.profile")}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => router.push('/farm')}>
+            <DropdownMenuItem onClick={() => router.push("/farm")}>
               <Settings className="w-4 h-4 me-2" />
               {t("common.farmSettings")}
             </DropdownMenuItem>

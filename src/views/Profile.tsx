@@ -499,9 +499,7 @@ const Profile = () => {
                       <h3 className="text-xl font-semibold">{profile.name || <Skeleton className="h-6 w-32" />}</h3>
                       <div className="flex gap-2">
                         <Badge className={getRoleBadgeColor(profile.role)}>{profile.role}</Badge>
-                        {profile.department && <Badge variant="outline">{profile.department}</Badge>}
                       </div>
-                      <p className="text-sm text-muted-foreground">ID: {profile.employeeId}</p>
                     </div>
                   </div>
 
@@ -542,21 +540,6 @@ const Profile = () => {
                           className="pl-10"
                           value={isEditing ? editedProfile.phone : profile.phone}
                           onChange={(e) => setEditedProfile({ ...editedProfile, phone: e.target.value })}
-                          disabled={!isEditing}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="dob">Date of Birth</Label>
-                      <div className="relative">
-                        <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          id="dob"
-                          type="date"
-                          className="pl-10"
-                          value={isEditing ? editedProfile.dateOfBirth : profile.dateOfBirth}
-                          onChange={(e) => setEditedProfile({ ...editedProfile, dateOfBirth: e.target.value })}
                           disabled={!isEditing}
                         />
                       </div>

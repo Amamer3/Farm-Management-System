@@ -55,7 +55,7 @@ export function ProtectedRoute({
 
     // Don't redirect if we're already on profile or dashboard (safe pages)
     const currentPath = pathname
-    if (currentPath === "/profile" || currentPath === "/") {
+    if (currentPath === "/profile" || currentPath === "/dashboard" || currentPath === "/") {
       hasRedirected.current = false
       redirectingRef.current = false
       return
@@ -93,7 +93,7 @@ export function ProtectedRoute({
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Checking permissions...</p>
+          <p className="text-muted-foreground">Checking access…</p>
         </div>
       </div>
     )

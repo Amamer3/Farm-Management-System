@@ -89,7 +89,7 @@ const StatisticsDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold pt-10">Statistics Dashboard</h1>
+          <h1 className="text-3xl font-bold">Egg production statistics</h1>
           <p className="text-gray-600">Comprehensive farm performance analytics</p>
         </div>
         <div className="flex gap-2">

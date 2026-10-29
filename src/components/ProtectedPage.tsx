@@ -34,7 +34,7 @@ export function ProtectedPage({
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.replace("/");
+      router.replace("/login");
     }
   }, [isLoading, isAuthenticated, router]);
 

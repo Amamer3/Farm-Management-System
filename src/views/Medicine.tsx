@@ -26,7 +26,9 @@ export default function Medicine() {
   const { data: movementData, refetch: refetchMovements } = useStockMovements("medicine")
   const movements = Array.isArray(movementData) ? movementData : []
   const [useOpen, setUseOpen] = useState(false)
+  const [addOpen, setAddOpen] = useState(false)
   const [useForm, setUseForm] = useState({ medicineId: "", name: "", birdGroup: "", dosage: "", quantity: "", administeredBy: "" })
+  const [addForm, setAddForm] = useState({ name: "", type: "Vaccine", supplier: "", quantity: "", unit: "ml", expiryDate: "", batchNumber: "" })
   
   // Handle nested API response structure for medicine data
   // API response: {success: true, data: {data: [], total: 0, pagination: {...}}}
@@ -114,11 +116,11 @@ export default function Medicine() {
               <p className="text-muted-foreground">Manage medical inventory and treatment records</p>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" className="gap-2">
+              <Button variant="outline" className="gap-2" onClick={() => setUseOpen(true)}>
                 <Calendar className="w-4 h-4" />
-                Schedule Treatment
+                Record treatment
               </Button>
-              <Button className="gap-2">
+              <Button className="gap-2" onClick={() => setAddOpen(true)}>
                 <Plus className="w-4 h-4" />
                 Add Medicine
               </Button>
@@ -301,7 +303,6 @@ export default function Medicine() {
                         <TableCell>{medicine.usage}</TableCell>
                         <TableCell>
                           <div className="flex gap-2">
-                            <Button variant="ghost" size="sm">Edit</Button>
                             <Button variant="ghost" size="sm" onClick={() => {
                               setUseForm({
                                 medicineId: medicine.id,
@@ -465,15 +466,100 @@ export default function Medicine() {
         </main>
       </div>
 
+      <Dialog open={addOpen} onOpenChange={setAddOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add medicine</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="med-name">Name</Label>
+              <Input id="med-name" value={addForm.name} onChange={(e) => setAddForm({ ...addForm, name: e.target.value })} />
+            </div>
+            <div className="space-y-2">
+              <Label>Type</Label>
+              <Select value={addForm.type} onValueChange={(v) => setAddForm({ ...addForm, type: v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Vaccine">Vaccine</SelectItem>
+                  <SelectItem value="Antibiotic">Antibiotic</SelectItem>
+                  <SelectItem value="Vitamin">Vitamin</SelectItem>
+                  <SelectItem value="Treatment">Treatment</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="med-supplier">Supplier</Label>
+              <Input id="med-supplier" value={addForm.supplier} onChange={(e) => setAddForm({ ...addForm, supplier: e.target.value })} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="med-qty">Quantity</Label>
+                <Input id="med-qty" type="number" min="0" value={addForm.quantity} onChange={(e) => setAddForm({ ...addForm, quantity: e.target.value })} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="med-unit">Unit</Label>
+                <Input id="med-unit" value={addForm.unit} onChange={(e) => setAddForm({ ...addForm, unit: e.target.value })} />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="med-exp">Expiry date</Label>
+              <Input id="med-exp" type="date" value={addForm.expiryDate} onChange={(e) => setAddForm({ ...addForm, expiryDate: e.target.value })} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="med-batch">Batch number</Label>
+              <Input id="med-batch" value={addForm.batchNumber} onChange={(e) => setAddForm({ ...addForm, batchNumber: e.target.value })} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAddOpen(false)}>Cancel</Button>
+            <Button disabled={actionLoading || !addForm.name.trim()} onClick={async () => {
+              const ok = await addMedicine({
+                name: addForm.name,
+                type: addForm.type,
+                supplier: addForm.supplier,
+                quantity: Number(addForm.quantity) || 0,
+                unit: addForm.unit,
+                expiryDate: addForm.expiryDate,
+                batchNumber: addForm.batchNumber || undefined,
+              })
+              if (ok) {
+                setAddOpen(false)
+                setAddForm({ name: "", type: "Vaccine", supplier: "", quantity: "", unit: "ml", expiryDate: "", batchNumber: "" })
+                refetchMedicine()
+              }
+            }}>{actionLoading ? "Saving..." : "Save"}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <Dialog open={useOpen} onOpenChange={setUseOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Use {useForm.name || "medicine"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
+            {!useForm.medicineId && (
+              <div className="space-y-2">
+                <Label>Medicine</Label>
+                <Select
+                  value={useForm.medicineId || undefined}
+                  onValueChange={(v) => {
+                    const med = medicines.find((item: any) => item.id === v)
+                    setUseForm({ ...useForm, medicineId: v, name: med?.name || "" })
+                  }}
+                >
+                  <SelectTrigger><SelectValue placeholder="Select medicine" /></SelectTrigger>
+                  <SelectContent>
+                    {medicines.map((med: any) => (
+                      <SelectItem key={med.id} value={med.id}>{med.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="birdGroup">Group or animal</Label>
-              <Input id="birdGroup" value={useForm.birdGroup} onChange={(e) => setUseForm({ ...useForm, birdGroup: e.target.value })} placeholder="Pen A or tag" />
+              <Input id="birdGroup" value={useForm.birdGroup} onChange={(e) => setUseForm({ ...useForm, birdGroup: e.target.value })} placeholder="Pen, tag, or herd" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="dosage">Dosage</Label>

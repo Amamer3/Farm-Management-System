@@ -12,19 +12,9 @@ export default function RuminantsPage() {
         config={{
           enterprise: "small_ruminants",
           module: "ruminants",
-          title: "Small ruminants",
-          housingKind: "paddock",
-          species: [
-            { value: "goat", label: "Goat" },
-            { value: "sheep", label: "Sheep" },
-          ],
-          events: [
-            { value: "birth", label: "Birth" },
-            { value: "weaning", label: "Weaning" },
-            { value: "weight", label: "Weight" },
-            { value: "sale", label: "Sale" },
-            { value: "mortality", label: "Mortality" },
-          ],
+          titleKey: "sidebar.ruminants",
+          species: ["goat", "sheep"],
+          events: ["birth", "weaning", "weight", "sale", "mortality"],
         }}
       />
     </ProtectedPage>

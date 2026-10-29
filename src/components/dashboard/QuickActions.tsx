@@ -1,6 +1,6 @@
 "use client"
 
-import { Plus, Package, Egg, Syringe, Users } from "lucide-react"
+import { Plus, Package, Egg, Syringe, Users, Sprout } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
@@ -73,6 +73,14 @@ export function QuickActions() {
       onClick: () => router.push("/pigs"),
       permission: "view_dashboard"
     } : null,
+    (enterprises?.includes("crops") || (farm?.crops?.length ?? 0) > 0) ? {
+      label: t("dashboard.recordCrop"),
+      icon: Sprout,
+      description: t("dashboard.recordCropHint"),
+      variant: "default" as const,
+      onClick: () => router.push("/crops"),
+      permission: "view_dashboard"
+    } : null,
     {
       label: t("dashboard.medicineLog"),
       icon: Syringe,
@@ -91,9 +99,9 @@ export function QuickActions() {
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {actions.map((action) => {
+        {actions.filter((action) => hasPermission(action.permission)).map((action) => {
           const Icon = action.icon
-          const hasAccess = hasPermission(action.permission)
+          const hasAccess = true
           
           return (
             <button

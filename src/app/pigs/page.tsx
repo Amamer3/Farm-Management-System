@@ -12,16 +12,9 @@ export default function PigsPage() {
         config={{
           enterprise: "pigs",
           module: "pigs",
-          title: "Pigs",
-          housingKind: "sty",
-          species: [{ value: "pig", label: "Pig" }],
-          events: [
-            { value: "farrowing", label: "Farrowing" },
-            { value: "weaning", label: "Weaning" },
-            { value: "weight", label: "Weight" },
-            { value: "sale", label: "Sale" },
-            { value: "mortality", label: "Mortality" },
-          ],
+          titleKey: "sidebar.pigs",
+          species: ["pig"],
+          events: ["farrowing", "weaning", "weight", "sale", "mortality"],
         }}
       />
     </ProtectedPage>

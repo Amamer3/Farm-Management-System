@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { ArrowLeft, ArrowRight, Check, Eye, EyeOff, Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher"
@@ -25,7 +25,9 @@ export default function GetStarted() {
   const t = useTranslations()
   const { register } = useUserRole()
   const router = useRouter()
-  const steps = [
+  const searchParams = useSearchParams()
+  const selectedPlan = searchParams.get("plan")
+  const allSteps = [
     t("getStarted.steps.farm"),
     t("getStarted.steps.crops"),
     t("getStarted.steps.details"),
@@ -50,6 +52,8 @@ export default function GetStarted() {
 
   const growsCrops = enterprises.includes("crops")
   const cropsLocked = !growsCrops && noCrops
+  const steps = growsCrops ? allSteps : [allSteps[0], allSteps[2], allSteps[3]]
+  const visibleStep = growsCrops ? step : step === 0 ? 0 : step - 1
 
   useEffect(() => {
     const draft = readSignupDraft()
@@ -65,6 +69,15 @@ export default function GetStarted() {
     }
     setDraftReady(true)
   }, [])
+
+  useEffect(() => {
+    if (!draftReady) return
+    if (step === 1 && !enterprises.includes("crops")) {
+      setNoCrops(true)
+      setCrops([])
+      setStep(2)
+    }
+  }, [draftReady, step, enterprises])
 
   useEffect(() => {
     if (!draftReady) return
@@ -113,6 +126,8 @@ export default function GetStarted() {
       } else {
         setNoCrops(true)
         setCrops([])
+        setStep(2)
+        return
       }
     }
     if (step === 1) {
@@ -129,7 +144,7 @@ export default function GetStarted() {
       setError(t("getStarted.enterFarmName"))
       return
     }
-    setStep((current) => Math.min(current + 1, steps.length - 1))
+    setStep((current) => Math.min(current + 1, 3))
   }
 
   const submit = async () => {
@@ -172,7 +187,7 @@ export default function GetStarted() {
       })
       clearPendingFarm()
       clearSignupDraft()
-      router.replace("/")
+      router.replace("/dashboard")
     } catch (err: unknown) {
       const status = typeof err === "object" && err && "status" in err ? Number((err as { status?: number }).status) : 0
       if (status === 404) {
@@ -180,7 +195,7 @@ export default function GetStarted() {
           writePendingFarm(profile)
           await register(ownerName.trim(), email.trim(), password, "Admin")
           clearSignupDraft()
-          router.replace("/")
+          router.replace("/dashboard")
           return
         } catch (fallbackError: unknown) {
           const message = fallbackError instanceof Error ? fallbackError.message : t("getStarted.couldNotCreate")
@@ -221,11 +236,11 @@ export default function GetStarted() {
           {t("getStarted.lead")}
         </p>
 
-        <ol className="mt-8 grid grid-cols-4 gap-2 sm:gap-3">
+        <ol className={`mt-8 grid gap-2 sm:gap-3 ${growsCrops ? "grid-cols-4" : "grid-cols-3"}`}>
           {steps.map((label, index) => (
             <li key={label} className="min-w-0">
-              <div className={`mb-2 h-1.5 rounded-full ${index <= step ? "bg-[#173528]" : "bg-[#E7EAE6]"}`} />
-              <p className={`truncate text-[11px] sm:text-xs ${index === step ? "font-bold text-[#142018]" : "font-medium text-[#7a877f]"}`}>
+              <div className={`mb-2 h-1.5 rounded-full ${index <= visibleStep ? "bg-[#173528]" : "bg-[#E7EAE6]"}`} />
+              <p className={`truncate text-[11px] sm:text-xs ${index === visibleStep ? "font-bold text-[#142018]" : "font-medium text-[#7a877f]"}`}>
                 {label}
               </p>
             </li>
@@ -361,6 +376,13 @@ export default function GetStarted() {
               <div>
                 <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">{t("getStarted.step3Title")}</h2>
                 <p className="mt-2 text-sm leading-relaxed text-[#526057]">{t("getStarted.step3Lead")}</p>
+                {selectedPlan && ["starter", "professional", "enterprise"].includes(selectedPlan) && (
+                  <p className="mt-2 text-sm font-semibold text-[#173528]">
+                    {t("getStarted.selectedPlan", {
+                      plan: t(`getStarted.plan${selectedPlan.charAt(0).toUpperCase()}${selectedPlan.slice(1)}`),
+                    })}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <label htmlFor="owner-name" className="text-sm font-semibold">{t("getStarted.yourName")}</label>
@@ -412,11 +434,11 @@ export default function GetStarted() {
                 <ArrowLeft className="h-4 w-4 rtl:rotate-180" /> {t("common.back")}
               </Link>
             ) : (
-              <button type="button" className="inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold text-[#526057] hover:bg-[#F3F4F2] disabled:opacity-50" onClick={() => { setError(null); setStep((current) => current - 1) }} disabled={submitting}>
+              <button type="button" className="inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold text-[#526057] hover:bg-[#F3F4F2] disabled:opacity-50" onClick={() => { setError(null); setStep((current) => (current === 2 && !growsCrops ? 0 : current - 1)) }} disabled={submitting}>
                 <ArrowLeft className="h-4 w-4 rtl:rotate-180" /> {t("common.back")}
               </button>
             )}
-            {step < steps.length - 1 ? (
+            {step < 3 ? (
               <button type="button" onClick={goNext} className="inline-flex items-center gap-3 rounded-full bg-[#173528] py-1.5 pl-5 pr-1.5 text-sm font-semibold text-white">
                 {t("common.continue")}
                 <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#173528]">

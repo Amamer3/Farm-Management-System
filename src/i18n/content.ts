@@ -28,12 +28,13 @@ export const HOME_VALUE_KEYS = ["organize", "consistency", "monitor", "decisions
 export const HOME_STEP_KEYS = ["account", "farm", "operations"] as const
 
 export const SIDEBAR_ITEMS = [
-  { key: "dashboard", href: "/", enterprise: "" },
+  { key: "dashboard", href: "/dashboard", enterprise: "" },
   { key: "birds", href: "/birds", enterprise: "poultry" },
   { key: "eggs", href: "/eggs", enterprise: "poultry" },
   { key: "ruminants", href: "/ruminants", enterprise: "small_ruminants" },
   { key: "cattle", href: "/cattle", enterprise: "cattle" },
   { key: "pigs", href: "/pigs", enterprise: "pigs" },
+  { key: "crops", href: "/crops", enterprise: "crops" },
   { key: "feed", href: "/feed", enterprise: "" },
   { key: "medicine", href: "/medicine", enterprise: "" },
   { key: "reports", href: "/reports", enterprise: "" },

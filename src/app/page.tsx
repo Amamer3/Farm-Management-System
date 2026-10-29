@@ -3,7 +3,7 @@ import { HomePage } from "@/views/HomePage"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { FAQS } from "@/lib/marketing"
 import { HOME_SEO } from "@/lib/siteContent"
-import { breadcrumbJsonLd, createPageMetadata, faqJsonLd, webPageJsonLd } from "@/lib/seo"
+import { createPageMetadata, faqJsonLd, pageGraphJsonLd, webPageJsonLd } from "@/lib/seo"
 
 const homeTitle = HOME_SEO.title
 const homeDescription = HOME_SEO.description
@@ -16,17 +16,22 @@ export const metadata: Metadata = createPageMetadata({
   path: "/",
   absoluteTitle: true,
   keywords: HOME_SEO.keywords,
+  imageAlt: "Agrocyms farm management software",
 })
 
 export default function Page() {
   return (
     <>
       <JsonLd
-        data={[
-          webPageJsonLd({ name: homeTitle, description: homeDescription, path: "/" }),
-          breadcrumbJsonLd([{ name: "Home", path: "/" }]),
+        data={pageGraphJsonLd([
+          webPageJsonLd({
+            name: homeTitle,
+            description: homeDescription,
+            path: "/",
+            image: "/landing/farmer.jpg",
+          }),
           faqJsonLd(FAQS),
-        ]}
+        ])}
       />
       <HomePage />
     </>

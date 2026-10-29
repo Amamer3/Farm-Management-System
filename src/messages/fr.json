@@ -42,6 +42,25 @@
     "member": "Membre",
     "home": "Accueil"
   },
+  "pwa": {
+    "install": "Installer l’app",
+    "installTitle": "Installer {name}",
+    "installBody": "Ajoutez {name} à ce téléphone ou ordinateur et ouvrez-la comme n’importe quelle autre application — sur Android, iPhone, iPad, Windows ou Mac.",
+    "installAction": "Installer",
+    "notNow": "Pas maintenant",
+    "close": "Fermer",
+    "iosTitle": "Ajouter à l’écran d’accueil",
+    "iosBody": "Sur iPhone ou iPad, touchez Partager, puis Ajouter à l’écran d’accueil. {name} apparaîtra avec vos autres apps.",
+    "iosShare": "Touchez le bouton Partager dans Safari.",
+    "iosAdd": "Choisissez Ajouter à l’écran d’accueil, puis Ajouter.",
+    "macosTitle": "Ajouter au Dock",
+    "macosBody": "Dans Safari sur un Mac, ajoutez {name} au Dock pour l’ouvrir dans sa propre fenêtre.",
+    "macosStepFile": "Ouvrez le menu Fichier, ou le bouton Partager.",
+    "macosStepDock": "Choisissez Ajouter au Dock.",
+    "desktopTitle": "Installer {name}",
+    "desktopBody": "Installez {name} depuis ce navigateur pour l’ouvrir comme une application de bureau sous Windows ou Mac.",
+    "desktopHint": "Cherchez Installer dans la barre d’adresse, ou utilisez le menu du navigateur : Enregistrer et partager, puis Installer la page en tant qu’application."
+  },
   "nav": {
     "features": "Fonctionnalités",
     "solutions": "Solutions",
@@ -60,7 +79,9 @@
     "livestock": "Élevage",
     "poultry": "Aviculture",
     "cattle": "Bovins",
-    "inventory": "Inventaire"
+    "inventory": "Inventaire",
+    "useCases": "Cas d'usage",
+    "resources": "Ressources"
   },
   "auth": {
     "welcomeBack": "Bon retour",
@@ -78,14 +99,15 @@
     "showPassword": "Afficher le mot de passe",
     "hidePassword": "Masquer le mot de passe",
     "createAccount": "Créer un compte",
-    "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter."
+    "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
+    "heroAlt": "Agriculteur utilisant une tablette dans un champ de maïs au coucher du soleil"
   },
   "home": {
     "records": "Vos registres",
     "onePlatform": "Une plateforme pour chaque ferme",
     "farmerAlt": "Agriculteur debout dans une serre, les bras croisés",
-    "fieldAlt": "Rangées de cultures vertes vues du dessus",
-    "produceAlt": "Poires, raisins et pommes verts dans une caisse",
+    "fieldAlt": "Champ de maïs au lever du soleil",
+    "produceAlt": "Ferme mixte avec bovins, poules et un coq au lever du soleil",
     "overview": {
       "eyebrow": "En un coup d'œil",
       "title": "Cultures, élevage, ressources et gestion de l'exploitation — ensemble",
@@ -209,13 +231,15 @@
       "subscribe": { "question": "Comment m’abonner ?", "answer": "Créez votre compte de ferme et utilisez l’essai de 30 jours. Lorsque vous voudrez continuer à écrire des registres, contactez Agrocyms ou terminez le paiement proposé dans le produit." },
       "cancel": { "question": "Puis-je annuler mon abonnement ?", "answer": "L’annulation est soumise aux conditions affichées à l’achat. Consultez la facturation du compte ou la page de contact." },
       "support": { "question": "Comment contacter le support ?", "answer": "Utilisez la page de contact pour les questions d’inscription, d’abonnement ou de fonctionnement de la plateforme." },
-      "inventory": { "question": "Agrocyms suit-il les aliments et les médicaments ?", "answer": "Oui. Le stock d’aliments et l’usage des médicaments sont sur la même ferme que les animaux concernés, donc l’inventaire n’est pas un carnet séparé." }
+      "inventory": { "question": "Agrocyms suit-il les aliments et les médicaments ?", "answer": "Oui. Le stock d’aliments et l’usage des médicaments sont sur la même ferme que les animaux concernés, donc l’inventaire n’est pas un carnet séparé." },
+      "install": { "question": "Puis-je installer Agrocyms sur mon téléphone ou ordinateur ?", "answer": "Oui. Agrocyms est une application web progressive. Sur Android, Windows et la plupart des navigateurs de bureau, utilisez Installer lorsqu’il apparaît. Sur iPhone et iPad, touchez Partager puis Ajouter à l’écran d’accueil. Sur un Mac dans Safari, choisissez Fichier puis Ajouter au Dock." }
     }
   },
   "getStarted": {
     "eyebrow": "Commencer",
     "title": "Commencez avec Agrocyms",
     "lead": "Créez votre compte et démarrez un essai de 30 jours de l’espace de travail complet. Aucune carte n’est requise. Après le mois, les registres restent lisibles et exportables jusqu’à l’abonnement.",
+    "heroAlt": "Agriculteur utilisant une tablette dans un champ de maïs au coucher du soleil",
     "steps": { "farm": "Ferme", "crops": "Cultures", "details": "Détails de la ferme", "account": "Compte" },
     "step0Title": "Que fait cette ferme ?",
     "step0Lead": "Sélectionnez chaque activité que vous voulez sur le tableau de bord. Vous pourrez la modifier plus tard dans les paramètres de la ferme.",

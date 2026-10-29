@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
 import { MarketingCta, MarketingPage } from "@/components/marketing/MarketingPage"
 import { JsonLd } from "@/components/seo/JsonLd"
+import { MARKETING_PHOTOS } from "@/lib/marketingImages"
 import { ABOUT } from "@/lib/siteContent"
-import { breadcrumbJsonLd, createPageMetadata, webPageJsonLd } from "@/lib/seo"
+import { createPageMetadata, pageGraphJsonLd, webPageJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = createPageMetadata({
   title: ABOUT.title,
@@ -16,19 +17,27 @@ export default function AboutPage() {
   return (
     <>
       <JsonLd
-        data={[
+        data={pageGraphJsonLd([
           webPageJsonLd({
             name: ABOUT.headline,
             description: ABOUT.description,
             path: "/about",
+            type: "AboutPage",
+            image: MARKETING_PHOTOS.farmer.src,
           }),
-          breadcrumbJsonLd([
-            { name: "Home", path: "/" },
-            { name: "About", path: "/about" },
-          ]),
-        ]}
+        ])}
       />
-      <MarketingPage eyebrow={ABOUT.eyebrow} title={ABOUT.headline} lead={ABOUT.lead}>
+      <MarketingPage
+        eyebrow={ABOUT.eyebrow}
+        title={ABOUT.headline}
+        lead={ABOUT.lead}
+        image={MARKETING_PHOTOS.farmer.src}
+        imageAlt={MARKETING_PHOTOS.farmer.alt}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "About", path: "/about" },
+        ]}
+      >
         <section className="mx-auto max-w-[1320px] px-4 pb-10 sm:px-6">
           <div className="grid gap-4 md:grid-cols-2">
             <article className="rounded-[28px] bg-[#F3F4F2] p-6">

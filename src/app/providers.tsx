@@ -10,6 +10,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import AuthErrorHandler from "@/components/AuthErrorHandler";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { PwaProvider } from "@/components/pwa/PwaProvider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -32,10 +33,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <UserRoleProvider>
             <FarmProvider>
               <TooltipProvider>
-                <AuthErrorHandler />
-                <Toaster />
-                <Sonner />
-                {children}
+                <PwaProvider>
+                  <AuthErrorHandler />
+                  <Toaster />
+                  <Sonner />
+                  {children}
+                </PwaProvider>
               </TooltipProvider>
             </FarmProvider>
           </UserRoleProvider>

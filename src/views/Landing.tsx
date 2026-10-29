@@ -84,7 +84,7 @@ export default function Landing() {
                     alt={t("home.produceAlt")}
                     fill
                     sizes="(min-width: 1024px) 24vw, (min-width: 480px) 46vw, 100vw"
-                    className="object-cover"
+                    className="object-cover object-[70%_58%]"
                     unoptimized
                   />
                   <p className="absolute bottom-3 start-3 end-3 line-clamp-3 text-sm font-bold leading-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)] sm:bottom-4 sm:start-4 sm:end-4 sm:text-base lg:text-lg">

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, ArrowRight, Check, Eye, EyeOff, Loader2 } from "lucide-react"
@@ -18,6 +19,7 @@ import {
   writeSignupDraft,
 } from "@/lib/farmProfile"
 import { getAppName, getLogoPath } from "@/lib/env"
+import { photoForEnterprise } from "@/lib/marketingImages"
 
 export default function GetStarted() {
   const t = useTranslations()
@@ -246,19 +248,29 @@ export default function GetStarted() {
                       key={item.id}
                       type="button"
                       onClick={() => toggleEnterprise(item.id)}
-                      className={`rounded-[22px] border p-4 text-left transition ${
+                      className={`flex items-start gap-3 rounded-[22px] border p-3 text-left transition ${
                         selected ? "border-[#173528] bg-[#E7F3E4]" : "border-[#E4E8E4] bg-[#F7F8F7] hover:border-[#173528]/30"
                       }`}
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="font-bold">{enterpriseName(item.id)}</p>
-                          <p className="mt-1 text-sm leading-relaxed text-[#526057]">{t(`enterprises.${item.id}.description`)}</p>
-                        </div>
+                      <span className="relative h-14 w-20 shrink-0 overflow-hidden rounded-xl sm:h-16 sm:w-24">
+                        <Image
+                          src={photoForEnterprise(item.id).src}
+                          alt={enterpriseName(item.id)}
+                          fill
+                          sizes="96px"
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </span>
+                      <span className="flex min-w-0 flex-1 items-start justify-between gap-3">
+                        <span>
+                          <span className="block font-bold">{enterpriseName(item.id)}</span>
+                          <span className="mt-1 block text-sm leading-relaxed text-[#526057]">{t(`enterprises.${item.id}.description`)}</span>
+                        </span>
                         <span className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${selected ? "border-[#173528] bg-[#173528] text-white" : "border-[#D5DBD6] bg-white"}`}>
                           {selected && <Check className="h-3.5 w-3.5" />}
                         </span>
-                      </div>
+                      </span>
                     </button>
                   )
                 })}

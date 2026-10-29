@@ -1,5 +1,5 @@
 import { getAppDescription, getAppName } from "@/lib/env"
-import { absoluteUrl } from "@/lib/seo"
+import { absoluteUrl, LLMS_FULL_PATH } from "@/lib/seo"
 
 export function GET() {
   const name = getAppName()
@@ -7,7 +7,9 @@ export function GET() {
 
 > ${getAppDescription()}
 
-${name} is farm management software for crop and livestock businesses. Farms choose poultry, goats and sheep, cattle, pigs, crops, or a mix during setup. The dashboard then shows records for that mix.
+${name} is farm management software for crop and livestock businesses. Farms choose poultry, goats and sheep, cattle, pigs, crops, or a mix during setup. The dashboard then shows records for that mix. New farms receive a 30-day trial of the full workspace with no card required.
+
+Full product text: ${absoluteUrl(LLMS_FULL_PATH)}
 
 ## Public pages
 
@@ -24,6 +26,7 @@ ${name} is farm management software for crop and livestock businesses. Farms cho
 - [Solutions](${absoluteUrl("/solutions")})
 - [Pricing](${absoluteUrl("/pricing")})
 - [Resources](${absoluteUrl("/resources")})
+- [Use cases](${absoluteUrl("/use-cases")})
 - [FAQ](${absoluteUrl("/faq")})
 - [Contact](${absoluteUrl("/contact")})
 - [Get started](${absoluteUrl("/get-started")})

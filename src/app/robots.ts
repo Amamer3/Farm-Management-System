@@ -1,42 +1,26 @@
 import type { MetadataRoute } from "next"
-import { absoluteUrl, PRIVATE_PATHS } from "@/lib/seo"
+import { absoluteUrl, ROBOTS_DISALLOW } from "@/lib/seo"
 
 const publicRules = {
   allow: "/",
-  disallow: [...PRIVATE_PATHS],
+  disallow: [...ROBOTS_DISALLOW],
 }
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      {
-        userAgent: "Googlebot",
-        ...publicRules,
-      },
-      {
-        userAgent: "*",
-        ...publicRules,
-      },
-      {
-        userAgent: "GPTBot",
-        ...publicRules,
-      },
-      {
-        userAgent: "ChatGPT-User",
-        ...publicRules,
-      },
-      {
-        userAgent: "ClaudeBot",
-        ...publicRules,
-      },
-      {
-        userAgent: "PerplexityBot",
-        ...publicRules,
-      },
-      {
-        userAgent: "Google-Extended",
-        ...publicRules,
-      },
+      { userAgent: "Googlebot", ...publicRules },
+      { userAgent: "Googlebot-Image", ...publicRules },
+      { userAgent: "Bingbot", ...publicRules },
+      { userAgent: "DuckDuckBot", ...publicRules },
+      { userAgent: "Applebot", ...publicRules },
+      { userAgent: "GPTBot", ...publicRules },
+      { userAgent: "ChatGPT-User", ...publicRules },
+      { userAgent: "ClaudeBot", ...publicRules },
+      { userAgent: "PerplexityBot", ...publicRules },
+      { userAgent: "Google-Extended", ...publicRules },
+      { userAgent: "Amazonbot", ...publicRules },
+      { userAgent: "*", ...publicRules },
     ],
     sitemap: absoluteUrl("/sitemap.xml"),
     host: absoluteUrl("/"),

@@ -3,13 +3,16 @@ export const BRAND_TAGLINE = "One Platform. Every Farm. Smarter Agriculture."
 export const HOME_SEO = {
   title: "Farm Management Software for Modern Agriculture | Agrocyms",
   description:
-    "Manage your farming operations with Agrocyms. Bring crop and livestock activities, farm resources, and business management together in one platform.",
+    "Farm management software for crops and livestock. Agrocyms tracks poultry, cattle, pigs, fields, feed, and team records in one workspace. Start a 30-day trial.",
   keywords: [
     "farm management software",
     "farm management system",
     "agriculture management software",
     "farm operations software",
-    "digital farm management", 
+    "digital farm management",
+    "livestock management software",
+    "crop management software",
+    "poultry farm software",
   ],
 }
 
@@ -125,10 +128,15 @@ export const HOME_CLOSE = {
 export const FEATURE_OVERVIEW = {
   title: "Farm Management Software Features",
   description:
-    "Explore Agrocyms farm management features for crop and livestock operations, resource tracking, farm records, and business oversight.",
-  keywords: ["farm management system", "farm management features", "agriculture software features"],
+    "See Agrocyms farm management features for crops, livestock, inventory, records, and team access. Built for mixed farms that keep poultry, cattle, pigs, and fields together.",
+  keywords: [
+    "farm management system",
+    "farm management features",
+    "agriculture software features",
+    "crop and livestock software",
+  ],
   eyebrow: "Features",
-  headline: "The Tools to Manage Your Farm More Effectively",
+  headline: "Farm Management Features for Crop and Livestock Operations",
   lead: "Agrocyms brings agricultural management into a centralized platform designed to help you organize your operations, maintain better records, and understand your farming business.",
   sections: [
     {
@@ -167,10 +175,10 @@ export const FEATURE_OVERVIEW = {
 export const CROP_HUB = {
   title: "Crop Management Software for Farm Operations | Agrocyms",
   description:
-    "Organize crop farming activities and production records with Agrocyms. Explore digital tools for managing crop operations and farm information.",
-  keywords: ["crop management software", "crop farm records", "digital crop farming"],
+    "Crop management software for mixed farms. Keep maize, rice, cassava, vegetables, and cocoa lists beside livestock records in one Agrocyms workspace.",
+  keywords: ["crop management software", "crop farm records", "digital crop farming", "field records software"],
   eyebrow: "Crop management",
-  headline: "Manage Crop Farming with Greater Clarity",
+  headline: "Crop Management Software for Clearer Field Records",
   lead: "Successful crop production requires planning, consistent records, and visibility into farming activities. Agrocyms helps crop farming businesses organize their operations through a centralized digital platform.",
   sections: [
     {
@@ -195,10 +203,15 @@ export const CROP_HUB = {
 export const LIVESTOCK_HUB = {
   title: "Livestock Management Software for Farms | Agrocyms",
   description:
-    "Organize livestock farming operations and animal records with Agrocyms. Explore digital farm management tools for livestock businesses.",
-  keywords: ["livestock management software", "livestock farm records", "animal farm software"],
+    "Livestock management software for poultry, goats, cattle, and pigs. Keep herd events, egg collection, and treatments on the same farm as your crops.",
+  keywords: [
+    "livestock management software",
+    "livestock farm records",
+    "animal farm software",
+    "poultry cattle pig records",
+  ],
   eyebrow: "Livestock management",
-  headline: "Bring Better Organization to Your Livestock Operations",
+  headline: "Livestock Management Software for Mixed Farms",
   lead: "Livestock farming involves ongoing activities, important records, and careful resource management. Agrocyms offers a digital platform to help livestock businesses organize their operations and maintain better visibility into available information.",
   sections: [
     {
@@ -223,10 +236,10 @@ export const LIVESTOCK_HUB = {
 export const SOLUTIONS = {
   title: "Farm Management Solutions for Agricultural Businesses | Agrocyms",
   description:
-    "Discover how Agrocyms supports crop farms, livestock businesses, commercial farms, and agricultural enterprises with digital farm management.",
-  keywords: ["farm management solutions", "agriculture software for farms", "digital farm platform"],
+    "Farm management solutions for crop farms, livestock businesses, commercial operations, and mixed enterprises. One Agrocyms login for the work this farm actually runs.",
+  keywords: ["farm management solutions", "agriculture software for farms", "digital farm platform", "mixed farm software"],
   eyebrow: "Solutions",
-  headline: "Farm Management Solutions for Different Agricultural Businesses",
+  headline: "Farm Management Solutions for Crop, Livestock, and Mixed Farms",
   lead: "Every agricultural business has different operational needs. Agrocyms provides a centralized digital platform to support more organized farm management across crop and livestock operations.",
   items: [
     {
@@ -260,8 +273,8 @@ export const SOLUTIONS = {
 export const PRICING = {
   title: "Agrocyms Pricing | Farm Management Software Plans",
   description:
-    "Explore Agrocyms subscription options for crop and livestock farming businesses. Choose a plan that fits your operations and get started online.",
-  keywords: ["farm management software pricing", "Agrocyms plans", "agriculture software subscription"],
+    "Agrocyms farm management software pricing starts with a 30-day trial and no card required. Compare Starter, Professional, and Enterprise plans for crop and livestock farms.",
+  keywords: ["farm management software pricing", "Agrocyms plans", "agriculture software subscription", "farm software trial"],
   eyebrow: "Pricing",
   headline: "Choose a Plan for Your Farming Business",
   lead: "Every new farm gets 30 days of full access, with no card required. After the trial, choose a plan if you want to keep writing records.",
@@ -300,10 +313,10 @@ export const PRICING = {
 export const ABOUT = {
   title: "About Agrocyms | Farm Management Software",
   description:
-    "Learn about Agrocyms, a digital farm management platform designed to help agricultural businesses organize operations and manage farm information.",
+    "Agrocyms is farm management software for agricultural businesses. We help farms keep crop, livestock, inventory, and team records in one practical digital workspace.",
   keywords: ["Agrocyms farm management software", "about Agrocyms", "agriculture software company"],
   eyebrow: "About Agrocyms",
-  headline: "Helping Agricultural Businesses Manage Smarter",
+  headline: "About Agrocyms Farm Management Software",
   lead: "Agrocyms is built around a simple idea: agricultural businesses deserve practical digital tools that make farm management more organized, accessible, and informed.",
   mission:
     "Our mission is to help agricultural businesses manage their operations more effectively through accessible farm management technology.",
@@ -565,4 +578,21 @@ export const RESOURCE_ARTICLES: ResourceArticle[] = [
 
 export function getResourceBySlug(slug: string): ResourceArticle | undefined {
   return RESOURCE_ARTICLES.find((item) => item.slug === slug)
+}
+
+export function getRelatedResources(slug: string, limit = 3): ResourceArticle[] {
+  const current = getResourceBySlug(slug)
+  if (!current) return RESOURCE_ARTICLES.filter((item) => item.slug !== slug).slice(0, limit)
+  const sameCategory = RESOURCE_ARTICLES.filter(
+    (item) => item.slug !== slug && item.category === current.category
+  )
+  const others = RESOURCE_ARTICLES.filter(
+    (item) => item.slug !== slug && item.category !== current.category
+  )
+  return [...sameCategory, ...others].slice(0, limit)
+}
+
+export function resourceWordCount(article: ResourceArticle): number {
+  const text = [article.description, ...article.sections.flatMap((section) => [section.heading, section.body])].join(" ")
+  return text.split(/\s+/).filter(Boolean).length
 }

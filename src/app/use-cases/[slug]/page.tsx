@@ -4,7 +4,8 @@ import { notFound } from "next/navigation"
 import { MarketingCta, MarketingPage } from "@/components/marketing/MarketingPage"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { FEATURE_PAGES, USE_CASE_PAGES, getUseCaseBySlug } from "@/lib/marketing"
-import { breadcrumbJsonLd, createPageMetadata, faqJsonLd, webPageJsonLd } from "@/lib/seo"
+import { photoForUseCase } from "@/lib/marketingImages"
+import { createPageMetadata, faqJsonLd, pageGraphJsonLd, webPageJsonLd } from "@/lib/seo"
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -35,25 +36,34 @@ export default async function UseCaseDetailPage({ params }: PageProps) {
   if (!useCase) notFound()
 
   const related = FEATURE_PAGES.filter((item) => useCase.relatedFeatures.includes(item.slug))
+  const photo = photoForUseCase(useCase.slug)
 
   return (
     <>
       <JsonLd
-        data={[
+        data={pageGraphJsonLd([
           webPageJsonLd({
             name: useCase.title,
             description: useCase.description,
             path: `/use-cases/${useCase.slug}`,
+            type: "ItemPage",
+            image: photo.src,
           }),
-          breadcrumbJsonLd([
-            { name: "Home", path: "/" },
-            { name: "Use cases", path: "/use-cases" },
-            { name: useCase.eyebrow, path: `/use-cases/${useCase.slug}` },
-          ]),
           faqJsonLd(useCase.faqs),
-        ]}
+        ])}
       />
-      <MarketingPage eyebrow={useCase.eyebrow} title={useCase.headline} lead={useCase.summary}>
+      <MarketingPage
+        eyebrow={useCase.eyebrow}
+        title={useCase.headline}
+        lead={useCase.summary}
+        image={photo.src}
+        imageAlt={photo.alt}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Use cases", path: "/use-cases" },
+          { name: useCase.eyebrow, path: `/use-cases/${useCase.slug}` },
+        ]}
+      >
         <section className="mx-auto max-w-[1320px] px-4 pb-6 sm:px-6">
           <div className="grid gap-4 md:grid-cols-2">
             <article className="rounded-[28px] border border-[#E4E8E4] bg-white p-6">

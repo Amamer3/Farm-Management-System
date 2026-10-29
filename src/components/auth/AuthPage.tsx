@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useTranslations } from "next-intl"
@@ -16,6 +17,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { getAppName, getAppTagline, getLogoPath } from "@/lib/env"
+import { MARKETING_PHOTOS } from "@/lib/marketingImages"
 
 type LoginFormData = {
   email: string
@@ -149,38 +151,58 @@ export function AuthPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex items-center justify-center p-4">
-      <div className="absolute end-4 top-4 sm:end-6 sm:top-6">
+      <div className="absolute end-4 top-4 z-10 sm:end-6 sm:top-6">
         <LanguageSwitcher variant="plain" />
       </div>
-      <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
-        <div className="text-center lg:text-start space-y-8">
-          <Link href="/" className="flex items-center justify-center lg:justify-start gap-3">
-            <img
-              src={getLogoPath()}
-              alt={appName}
-              className="h-20 w-20 object-contain bg-transparent"
-            />
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">{appName}</h1>
-              <p className="text-sm text-muted-foreground">{getAppTagline()}</p>
-            </div>
-          </Link>
-
-          <div className="space-y-4">
-            <h2 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+      <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-8 lg:gap-12 items-stretch">
+        <div className="relative hidden min-h-[560px] overflow-hidden rounded-[32px] lg:block">
+          <Image
+            src={MARKETING_PHOTOS.farmer.src}
+            alt={t("heroAlt")}
+            fill
+            sizes="(min-width: 1024px) 42vw, 100vw"
+            className="object-cover"
+            unoptimized
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#173528]/90 via-[#173528]/35 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 space-y-3 p-8 text-white">
+            <h2 className="text-4xl font-bold leading-tight">
               {t("welcomeBack")}
               <br />
-              <span className="text-primary">{t("toBrand", { name: appName })}</span>
+              {t("toBrand", { name: appName })}
             </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed max-w-lg mx-auto lg:mx-0">
-              {t("subtitle")}
-            </p>
+            <p className="max-w-md text-base leading-relaxed text-white/85">{t("subtitle")}</p>
           </div>
         </div>
 
-        <div className="flex justify-center">
-          <Card className="w-full max-w-md shadow-xl border-0">
-            <CardHeader className="space-y-1 pb-8">
+        <div className="flex flex-col justify-center">
+          <div className="mb-6 lg:hidden">
+            <figure className="relative h-40 overflow-hidden rounded-[24px] sm:h-48 sm:rounded-[28px]">
+              <Image
+                src={MARKETING_PHOTOS.farmer.src}
+                alt={t("heroAlt")}
+                fill
+                sizes="(min-width: 1024px) 0px, calc(100vw - 2rem)"
+                className="object-cover object-[center_30%]"
+                unoptimized
+                priority
+              />
+            </figure>
+          </div>
+          <Card className="w-full max-w-md shadow-xl border-0 mx-auto lg:max-w-none">
+            <CardHeader className="space-y-3 pb-6">
+              <Link href="/" className="mx-auto flex items-center gap-3">
+                <img
+                  src={getLogoPath()}
+                  alt={appName}
+                  className="h-12 w-12 object-contain bg-transparent sm:h-14 sm:w-14"
+                />
+                <div className="text-start">
+                  <h1 className="text-xl font-bold text-foreground sm:text-2xl">{appName}</h1>
+                  <p className="text-xs text-muted-foreground sm:text-sm">{getAppTagline()}</p>
+                </div>
+              </Link>
               <CardTitle className="text-2xl font-bold text-center">
                 {t("cardTitle")}
               </CardTitle>

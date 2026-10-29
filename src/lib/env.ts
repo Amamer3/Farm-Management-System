@@ -27,7 +27,7 @@ export const APP_NAME = "Agrocyms"
 export const APP_TAGLINE = "One Platform. Every Farm. Smarter Agriculture."
 export const APP_TITLE = "Farm Management Software for Modern Agriculture | Agrocyms"
 export const APP_DESCRIPTION =
-  "Manage your farming operations with Agrocyms. Bring crop and livestock activities, farm resources, and business management together in one platform."
+  "Farm management software for crops and livestock. Agrocyms tracks poultry, cattle, pigs, fields, feed, and team records in one workspace. Start a 30-day trial."
 export const LOGO_PATH = "/agrocyms-logo.png"
 
 export function getAppName(): string {
@@ -106,6 +106,18 @@ export function getGoogleSiteVerification(): string | undefined {
 
 export function getBingSiteVerification(): string | undefined {
   return process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION || undefined
+}
+
+export function getYandexSiteVerification(): string | undefined {
+  return process.env.NEXT_PUBLIC_YANDEX_VERIFICATION || undefined
+}
+
+export function getPinterestSiteVerification(): string | undefined {
+  return process.env.NEXT_PUBLIC_PINTEREST_VERIFICATION || undefined
+}
+
+export function getFacebookDomainVerification(): string | undefined {
+  return process.env.NEXT_PUBLIC_FACEBOOK_DOMAIN_VERIFICATION || undefined
 }
 
 export function getContactEmail(): string {

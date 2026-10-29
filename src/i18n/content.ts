@@ -11,6 +11,7 @@ export const FAQ_ITEM_KEYS = [
   "cancel",
   "support",
   "inventory",
+  "install",
 ] as const
 
 export const HOME_PLATFORM_CARDS = [
@@ -47,6 +48,7 @@ export const MARKETING_NAV = [
   { id: "solutions", href: "/solutions" },
   { id: "pricing", href: "/pricing" },
   { id: "resources", href: "/resources" },
+  { id: "contact", href: "/contact" },
   { id: "about", href: "/about" },
 ] as const
 

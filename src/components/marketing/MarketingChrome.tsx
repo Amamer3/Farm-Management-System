@@ -4,11 +4,13 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
-import { ArrowRight, Menu, Search, X } from "lucide-react"
+import { ArrowRight, Menu, Search } from "lucide-react"
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher"
 import { SocialLinks } from "@/components/marketing/SocialLinks"
+import { usePwaInstall } from "@/components/pwa/PwaProvider"
+import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet"
 import { MARKETING_NAV } from "@/i18n/content"
-import { getAppName, getLogoPath } from "@/lib/env"
+import { getAppName, getContactEmail, getLogoPath } from "@/lib/env"
 import { searchPublicPages } from "@/lib/marketing"
 
 export function MarketingChrome({
@@ -25,6 +27,7 @@ export function MarketingChrome({
   const searchRef = useRef<HTMLInputElement>(null)
   const appName = getAppName()
   const logoPath = getLogoPath()
+  const { canInstall, promptInstall } = usePwaInstall()
 
   const results = useMemo(() => searchPublicPages(query).slice(0, 8), [query])
 
@@ -144,47 +147,76 @@ export function MarketingChrome({
             <button
               type="button"
               className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F3F4F2] sm:h-11 sm:w-11 lg:hidden"
-              aria-label={menuOpen ? t("common.closeMenu") : t("common.openMenu")}
+              aria-label={t("common.openMenu")}
               onClick={() => {
                 setSearchOpen(false)
-                setMenuOpen((open) => !open)
+                setMenuOpen(true)
               }}
             >
-              {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              <Menu className="h-5 w-5" />
             </button>
           </div>
         </div>
-
-        {menuOpen && (
-          <div className="mx-auto grid max-w-[1320px] gap-2 px-4 pb-4 lg:hidden">
-            {MARKETING_NAV.map((item) => (
-              <Link
-                key={item.id}
-                href={item.href}
-                className="rounded-2xl bg-[#F3F4F2] px-4 py-3 text-start text-sm font-semibold"
-                onClick={() => setMenuOpen(false)}
-              >
-                {t(`nav.${item.id}`)}
-              </Link>
-            ))}
-            <div className="grid grid-cols-2 gap-2 pt-1">
-              <Link href="/login" className="rounded-2xl border border-[#E4E8E4] px-4 py-3 text-center text-sm font-semibold" onClick={() => setMenuOpen(false)}>
-                {t("common.signIn")}
-              </Link>
-              <Link href="/get-started" className="rounded-2xl bg-[#173528] px-4 py-3 text-center text-sm font-semibold text-white" onClick={() => setMenuOpen(false)}>
-                {t("common.getStarted")}
-              </Link>
-            </div>
-          </div>
-        )}
       </header>
+
+      <Sheet
+        open={menuOpen}
+        onOpenChange={(open) => {
+          setMenuOpen(open)
+          if (open) setSearchOpen(false)
+        }}
+      >
+        <SheetContent
+          side="left"
+          overlayClassName="bg-[#142018]/35 backdrop-blur-md"
+          className="flex w-[min(19rem,86vw)] flex-col border-0 p-0 sm:max-w-sm"
+        >
+          <div className="flex items-center gap-2 border-b border-[#E4E8E4] px-5 py-4 pe-14">
+            <img src={logoPath} alt="" className="h-9 w-9 object-contain" />
+            <SheetTitle className="text-lg font-extrabold tracking-tight text-[#173528]">
+              {appName}
+            </SheetTitle>
+            <SheetDescription className="sr-only">{t("common.openMenu")}</SheetDescription>
+          </div>
+          <nav className="flex-1 overflow-y-auto p-4" aria-label="Primary">
+            <div className="grid gap-2">
+              {MARKETING_NAV.map((item) => (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  className="rounded-2xl bg-[#F3F4F2] px-4 py-3 text-start text-sm font-semibold"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {t(`nav.${item.id}`)}
+                </Link>
+              ))}
+            </div>
+          </nav>
+          <div className="grid grid-cols-2 gap-2 border-t border-[#E4E8E4] p-4">
+            <Link
+              href="/login"
+              className="rounded-2xl border border-[#E4E8E4] px-4 py-3 text-center text-sm font-semibold"
+              onClick={() => setMenuOpen(false)}
+            >
+              {t("common.signIn")}
+            </Link>
+            <Link
+              href="/get-started"
+              className="rounded-2xl bg-[#173528] px-4 py-3 text-center text-sm font-semibold text-white"
+              onClick={() => setMenuOpen(false)}
+            >
+              {t("common.getStarted")}
+            </Link>
+          </div>
+        </SheetContent>
+      </Sheet>
 
       <div id="main-content">{children}</div>
 
       <footer className="px-4 pb-6 sm:px-6">
         <div className="mx-auto max-w-[1320px] overflow-hidden rounded-[28px] bg-[#173528] text-white sm:rounded-[32px]">
-          <div className="grid gap-8 px-5 py-8 sm:grid-cols-2 sm:gap-10 sm:px-10 sm:py-10 lg:grid-cols-[1.4fr_0.7fr_0.7fr_0.8fr] lg:items-start">
-            <div className="sm:col-span-2 lg:col-span-1">
+          <div className="grid grid-cols-2 gap-8 px-5 py-8 sm:gap-10 sm:px-10 sm:py-10 lg:grid-cols-[1.4fr_0.8fr_0.8fr] lg:items-start">
+            <div className="col-span-2 lg:col-span-1">
               <Link href="/" className="inline-flex items-center gap-2.5">
                 <img src={logoPath} alt={`${appName} logo`} className="h-11 w-11 object-contain" />
                 <span className="text-[22px] font-extrabold tracking-tight">{appName}</span>
@@ -193,6 +225,12 @@ export function MarketingChrome({
                 {t("footer.blurb")}
               </p>
               <SocialLinks className="mt-5" />
+              <a
+                href={`mailto:${getContactEmail()}`}
+                className="mt-4 block text-sm font-medium text-white/75 transition hover:text-white"
+              >
+                {getContactEmail()}
+              </a>
               <Link
                 href="/get-started"
                 className="mt-6 inline-flex items-center gap-3 rounded-full bg-white py-1.5 ps-5 pe-1.5 text-sm font-semibold text-[#173528]"
@@ -210,10 +248,11 @@ export function MarketingChrome({
                 <li><Link href="/features" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.features")}</Link></li>
                 <li><Link href="/solutions" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.solutions")}</Link></li>
                 <li><Link href="/pricing" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.pricing")}</Link></li>
-                <li><Link href="/resources" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.resources")}</Link></li>
+                <li><Link href="/resources" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("footer.resources")}</Link></li>
+                <li><Link href="/use-cases" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("footer.useCases")}</Link></li>
+                <li><Link href="/contact" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.contact")}</Link></li>
                 <li><Link href="/about" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.about")}</Link></li>
                 <li><Link href="/faq" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.faq")}</Link></li>
-                <li><Link href="/contact" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.contact")}</Link></li>
               </ul>
             </div>
 
@@ -228,19 +267,16 @@ export function MarketingChrome({
               </ul>
             </div>
 
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/55">{t("footer.account")}</p>
-              <ul className="mt-4 space-y-2">
-                <li><Link href="/get-started" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("common.getStarted")}</Link></li>
-                <li><Link href="/login" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("common.signIn")}</Link></li>
-                <li><Link href="/contact" className="block py-1.5 text-sm font-medium text-white/85 transition hover:text-white">{t("nav.contact")}</Link></li>
-              </ul>
-            </div>
           </div>
 
-          <div className="flex flex-col gap-3 border-t border-white/10 px-5 py-5 text-sm text-white/60 sm:flex-row sm:items-center sm:justify-between sm:px-10">
+          <div className="flex items-center justify-between gap-3 border-t border-white/10 px-5 py-5 text-sm text-white/60 sm:px-10">
             <p>© {new Date().getFullYear()} {appName}</p>
-            <div className="flex items-center gap-5">
+            <div className="flex flex-wrap items-center justify-end gap-5">
+              {canInstall && (
+                <button type="button" onClick={() => void promptInstall()} className="transition hover:text-white">
+                  {t("pwa.install")}
+                </button>
+              )}
               <Link href="/privacy" className="transition hover:text-white">{t("common.privacy")}</Link>
               <Link href="/terms" className="transition hover:text-white">{t("common.terms")}</Link>
             </div>

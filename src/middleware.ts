@@ -3,10 +3,14 @@ import type { NextRequest } from "next/server"
 import { PRODUCTION_SITE_URL } from "@/lib/env"
 import { LOCALE_COOKIE } from "@/i18n/config"
 import { localeFromCookie, negotiateLocale } from "@/i18n/negotiate"
+import { isSearchCrawler } from "@/lib/crawlers"
 
 const canonicalHost = new URL(PRODUCTION_SITE_URL).host
 
 function withLocaleCookie(request: NextRequest, response: NextResponse) {
+  if (isSearchCrawler(request.headers.get("user-agent"))) {
+    return response
+  }
   if (localeFromCookie(request.cookies.get(LOCALE_COOKIE)?.value)) {
     return response
   }
@@ -46,5 +50,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|api/).*)"],
+  matcher: ["/((?!_next/static|_next/image|api/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt)$).*)"],
 }

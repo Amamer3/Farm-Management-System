@@ -2,8 +2,9 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { MarketingCta, MarketingPage } from "@/components/marketing/MarketingPage"
 import { JsonLd } from "@/components/seo/JsonLd"
+import { MARKETING_PHOTOS } from "@/lib/marketingImages"
 import { CROP_HUB } from "@/lib/siteContent"
-import { breadcrumbJsonLd, createPageMetadata, webPageJsonLd } from "@/lib/seo"
+import { createPageMetadata, pageGraphJsonLd, webPageJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = createPageMetadata({
   title: CROP_HUB.title,
@@ -17,20 +18,27 @@ export default function CropManagementPage() {
   return (
     <>
       <JsonLd
-        data={[
+        data={pageGraphJsonLd([
           webPageJsonLd({
             name: CROP_HUB.headline,
             description: CROP_HUB.description,
             path: "/features/crop-management",
+            image: MARKETING_PHOTOS.crops.src,
           }),
-          breadcrumbJsonLd([
-            { name: "Home", path: "/" },
-            { name: "Features", path: "/features" },
-            { name: "Crop management", path: "/features/crop-management" },
-          ]),
-        ]}
+        ])}
       />
-      <MarketingPage eyebrow={CROP_HUB.eyebrow} title={CROP_HUB.headline} lead={CROP_HUB.lead}>
+      <MarketingPage
+        eyebrow={CROP_HUB.eyebrow}
+        title={CROP_HUB.headline}
+        lead={CROP_HUB.lead}
+        image={MARKETING_PHOTOS.crops.src}
+        imageAlt={MARKETING_PHOTOS.crops.alt}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Features", path: "/features" },
+          { name: "Crop management", path: "/features/crop-management" },
+        ]}
+      >
         <section className="mx-auto max-w-[1320px] px-4 pb-6 sm:px-6">
           <div className="grid gap-4 md:grid-cols-2">
             {CROP_HUB.sections.map((item) => (

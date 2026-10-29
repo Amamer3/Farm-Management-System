@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { MarketingPage } from "@/components/marketing/MarketingPage"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { getAppName } from "@/lib/env"
-import { breadcrumbJsonLd, createPageMetadata, webPageJsonLd } from "@/lib/seo"
+import { createPageMetadata, pageGraphJsonLd, webPageJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = createPageMetadata({
   title: "Privacy Policy | Agrocyms",
@@ -18,23 +18,23 @@ export default function PrivacyPage() {
   return (
     <>
       <JsonLd
-        data={[
+        data={pageGraphJsonLd([
           webPageJsonLd({
             name: "Privacy policy",
             description:
               "How Agrocyms handles farm and account information: what is collected, why it is kept, and how you can ask about it.",
             path: "/privacy",
           }),
-          breadcrumbJsonLd([
-            { name: "Home", path: "/" },
-            { name: "Privacy", path: "/privacy" },
-          ]),
-        ]}
+        ])}
       />
       <MarketingPage
         eyebrow="Privacy"
         title="How farm and account information is handled."
         lead={`${name} stores the records you enter so the team can run the farm. This page explains what that includes.`}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Privacy", path: "/privacy" },
+        ]}
       >
         <section className="mx-auto max-w-[760px] space-y-8 px-4 pb-16 text-[#3e4b43] sm:px-6">
           <article>

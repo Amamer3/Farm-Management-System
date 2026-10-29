@@ -268,6 +268,11 @@ export const FAQS = [
     answer:
       "Yes. Feed stock and medicine use sit on the same farm as the animals they belong to, so inventory is not a separate notebook.",
   },
+  {
+    question: "Can I install Agrocyms on my phone or computer?",
+    answer:
+      "Yes. Agrocyms is a progressive web app. On Android, Windows, and most desktop browsers, use Install when it appears. On iPhone and iPad, tap Share then Add to Home Screen. On a Mac in Safari, choose File then Add to Dock.",
+  },
 ]
 
 export type UseCasePage = {

@@ -2,8 +2,9 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { MarketingCta, MarketingPage } from "@/components/marketing/MarketingPage"
 import { JsonLd } from "@/components/seo/JsonLd"
+import { MARKETING_PHOTOS } from "@/lib/marketingImages"
 import { PRICING } from "@/lib/siteContent"
-import { breadcrumbJsonLd, createPageMetadata, webPageJsonLd } from "@/lib/seo"
+import { createPageMetadata, offerCatalogJsonLd, pageGraphJsonLd, webPageJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = createPageMetadata({
   title: PRICING.title,
@@ -17,19 +18,27 @@ export default function PricingPage() {
   return (
     <>
       <JsonLd
-        data={[
+        data={pageGraphJsonLd([
           webPageJsonLd({
             name: PRICING.headline,
             description: PRICING.description,
             path: "/pricing",
+            image: MARKETING_PHOTOS.farmer.src,
           }),
-          breadcrumbJsonLd([
-            { name: "Home", path: "/" },
-            { name: "Pricing", path: "/pricing" },
-          ]),
-        ]}
+          offerCatalogJsonLd(),
+        ])}
       />
-      <MarketingPage eyebrow={PRICING.eyebrow} title={PRICING.headline} lead={PRICING.lead}>
+      <MarketingPage
+        eyebrow={PRICING.eyebrow}
+        title={PRICING.headline}
+        lead={PRICING.lead}
+        image={MARKETING_PHOTOS.farmer.src}
+        imageAlt={MARKETING_PHOTOS.farmer.alt}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Pricing", path: "/pricing" },
+        ]}
+      >
         <section className="mx-auto max-w-[1320px] px-4 pb-6 sm:px-6">
           <p className="mb-6 max-w-2xl rounded-[24px] bg-[#E7F3E4] px-5 py-4 text-sm leading-relaxed text-[#3e4b43]">
             {PRICING.note}

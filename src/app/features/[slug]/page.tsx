@@ -4,7 +4,8 @@ import { notFound } from "next/navigation"
 import { MarketingCta, MarketingPage } from "@/components/marketing/MarketingPage"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { FEATURE_FAQS, FEATURE_PAGES, USE_CASE_PAGES, featureBySlug } from "@/lib/marketing"
-import { breadcrumbJsonLd, createPageMetadata, faqJsonLd, webPageJsonLd } from "@/lib/seo"
+import { photoForFeature } from "@/lib/marketingImages"
+import { createPageMetadata, faqJsonLd, pageGraphJsonLd, webPageJsonLd } from "@/lib/seo"
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -36,25 +37,34 @@ export default async function FeatureDetailPage({ params }: PageProps) {
 
   const faqs = FEATURE_FAQS[feature.slug] ?? []
   const relatedUseCases = USE_CASE_PAGES.filter((item) => item.relatedFeatures.includes(feature.slug))
+  const photo = photoForFeature(feature.slug)
 
   return (
     <>
       <JsonLd
-        data={[
+        data={pageGraphJsonLd([
           webPageJsonLd({
             name: feature.title,
             description: feature.description,
             path: `/features/${feature.slug}`,
+            type: "ItemPage",
+            image: photo.src,
           }),
-          breadcrumbJsonLd([
-            { name: "Home", path: "/" },
-            { name: "Features", path: "/features" },
-            { name: feature.eyebrow, path: `/features/${feature.slug}` },
-          ]),
           ...(faqs.length ? [faqJsonLd(faqs)] : []),
-        ]}
+        ])}
       />
-      <MarketingPage eyebrow={feature.eyebrow} title={feature.headline} lead={feature.summary}>
+      <MarketingPage
+        eyebrow={feature.eyebrow}
+        title={feature.headline}
+        lead={feature.summary}
+        image={photo.src}
+        imageAlt={photo.alt}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Features", path: "/features" },
+          { name: feature.eyebrow, path: `/features/${feature.slug}` },
+        ]}
+      >
         <section className="mx-auto max-w-[1320px] px-4 pb-6 sm:px-6">
           <p className="max-w-3xl text-base leading-relaxed text-[#3e4b43]">{feature.description}</p>
           <div className="mt-6 grid gap-4 md:grid-cols-3">

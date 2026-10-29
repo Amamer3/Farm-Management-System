@@ -42,6 +42,25 @@
     "member": "Miembro",
     "home": "Inicio"
   },
+  "pwa": {
+    "install": "Instalar app",
+    "installTitle": "Instalar {name}",
+    "installBody": "Añada {name} a este teléfono u ordenador y ábrala como cualquier otra aplicación, en Android, iPhone, iPad, Windows o Mac.",
+    "installAction": "Instalar",
+    "notNow": "Ahora no",
+    "close": "Cerrar",
+    "iosTitle": "Añadir a la pantalla de inicio",
+    "iosBody": "En iPhone o iPad, pulse Compartir y luego Añadir a pantalla de inicio. {name} aparecerá con sus otras apps.",
+    "iosShare": "Pulse el botón Compartir en Safari.",
+    "iosAdd": "Elija Añadir a pantalla de inicio y luego Añadir.",
+    "macosTitle": "Añadir al Dock",
+    "macosBody": "En Safari en un Mac, añada {name} al Dock para abrirla en su propia ventana.",
+    "macosStepFile": "Abra el menú Archivo o el botón Compartir.",
+    "macosStepDock": "Elija Añadir al Dock.",
+    "desktopTitle": "Instalar {name}",
+    "desktopBody": "Instale {name} desde este navegador para abrirla como una app de escritorio en Windows o Mac.",
+    "desktopHint": "Busque Instalar en la barra de direcciones, o use el menú del navegador: Guardar y compartir, luego Instalar página como aplicación."
+  },
   "nav": {
     "features": "Funciones",
     "solutions": "Soluciones",
@@ -60,7 +79,9 @@
     "livestock": "Ganado",
     "poultry": "Avicultura",
     "cattle": "Vacuno",
-    "inventory": "Inventario"
+    "inventory": "Inventario",
+    "useCases": "Casos de uso",
+    "resources": "Recursos"
   },
   "auth": {
     "welcomeBack": "Bienvenido de nuevo",
@@ -78,14 +99,15 @@
     "showPassword": "Mostrar contraseña",
     "hidePassword": "Ocultar contraseña",
     "createAccount": "Crear una cuenta",
-    "sessionExpired": "Su sesión ha caducado. Vuelva a iniciar sesión."
+    "sessionExpired": "Su sesión ha caducado. Vuelva a iniciar sesión.",
+    "heroAlt": "Agricultor usando una tableta en un maizal al atardecer"
   },
   "home": {
     "records": "Sus registros",
     "onePlatform": "Una plataforma para cada granja",
     "farmerAlt": "Agricultor de pie en un invernadero con los brazos cruzados",
-    "fieldAlt": "Hileras de cultivos verdes vistas desde arriba",
-    "produceAlt": "Peras, uvas y manzanas verdes en un cajón",
+    "fieldAlt": "Maizal al amanecer",
+    "produceAlt": "Granja mixta con ganado, gallinas y un gallo al amanecer",
     "overview": {
       "eyebrow": "De un vistazo",
       "title": "Cultivos, ganado, recursos y el negocio agrícola — juntos",
@@ -245,6 +267,10 @@
       "inventory": {
         "question": "¿Agrocyms controla pienso y medicamentos?",
         "answer": "Sí. El stock de pienso y el uso de medicamentos están en la misma granja que los animales a los que pertenecen, así el inventario no es un cuaderno aparte."
+      },
+      "install": {
+        "question": "¿Puedo instalar Agrocyms en el teléfono o el ordenador?",
+        "answer": "Sí. Agrocyms es una aplicación web progresiva. En Android, Windows y la mayoría de navegadores de escritorio, use Instalar cuando aparezca. En iPhone e iPad, pulse Compartir y luego Añadir a pantalla de inicio. En un Mac con Safari, elija Archivo y luego Añadir al Dock."
       }
     }
   },
@@ -252,6 +278,7 @@
     "eyebrow": "Empezar",
     "title": "Empiece con Agrocyms",
     "lead": "Cree su cuenta y empiece una prueba de 30 días del espacio de trabajo completo. No se requiere tarjeta. Después del mes, los registros siguen siendo legibles y exportables hasta que se suscriba.",
+    "heroAlt": "Agricultor usando una tableta en un maizal al atardecer",
     "steps": { "farm": "Granja", "crops": "Cultivos", "details": "Datos de la granja", "account": "Cuenta" },
     "step0Title": "¿A qué se dedica esta granja?",
     "step0Lead": "Seleccione cada actividad que quiera en el panel. Puede cambiarlo después en Ajustes de la granja.",

@@ -1,6 +1,6 @@
 "use client"
 
-import { Menu, Search, User, LogOut, Settings, X } from "lucide-react"
+import { Menu, Search, User, LogOut, Settings, X, Download } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { NotificationBell } from "@/components/layout/NotificationBell"
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher"
@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useUserRole } from "@/contexts/UserRoleContext"
 import { useFarm } from "@/contexts/FarmContext"
 import { TrialBanner } from "@/components/layout/TrialBanner"
+import { usePwaInstall } from "@/components/pwa/PwaProvider"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,6 +34,7 @@ export function AppHeader({ onMenuToggle }: AppHeaderProps) {
   const router = useRouter()
   const { user, logout } = useUserRole()
   const { farm } = useFarm()
+  const { canInstall, promptInstall } = usePwaInstall()
 
   const handleLogout = async () => {
     try {
@@ -143,6 +145,12 @@ export function AppHeader({ onMenuToggle }: AppHeaderProps) {
               <Settings className="w-4 h-4 me-2" />
               {t("common.farmSettings")}
             </DropdownMenuItem>
+            {canInstall && (
+              <DropdownMenuItem onClick={() => void promptInstall()}>
+                <Download className="w-4 h-4 me-2" />
+                {t("pwa.install")}
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout} className="text-destructive">
               <LogOut className="w-4 h-4 me-2" />

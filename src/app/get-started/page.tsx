@@ -2,32 +2,36 @@ import type { Metadata } from "next"
 import GetStarted from "@/views/GetStarted"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { getAppName } from "@/lib/env"
-import { breadcrumbJsonLd, createPageMetadata, howToJsonLd, webPageJsonLd } from "@/lib/seo"
+import { breadcrumbJsonLd, createPageMetadata, howToJsonLd, pageGraphJsonLd, webPageJsonLd } from "@/lib/seo"
+
+const title = "Start a Free Farm Management Software Trial | Agrocyms"
+const description = `Create your ${getAppName()} account, name the farm, and start a 30-day trial of crop and livestock records. No card required.`
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Create Your Agrocyms Account | Get Started",
-  description: `Create your ${getAppName()} account to get started with digital farm management.`,
+  title,
+  description,
   path: "/get-started",
   absoluteTitle: true,
-  keywords: ["create Agrocyms account", "farm software signup", "get started"],
+  keywords: ["create Agrocyms account", "farm software signup", "farm management software trial", "get started"],
 })
 
 export default function GetStartedPage() {
   return (
     <>
       <JsonLd
-        data={[
+        data={pageGraphJsonLd([
           webPageJsonLd({
-            name: "Create Your Agrocyms Account",
-            description: `Create your ${getAppName()} account to get started with digital farm management.`,
+            name: title,
+            description,
             path: "/get-started",
+            image: "/farm/farmer.jpg",
           }),
           breadcrumbJsonLd([
             { name: "Home", path: "/" },
             { name: "Get started", path: "/get-started" },
           ]),
           howToJsonLd(),
-        ]}
+        ])}
       />
       <GetStarted />
     </>

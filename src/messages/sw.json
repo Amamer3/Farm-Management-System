@@ -42,6 +42,25 @@
     "member": "Mwanachama",
     "home": "Mwanzo"
   },
+  "pwa": {
+    "install": "Sakinisha programu",
+    "installTitle": "Sakinisha {name}",
+    "installBody": "Ongeza {name} kwenye simu au kompyuta hii na uifungue kama programu nyingine yoyote — kwenye Android, iPhone, iPad, Windows, au Mac.",
+    "installAction": "Sakinisha",
+    "notNow": "Sio sasa",
+    "close": "Funga",
+    "iosTitle": "Ongeza kwenye skrini ya nyumbani",
+    "iosBody": "Kwenye iPhone au iPad, gusa Shiriki, kisha Ongeza kwenye skrini ya nyumbani. {name} itaonekana pamoja na programu zako nyingine.",
+    "iosShare": "Gusa kitufe cha Shiriki katika Safari.",
+    "iosAdd": "Chagua Ongeza kwenye skrini ya nyumbani, kisha Ongeza.",
+    "macosTitle": "Ongeza kwenye Dock",
+    "macosBody": "Katika Safari kwenye Mac, ongeza {name} kwenye Dock ili ifunguke katika dirisha lake.",
+    "macosStepFile": "Fungua menyu ya Faili, au kitufe cha Shiriki.",
+    "macosStepDock": "Chagua Ongeza kwenye Dock.",
+    "desktopTitle": "Sakinisha {name}",
+    "desktopBody": "Sakinisha {name} kutoka kivinjari hiki ili ifunguke kama programu ya kompyuta kwenye Windows au Mac.",
+    "desktopHint": "Tafuta Sakinisha kwenye upau wa anwani, au tumia menyu ya kivinjari: Hifadhi na ushiriki, kisha Sakinisha ukurasa kama programu."
+  },
   "nav": {
     "features": "Vipengele",
     "solutions": "Suluhisho",
@@ -60,7 +79,9 @@
     "livestock": "Mifugo",
     "poultry": "Kuku",
     "cattle": "Ng’ombe",
-    "inventory": "Hifadhi"
+    "inventory": "Hifadhi",
+    "useCases": "Matumizi",
+    "resources": "Rasilimali"
   },
   "auth": {
     "welcomeBack": "Karibu tena",
@@ -78,14 +99,15 @@
     "showPassword": "Onyesha nenosiri",
     "hidePassword": "Ficha nenosiri",
     "createAccount": "Fungua akaunti",
-    "sessionExpired": "Kipindi chako kimeisha. Tafadhali ingia tena."
+    "sessionExpired": "Kipindi chako kimeisha. Tafadhali ingia tena.",
+    "heroAlt": "Mkulima anayetumia kompyuta kibao katika shamba la mahindi wakati wa machweo"
   },
   "home": {
     "records": "Rekodi zako",
     "onePlatform": "Jukwaa moja kwa kila shamba",
     "farmerAlt": "Mkulima amesimama kwenye chafu akiwa amekunja mikono",
-    "fieldAlt": "Safu za mazao ya kijani zilizoonekana kutoka juu",
-    "produceAlt": "Peari, zabibu na tufaha kijani kwenye kasha",
+    "fieldAlt": "Shamba la mahindi wakati wa kuchomoza kwa jua",
+    "produceAlt": "Shamba mchanganyiko lenye ng'ombe, kuku na jogoo wakati wa kuchomoza kwa jua",
     "overview": {
       "eyebrow": "Kwa mtazamo mmoja",
       "title": "Mazao, mifugo, rasilimali na biashara ya shamba — pamoja",
@@ -169,13 +191,15 @@
       "subscribe": { "question": "Ninawezaje kujiandikisha?", "answer": "Fungua akaunti ya shamba na utumie majaribio ya siku 30. Unapokuwa tayari kuendelea kuandika rekodi, wasiliana na Agrocyms au kamilisha malipo katika bidhaa." },
       "cancel": { "question": "Naweza kughairi usajili?", "answer": "Kughairi kunategemea masharti yanayoonyeshwa unaponunua. Tazama bili ya akaunti au ukurasa wa mawasiliano." },
       "support": { "question": "Ninawezaje kuwasiliana na msaada?", "answer": "Tumia ukurasa wa mawasiliano kuuliza kuhusu usajili, malipo, au utendaji wa jukwaa." },
-      "inventory": { "question": "Je, Agrocyms inafuatilia chakula na dawa?", "answer": "Ndiyo. Hifadhi ya chakula na matumizi ya dawa yako kwenye shamba lile lile la wanyama, hivyo hifadhi si daftari tofauti." }
+      "inventory": { "question": "Je, Agrocyms inafuatilia chakula na dawa?", "answer": "Ndiyo. Hifadhi ya chakula na matumizi ya dawa yako kwenye shamba lile lile la wanyama, hivyo hifadhi si daftari tofauti." },
+      "install": { "question": "Naweza kusakinisha Agrocyms kwenye simu au kompyuta?", "answer": "Ndiyo. Agrocyms ni programu ya wavuti inayoendelea. Kwenye Android, Windows, na vivinjari vingi vya kompyuta, tumia Sakinisha inapoonekana. Kwenye iPhone na iPad, gusa Shiriki kisha Ongeza kwenye skrini ya nyumbani. Kwenye Mac katika Safari, chagua Faili kisha Ongeza kwenye Dock." }
     }
   },
   "getStarted": {
     "eyebrow": "Anza",
     "title": "Anza na Agrocyms",
     "lead": "Fungua akaunti yako na uanze majaribio ya siku 30 ya nafasi kamili ya kazi. Hakuna kadi inayohitajika. Baada ya mwezi, rekodi zinabaki kusomwa na kuhamishwa hadi uandikishe.",
+    "heroAlt": "Mkulima anayetumia kompyuta kibao katika shamba la mahindi wakati wa machweo",
     "steps": { "farm": "Shamba", "crops": "Mazao", "details": "Maelezo ya shamba", "account": "Akaunti" },
     "step0Title": "Shamba hili linafanya nini?",
     "step0Lead": "Chagua kila shughuli unayotaka kwenye dashibodi. Unaweza kubadilisha baadaye katika Mipangilio ya shamba.",

@@ -22,11 +22,15 @@ export default async function SearchPage({ searchParams }: PageProps) {
   const results = searchPublicPages(query)
 
   return (
-    <MarketingPage
-      eyebrow="Search"
-      title={query ? `Results for “${query}”` : "Search public pages"}
-      lead="Look up poultry, livestock, crops, setup, and farm questions. Workspace routes stay private."
-    >
+      <MarketingPage
+        eyebrow="Search"
+        title={query ? `Results for “${query}”` : "Search public pages"}
+        lead="Look up poultry, livestock, crops, setup, and farm questions. Workspace routes stay private."
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Search", path: "/search" },
+        ]}
+      >
       <section className="mx-auto max-w-[760px] px-4 pb-16 sm:px-6">
         <form action="/search" method="get" className="flex gap-2">
           <label htmlFor="site-search" className="sr-only">

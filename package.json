@@ -6,7 +6,8 @@
     "dev": "node scripts/next-with-env.mjs dev",
     "build": "next build",
     "start": "node scripts/next-with-env.mjs start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pwa:icons": "node scripts/generate-pwa-assets.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

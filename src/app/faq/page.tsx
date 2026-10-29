@@ -3,18 +3,19 @@ import { getTranslations } from "next-intl/server"
 import { MarketingCta, MarketingPage } from "@/components/marketing/MarketingPage"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { FAQ_ITEM_KEYS } from "@/i18n/content"
-import { breadcrumbJsonLd, createPageMetadata, faqJsonLd, webPageJsonLd } from "@/lib/seo"
+import { MARKETING_PHOTOS } from "@/lib/marketingImages"
+import { createPageMetadata, faqJsonLd, pageGraphJsonLd, webPageJsonLd } from "@/lib/seo"
 
 const title = "Farm Management Software FAQs | Agrocyms"
 const description =
-  "Find answers about Agrocyms registration, farm management features, subscriptions, account setup, and using the platform."
+  "Answers about Agrocyms farm management software: registration, crop and livestock records, the 30-day trial, subscriptions, and team access."
 
 export const metadata: Metadata = createPageMetadata({
   title,
   description,
   path: "/faq",
   absoluteTitle: true,
-  keywords: ["farm management software FAQ", "Agrocyms FAQ", "agriculture software questions"],
+  keywords: ["farm management software FAQ", "Agrocyms FAQ", "agriculture software questions", "farm software trial"],
 })
 
 export default async function FaqPage() {
@@ -27,19 +28,26 @@ export default async function FaqPage() {
   return (
     <>
       <JsonLd
-        data={[
-          webPageJsonLd({ name: title, description, path: "/faq" }),
-          breadcrumbJsonLd([
-            { name: t("common.home"), path: "/" },
-            { name: t("common.faq"), path: "/faq" },
-          ]),
+        data={pageGraphJsonLd([
+          webPageJsonLd({
+            name: title,
+            description,
+            path: "/faq",
+            image: MARKETING_PHOTOS.mixed.src,
+          }),
           faqJsonLd(faqs),
-        ]}
+        ])}
       />
       <MarketingPage
         eyebrow={t("common.faq")}
         title={t("faq.pageTitle")}
         lead={t("faq.pageLead")}
+        image={MARKETING_PHOTOS.mixed.src}
+        imageAlt={MARKETING_PHOTOS.mixed.alt}
+        breadcrumbs={[
+          { name: t("common.home"), path: "/" },
+          { name: t("common.faq"), path: "/faq" },
+        ]}
       >
         <section className="mx-auto max-w-[860px] px-4 pb-6 sm:px-6">
           <div className="space-y-3">

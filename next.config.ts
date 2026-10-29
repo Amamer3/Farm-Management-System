@@ -35,7 +35,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   images: {
-    formats: ["image/avif", "image/webp"],
+    unoptimized: true,
   },
   async headers() {
     return [
@@ -70,6 +70,18 @@ const nextConfig: NextConfig = {
         headers: [{ key: "Cache-Control", value: "public, max-age=3600" }],
       },
       {
+        source: "/feed.xml",
+        headers: [{ key: "Cache-Control", value: "public, max-age=3600, s-maxage=86400" }],
+      },
+      {
+        source: "/llms.txt",
+        headers: [{ key: "Cache-Control", value: "public, max-age=3600, s-maxage=86400" }],
+      },
+      {
+        source: "/llms-full.txt",
+        headers: [{ key: "Cache-Control", value: "public, max-age=3600, s-maxage=86400" }],
+      },
+      {
         source: "/favicon.ico",
         headers: [{ key: "Cache-Control", value: "public, max-age=86400, s-maxage=604800" }],
       },
@@ -80,6 +92,38 @@ const nextConfig: NextConfig = {
       {
         source: "/favicon_io/:path*",
         headers: [{ key: "Cache-Control", value: "public, max-age=86400, s-maxage=604800" }],
+      },
+      {
+        source: "/icons/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400, s-maxage=604800" }],
+      },
+      {
+        source: "/splash/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400, s-maxage=604800" }],
+      },
+      {
+        source: "/screenshots/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400, s-maxage=604800" }],
+      },
+      {
+        source: "/manifest.webmanifest",
+        headers: [{ key: "Cache-Control", value: "public, max-age=0, must-revalidate" }],
+      },
+      {
+        source: "/sw.js",
+        headers: [
+          { key: "Content-Type", value: "application/javascript; charset=utf-8" },
+          { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+          { key: "Service-Worker-Allowed", value: "/" },
+        ],
+      },
+      {
+        source: "/offline.html",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
+        source: "/browserconfig.xml",
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400" }],
       },
       ...privateWorkspacePaths.map((source) => ({
         source,
@@ -131,7 +175,15 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/apple-touch-icon.png",
-        destination: "/favicon_io/apple-touch-icon.png",
+        destination: "/icons/apple-touch-icon.png",
+      },
+      {
+        source: "/apple-touch-icon-precomposed.png",
+        destination: "/icons/apple-touch-icon.png",
+      },
+      {
+        source: "/offline",
+        destination: "/offline.html",
       },
       {
         source: "/api/:path*",

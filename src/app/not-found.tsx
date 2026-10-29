@@ -23,6 +23,12 @@ export default function NotFound() {
           <Link href="/" className="rounded-full bg-[#173528] px-5 py-3 text-sm font-semibold text-white">
             Back home
           </Link>
+          <Link href="/features" className="rounded-full bg-[#F3F4F2] px-5 py-3 text-sm font-semibold">
+            Features
+          </Link>
+          <Link href="/resources" className="rounded-full bg-[#F3F4F2] px-5 py-3 text-sm font-semibold">
+            Guides
+          </Link>
           <Link href="/get-started" className="rounded-full bg-[#F3F4F2] px-5 py-3 text-sm font-semibold">
             Set up your farm
           </Link>

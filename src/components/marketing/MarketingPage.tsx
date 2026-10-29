@@ -1,27 +1,51 @@
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { MarketingChrome } from "@/components/marketing/MarketingChrome"
+import { MarketingHeroPhoto } from "@/components/marketing/MarketingPhoto"
+import { Breadcrumbs, type BreadcrumbItem } from "@/components/seo/Breadcrumbs"
 
 export function MarketingPage({
   eyebrow,
   title,
   lead,
+  image,
+  imageAlt,
+  breadcrumbs,
   children,
 }: {
   eyebrow: string
   title: string
   lead: string
+  image?: string
+  imageAlt?: string
+  breadcrumbs?: BreadcrumbItem[]
   children: React.ReactNode
 }) {
   return (
     <MarketingChrome>
       <main>
         <section className="mx-auto max-w-[1320px] px-4 pb-6 pt-8 sm:px-6 sm:pt-12">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#3d6b4a]">{eyebrow}</p>
-          <h1 className="mt-3 max-w-3xl text-4xl font-extrabold tracking-tight text-[#121815] sm:text-6xl">
-            {title}
-          </h1>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#3e4b43] sm:text-lg">{lead}</p>
+          {breadcrumbs ? <Breadcrumbs items={breadcrumbs} /> : null}
+          {image && imageAlt ? (
+            <div className="grid items-center gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)] lg:gap-10">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#3d6b4a]">{eyebrow}</p>
+                <h1 className="mt-3 max-w-3xl text-4xl font-extrabold tracking-tight text-[#121815] sm:text-6xl">
+                  {title}
+                </h1>
+                <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#3e4b43] sm:text-lg">{lead}</p>
+              </div>
+              <MarketingHeroPhoto src={image} alt={imageAlt} />
+            </div>
+          ) : (
+            <>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#3d6b4a]">{eyebrow}</p>
+              <h1 className="mt-3 max-w-3xl text-4xl font-extrabold tracking-tight text-[#121815] sm:text-6xl">
+                {title}
+              </h1>
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#3e4b43] sm:text-lg">{lead}</p>
+            </>
+          )}
         </section>
         {children}
       </main>

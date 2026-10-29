@@ -1,39 +1,54 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 import { MarketingPage } from "@/components/marketing/MarketingPage"
+import { MarketingPhotoCard } from "@/components/marketing/MarketingPhoto"
 import { JsonLd } from "@/components/seo/JsonLd"
+import { MARKETING_PHOTOS, photoForResourceCategory } from "@/lib/marketingImages"
 import { RESOURCE_ARTICLES, RESOURCE_CATEGORIES } from "@/lib/siteContent"
-import { breadcrumbJsonLd, createPageMetadata, itemListJsonLd, webPageJsonLd } from "@/lib/seo"
+import { createPageMetadata, itemListJsonLd, pageGraphJsonLd, webPageJsonLd } from "@/lib/seo"
 
 const title = "Farm Management Guides and Agricultural Insights | Agrocyms"
 const description =
-  "Explore practical guides on farm management, crop production, livestock operations, farm records, and agricultural business organization."
+  "Practical farm management guides on crop records, livestock events, inventory, digital agriculture, and running the farm as a business."
 
 export const metadata: Metadata = createPageMetadata({
   title,
   description,
   path: "/resources",
   absoluteTitle: true,
-  keywords: ["farm management tips", "agriculture guides", "digital agriculture"],
+  keywords: [
+    "farm management tips",
+    "agriculture guides",
+    "digital agriculture",
+    "livestock record keeping",
+    "crop production records",
+  ],
 })
 
 export default function ResourcesPage() {
   return (
     <>
       <JsonLd
-        data={[
-          webPageJsonLd({ name: title, description, path: "/resources" }),
-          breadcrumbJsonLd([
-            { name: "Home", path: "/" },
-            { name: "Resources", path: "/resources" },
-          ]),
+        data={pageGraphJsonLd([
+          webPageJsonLd({
+            name: title,
+            description,
+            path: "/resources",
+            type: "CollectionPage",
+            image: MARKETING_PHOTOS.mixed.src,
+          }),
           itemListJsonLd(RESOURCE_ARTICLES.map((item) => ({ name: item.title, path: `/resources/${item.slug}` }))),
-        ]}
+        ])}
       />
       <MarketingPage
         eyebrow="Resources"
         title="Practical Insights for Better Farm Management"
         lead="Explore educational resources designed to help agricultural businesses organize their operations, understand farm management practices, and make more informed decisions."
+        image={MARKETING_PHOTOS.mixed.src}
+        imageAlt={MARKETING_PHOTOS.mixed.alt}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Resources", path: "/resources" },
+        ]}
       >
         <section className="mx-auto max-w-[1320px] px-4 pb-16 sm:px-6">
           <div className="mb-8 flex flex-wrap gap-2">
@@ -44,17 +59,20 @@ export default function ResourcesPage() {
             ))}
           </div>
           <div className="grid gap-4 md:grid-cols-2">
-            {RESOURCE_ARTICLES.map((item) => (
-              <article key={item.slug} className="rounded-[28px] border border-[#E4E8E4] bg-white p-6">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#3d6b4a]">{item.category}</p>
-                <h2 className="mt-2 text-xl font-bold">
-                  <Link href={`/resources/${item.slug}`} className="hover:underline">
-                    {item.title}
-                  </Link>
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-[#526057]">{item.description}</p>
-              </article>
-            ))}
+            {RESOURCE_ARTICLES.map((item) => {
+              const photo = photoForResourceCategory(item.category)
+              return (
+                <MarketingPhotoCard
+                  key={item.slug}
+                  href={`/resources/${item.slug}`}
+                  title={item.title}
+                  body={item.description}
+                  src={photo.src}
+                  alt={photo.alt}
+                  cta="Read guide"
+                />
+              )
+            })}
           </div>
         </section>
       </MarketingPage>

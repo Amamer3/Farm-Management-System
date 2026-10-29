@@ -42,6 +42,25 @@
     "member": "Membro",
     "home": "Início"
   },
+  "pwa": {
+    "install": "Instalar app",
+    "installTitle": "Instalar {name}",
+    "installBody": "Adicione {name} a este telemóvel ou computador e abra-a como qualquer outra aplicação — no Android, iPhone, iPad, Windows ou Mac.",
+    "installAction": "Instalar",
+    "notNow": "Agora não",
+    "close": "Fechar",
+    "iosTitle": "Adicionar ao ecrã de início",
+    "iosBody": "No iPhone ou iPad, toque em Partilhar e depois em Adicionar ao ecrã de início. {name} aparece com as outras apps.",
+    "iosShare": "Toque no botão Partilhar no Safari.",
+    "iosAdd": "Escolha Adicionar ao ecrã de início e depois Adicionar.",
+    "macosTitle": "Adicionar ao Dock",
+    "macosBody": "No Safari num Mac, adicione {name} ao Dock para abrir numa janela própria.",
+    "macosStepFile": "Abra o menu Ficheiro ou o botão Partilhar.",
+    "macosStepDock": "Escolha Adicionar ao Dock.",
+    "desktopTitle": "Instalar {name}",
+    "desktopBody": "Instale {name} neste browser para abrir como uma aplicação de ambiente de trabalho no Windows ou Mac.",
+    "desktopHint": "Procure Instalar na barra de endereço ou use o menu do browser: Guardar e partilhar, depois Instalar página como aplicação."
+  },
   "nav": {
     "features": "Recursos",
     "solutions": "Soluções",
@@ -60,7 +79,9 @@
     "livestock": "Pecuária",
     "poultry": "Avicultura",
     "cattle": "Bovinos",
-    "inventory": "Inventário"
+    "inventory": "Inventário",
+    "useCases": "Casos de uso",
+    "resources": "Recursos"
   },
   "auth": {
     "welcomeBack": "Bem-vindo de volta",
@@ -78,14 +99,15 @@
     "showPassword": "Mostrar senha",
     "hidePassword": "Ocultar senha",
     "createAccount": "Criar uma conta",
-    "sessionExpired": "Sua sessão expirou. Entre novamente."
+    "sessionExpired": "Sua sessão expirou. Entre novamente.",
+    "heroAlt": "Agricultor usando um tablet em um campo de milho ao pôr do sol"
   },
   "home": {
     "records": "Seus registros",
     "onePlatform": "Uma plataforma para cada fazenda",
     "farmerAlt": "Agricultor em pé em uma estufa com os braços cruzados",
-    "fieldAlt": "Fileiras de culturas verdes vistas de cima",
-    "produceAlt": "Peras, uvas e maçãs verdes em uma caixa",
+    "fieldAlt": "Milharal ao nascer do sol",
+    "produceAlt": "Fazenda mista com gado, galinhas e um galo ao nascer do sol",
     "overview": {
       "eyebrow": "Em um relance",
       "title": "Culturas, pecuária, recursos e o negócio da fazenda — juntos",
@@ -169,13 +191,15 @@
       "subscribe": { "question": "Como assino?", "answer": "Crie sua conta de fazenda e use o teste de 30 dias. Quando quiser continuar gravando registros, contate a Agrocyms ou conclua o pagamento disponível no produto." },
       "cancel": { "question": "Posso cancelar a assinatura?", "answer": "O cancelamento está sujeito aos termos exibidos na compra. Consulte a faturamento da conta ou a página de contato." },
       "support": { "question": "Como contato o suporte?", "answer": "Use a página de contato para dúvidas sobre cadastro, assinaturas ou funcionamento da plataforma." },
-      "inventory": { "question": "A Agrocyms controla ração e medicamentos?", "answer": "Sim. O estoque de ração e o uso de medicamentos ficam na mesma fazenda dos animais a que pertencem, então o inventário não é um caderno separado." }
+      "inventory": { "question": "A Agrocyms controla ração e medicamentos?", "answer": "Sim. O estoque de ração e o uso de medicamentos ficam na mesma fazenda dos animais a que pertencem, então o inventário não é um caderno separado." },
+      "install": { "question": "Posso instalar a Agrocyms no telemóvel ou no computador?", "answer": "Sim. A Agrocyms é uma aplicação web progressiva. No Android, Windows e na maioria dos browsers de computador, use Instalar quando aparecer. No iPhone e iPad, toque em Partilhar e depois em Adicionar ao ecrã de início. Num Mac no Safari, escolha Ficheiro e depois Adicionar ao Dock." }
     }
   },
   "getStarted": {
     "eyebrow": "Começar",
     "title": "Comece com a Agrocyms",
     "lead": "Crie sua conta e inicie um teste de 30 dias do espaço de trabalho completo. Não é necessário cartão. Após o mês, os registros permanecem legíveis e exportáveis até a assinatura.",
+    "heroAlt": "Agricultor usando um tablet em um campo de milho ao pôr do sol",
     "steps": { "farm": "Fazenda", "crops": "Culturas", "details": "Dados da fazenda", "account": "Conta" },
     "step0Title": "O que esta fazenda faz?",
     "step0Lead": "Selecione cada atividade que deseja no painel. Você pode alterar isso depois em Configurações da fazenda.",

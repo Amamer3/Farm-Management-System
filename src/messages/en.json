@@ -44,6 +44,25 @@
     "member": "Member",
     "home": "Home"
   },
+  "pwa": {
+    "install": "Install app",
+    "installTitle": "Install {name}",
+    "installBody": "Add {name} to this phone or computer and open it like any other app — on Android, iPhone, iPad, Windows, or Mac.",
+    "installAction": "Install",
+    "notNow": "Not now",
+    "close": "Close",
+    "iosTitle": "Add to Home Screen",
+    "iosBody": "On iPhone or iPad, tap Share, then Add to Home Screen. {name} will appear with your other apps.",
+    "iosShare": "Tap the Share button in Safari.",
+    "iosAdd": "Choose Add to Home Screen, then Add.",
+    "macosTitle": "Add to Dock",
+    "macosBody": "In Safari on a Mac, add {name} to the Dock so it opens in its own window.",
+    "macosStepFile": "Open the File menu, or the Share button.",
+    "macosStepDock": "Choose Add to Dock.",
+    "desktopTitle": "Install {name}",
+    "desktopBody": "Install {name} from this browser so it opens like a desktop app on Windows or Mac.",
+    "desktopHint": "Look for Install in the address bar, or use the browser menu: Save and share, then Install page as app."
+  },
   "nav": {
     "features": "Features",
     "solutions": "Solutions",
@@ -62,7 +81,9 @@
     "livestock": "Livestock",
     "poultry": "Poultry",
     "cattle": "Cattle",
-    "inventory": "Inventory"
+    "inventory": "Inventory",
+    "useCases": "Use cases",
+    "resources": "Resources"
   },
   "auth": {
     "welcomeBack": "Welcome Back",
@@ -80,14 +101,15 @@
     "showPassword": "Show password",
     "hidePassword": "Hide password",
     "createAccount": "Create an account",
-    "sessionExpired": "Your session has expired. Please log in again."
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "heroAlt": "Farmer using a tablet in a maize field at sunset"
   },
   "home": {
     "records": "Your records",
     "onePlatform": "One platform for every farm",
     "farmerAlt": "Farmer standing in a greenhouse with arms crossed",
-    "fieldAlt": "Rows of green crops seen from above",
-    "produceAlt": "Green pears, grapes, and apples in a crate",
+    "fieldAlt": "Cornfield at sunrise",
+    "produceAlt": "Mixed farm with cattle, chickens, and a rooster at sunrise",
     "overview": {
       "eyebrow": "At a glance",
       "title": "Crops, livestock, resources, and the farm business — together",
@@ -98,7 +120,7 @@
     "seeEveryAnswer": "See every answer",
     "hero": {
       "eyebrow": "Smarter farm management starts here",
-      "title": "Manage Your Farm Smarter with Agrocyms",
+      "title": "Farm Management Software for Crop and Livestock Operations",
       "kicker": "Your farm is a business. Give it the tools to run like one.",
       "body": "Agrocyms helps agricultural businesses bring their farming operations into one digital platform, making it easier to organize activities, monitor resources, and manage farm performance as the business grows.",
       "primaryCta": "Get Started",
@@ -247,6 +269,10 @@
       "inventory": {
         "question": "Does Agrocyms track feed and medicine?",
         "answer": "Yes. Feed stock and medicine use sit on the same farm as the animals they belong to, so inventory is not a separate notebook."
+      },
+      "install": {
+        "question": "Can I install Agrocyms on my phone or computer?",
+        "answer": "Yes. Agrocyms is a progressive web app. On Android, Windows, and most desktop browsers, use Install when it appears. On iPhone and iPad, tap Share then Add to Home Screen. On a Mac in Safari, choose File then Add to Dock."
       }
     }
   },
@@ -254,6 +280,7 @@
     "eyebrow": "Get started",
     "title": "Get Started with Agrocyms",
     "lead": "Create your account and start a 30-day trial of the full workspace. No card is required. After the month, records stay readable and exportable until you subscribe.",
+    "heroAlt": "Farmer using a tablet in a maize field at sunset",
     "steps": {
       "farm": "Farm",
       "crops": "Crops",

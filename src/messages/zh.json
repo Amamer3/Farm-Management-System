@@ -42,6 +42,25 @@
     "member": "成员",
     "home": "首页"
   },
+  "pwa": {
+    "install": "安装应用",
+    "installTitle": "安装 {name}",
+    "installBody": "将 {name} 添加到这台手机或电脑，像其他应用一样打开——适用于 Android、iPhone、iPad、Windows 和 Mac。",
+    "installAction": "安装",
+    "notNow": "暂不",
+    "close": "关闭",
+    "iosTitle": "添加到主屏幕",
+    "iosBody": "在 iPhone 或 iPad 上，点共享，然后点添加到主屏幕。{name} 会和其他应用一起出现。",
+    "iosShare": "在 Safari 中点共享按钮。",
+    "iosAdd": "选择添加到主屏幕，然后点添加。",
+    "macosTitle": "添加到程序坞",
+    "macosBody": "在 Mac 的 Safari 中，将 {name} 添加到程序坞，即可在独立窗口中打开。",
+    "macosStepFile": "打开“文件”菜单或共享按钮。",
+    "macosStepDock": "选择添加到程序坞。",
+    "desktopTitle": "安装 {name}",
+    "desktopBody": "从此浏览器安装 {name}，即可在 Windows 或 Mac 上像桌面应用一样打开。",
+    "desktopHint": "在地址栏查找“安装”，或使用浏览器菜单：保存并共享，然后将此页面安装为应用。"
+  },
   "nav": {
     "features": "功能",
     "solutions": "解决方案",
@@ -60,7 +79,9 @@
     "livestock": "畜牧",
     "poultry": "家禽",
     "cattle": "牛",
-    "inventory": "库存"
+    "inventory": "库存",
+    "useCases": "使用场景",
+    "resources": "资源"
   },
   "auth": {
     "welcomeBack": "欢迎回来",
@@ -78,14 +99,15 @@
     "showPassword": "显示密码",
     "hidePassword": "隐藏密码",
     "createAccount": "创建账户",
-    "sessionExpired": "会话已过期。请重新登录。"
+    "sessionExpired": "会话已过期。请重新登录。",
+    "heroAlt": "农民在日落时分的玉米地里使用平板电脑"
   },
   "home": {
     "records": "您的记录",
     "onePlatform": "一座农场，一个平台",
     "farmerAlt": "农民双臂交叉站在温室中",
-    "fieldAlt": "俯视成排的绿色作物",
-    "produceAlt": "箱中的青梨、葡萄和苹果",
+    "fieldAlt": "日出时的玉米地",
+    "produceAlt": "日出时有牛、鸡和公鸡的混合农场",
     "overview": {
       "eyebrow": "一览",
       "title": "作物、畜牧、物资与农场经营，集于一处",
@@ -169,13 +191,15 @@
       "subscribe": { "question": "如何订阅？", "answer": "创建农场账户并使用 30 天试用。当您准备继续写入记录时，联系 Agrocyms 或完成产品中的支付流程。" },
       "cancel": { "question": "可以取消订阅吗？", "answer": "取消须遵守购买时显示的订阅条款。请查看账户账单区或联系页。" },
       "support": { "question": "如何联系支持？", "answer": "使用联系页咨询注册、订阅或平台功能。" },
-      "inventory": { "question": "Agrocyms 跟踪饲料和药品吗？", "answer": "跟踪。饲料库存和药品使用与所属动物在同一农场，库存不是另一本笔记本。" }
+      "inventory": { "question": "Agrocyms 跟踪饲料和药品吗？", "answer": "跟踪。饲料库存和药品使用与所属动物在同一农场，库存不是另一本笔记本。" },
+      "install": { "question": "可以在手机或电脑上安装 Agrocyms 吗？", "answer": "可以。Agrocyms 是渐进式网页应用。在 Android、Windows 和多数桌面浏览器中，出现“安装”时点选即可。在 iPhone 和 iPad 上，点共享再点添加到主屏幕。在 Mac 的 Safari 中，选择文件，再选择添加到程序坞。" }
     }
   },
   "getStarted": {
     "eyebrow": "开始使用",
     "title": "开始使用 Agrocyms",
     "lead": "创建账户并开始完整工作区的 30 天试用。无需银行卡。一个月后，记录在订阅前仍可阅读和导出。",
+    "heroAlt": "农民在日落时分的玉米地里使用平板电脑",
     "steps": { "farm": "农场", "crops": "作物", "details": "农场详情", "account": "账户" },
     "step0Title": "这座农场经营什么？",
     "step0Lead": "选择要出现在仪表板中的每一项经营。之后可在农场设置中更改。",

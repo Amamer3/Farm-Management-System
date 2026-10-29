@@ -9,7 +9,7 @@ export const HOME_SEO = {
     "farm management system",
     "agriculture management software",
     "farm operations software",
-    "digital farm management",
+    "digital farm management", 
   ],
 }
 

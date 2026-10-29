@@ -106,6 +106,21 @@ const nextConfig: NextConfig = {
         destination: "/get-started",
         statusCode: 301,
       },
+      {
+        source: "/landing/farmer.png",
+        destination: "/landing/farmer.jpg",
+        statusCode: 301,
+      },
+      {
+        source: "/landing/field.png",
+        destination: "/landing/field.jpg",
+        statusCode: 301,
+      },
+      {
+        source: "/landing/produce.png",
+        destination: "/landing/produce.jpg",
+        statusCode: 301,
+      },
     ];
   },
   async rewrites() {

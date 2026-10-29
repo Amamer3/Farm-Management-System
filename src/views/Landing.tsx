@@ -62,11 +62,12 @@ export default function Landing() {
               <div className="grid min-w-0 grid-cols-1 gap-3 min-[360px]:grid-cols-2 sm:gap-4">
                 <article className="relative min-h-[200px] overflow-hidden rounded-[24px] sm:min-h-[230px] sm:rounded-[28px]">
                   <Image
-                    src="/landing/field.png"
+                    src="/landing/field.jpg"
                     alt={t("home.fieldAlt")}
                     fill
                     sizes="(min-width: 1024px) 28vw, (min-width: 480px) 46vw, 100vw"
                     className="object-cover"
+                    unoptimized
                   />
                   {pins.map((pin) => (
                     <span key={`${pin.top}-${pin.left}`} className="absolute -translate-x-1/2 -translate-y-1/2" style={{ top: pin.top, left: pin.left }}>
@@ -79,11 +80,12 @@ export default function Landing() {
 
                 <article className="relative min-h-[200px] overflow-hidden rounded-[24px] sm:min-h-[230px] sm:rounded-[28px]">
                   <Image
-                    src="/landing/produce.png"
+                    src="/landing/produce.jpg"
                     alt={t("home.produceAlt")}
                     fill
                     sizes="(min-width: 1024px) 24vw, (min-width: 480px) 46vw, 100vw"
                     className="object-cover"
+                    unoptimized
                   />
                   <p className="absolute bottom-3 start-3 end-3 line-clamp-3 text-sm font-bold leading-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)] sm:bottom-4 sm:start-4 sm:end-4 sm:text-base lg:text-lg">
                     {t("home.onePlatform")}
@@ -94,12 +96,13 @@ export default function Landing() {
 
             <article className="relative min-h-[300px] overflow-hidden rounded-[28px] sm:min-h-[420px] sm:rounded-[32px] md:min-h-full">
               <Image
-                src="/landing/farmer.png"
+                src="/landing/farmer.jpg"
                 alt={t("home.farmerAlt")}
                 fill
                 priority
                 sizes="(min-width: 1024px) 42vw, (min-width: 768px) 48vw, 100vw"
                 className="object-cover object-[center_top]"
+                unoptimized
               />
               <div className="absolute bottom-4 start-4 inline-flex max-w-[calc(100%-2rem)] items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-bold text-[#173528] shadow-[0_10px_24px_rgba(16,24,20,0.16)] sm:bottom-6">
                 {t("home.records")}

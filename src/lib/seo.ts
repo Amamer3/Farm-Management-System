@@ -35,7 +35,7 @@ export const PRIVATE_PATHS = [
 export const SITE_CONTENT_UPDATED = new Date("2026-10-26")
 
 export const PUBLIC_ROUTES = [
-  { path: "/", changeFrequency: "weekly", priority: 1, images: ["/landing/farmer.png", "/landing/field.png"] },
+  { path: "/", changeFrequency: "weekly", priority: 1, images: ["/landing/farmer.jpg", "/landing/field.jpg"] },
   { path: "/about", changeFrequency: "monthly", priority: 0.8 },
   { path: "/features", changeFrequency: "weekly", priority: 0.9 },
   { path: "/features/crop-management", changeFrequency: "monthly", priority: 0.9 },
@@ -373,7 +373,7 @@ export function softwareJsonLd(): JsonLd {
       "Team logins for the same farm",
       "Reports and production statistics",
     ],
-    screenshot: absoluteUrl("/landing/farmer.png"),
+    screenshot: absoluteUrl("/landing/farmer.jpg"),
     softwareHelp: {
       "@type": "WebPage",
       url: absoluteUrl("/faq"),

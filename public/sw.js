@@ -1,4 +1,4 @@
-const CACHE_NAME = "agrocyms-pwa-v1"
+const CACHE_NAME = "agrocyms-pwa-v2"
 const OFFLINE_URL = "/offline.html"
 const PRECACHE_URLS = [
   OFFLINE_URL,
@@ -37,12 +37,11 @@ function isApiRequest(url) {
 
 function isStaticAsset(url) {
   return (
-    url.pathname.startsWith("/_next/static/") ||
     url.pathname.startsWith("/icons/") ||
     url.pathname.startsWith("/splash/") ||
     url.pathname.startsWith("/screenshots/") ||
     url.pathname.startsWith("/favicon_io/") ||
-    /\.(?:png|jpg|jpeg|webp|gif|svg|ico|woff2?|ttf|css|js|map|webmanifest)$/i.test(url.pathname)
+    /\.(?:png|jpg|jpeg|webp|gif|svg|ico|woff2?)$/i.test(url.pathname)
   )
 }
 
@@ -85,6 +84,7 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url)
   if (url.origin !== self.location.origin) return
   if (isApiRequest(url)) return
+  if (url.pathname.startsWith("/_next/")) return
 
   if (request.mode === "navigate") {
     event.respondWith(networkFirst(request))

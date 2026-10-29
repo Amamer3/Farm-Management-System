@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next"
-import { getAppDescription, getAppName, getSiteUrl } from "@/lib/env"
+import { getAppDescription, getAppName } from "@/lib/env"
 import {
   PWA_BACKGROUND_COLOR,
   PWA_ICON_192,
@@ -16,14 +16,14 @@ export default function manifest(): MetadataRoute.Manifest {
   const name = getAppName()
 
   return {
-    id: getSiteUrl(),
+    id: "/",
     name: `${name} Farm Management`,
     short_name: name,
     description: getAppDescription(),
-    start_url: `${getSiteUrl()}/login`,
+    start_url: "/login",
     scope: "/",
     display: "standalone",
-    display_override: ["window-controls-overlay", "standalone", "minimal-ui"],
+    display_override: ["standalone", "minimal-ui", "window-controls-overlay"],
     orientation: "any",
     background_color: PWA_BACKGROUND_COLOR,
     theme_color: PWA_THEME_COLOR,

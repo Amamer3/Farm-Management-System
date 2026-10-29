@@ -108,7 +108,6 @@ export function PwaProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return
-    if (process.env.NODE_ENV !== "production") return
     void navigator.serviceWorker.register("/sw.js", { scope: "/", updateViaCache: "none" })
   }, [])
 

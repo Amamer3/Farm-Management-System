@@ -264,6 +264,9 @@
   },
   "header": { "searchPlaceholder": "Pesquisar...", "closeSearch": "Fechar pesquisa" },
   "trial": {
+    "noticeTitle": "Seu teste de 90 dias",
+    "expiredTitle": "Teste encerrado",
+    "gotIt": "Entendi",
     "expired": "O teste de 90 dias terminou. Você ainda pode ver e exportar registros.",
     "contactToSubscribe": "Contatar a Agrocyms",
     "keepWriting": "para assinar e continuar gravando.",

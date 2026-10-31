@@ -6,7 +6,7 @@ import { NotificationBell } from "@/components/layout/NotificationBell"
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher"
 import { ThemeToggle } from "@/components/layout/ThemeToggle"
 import { useMemo, useState } from "react"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useUserRole } from "@/contexts/UserRoleContext"
 import { useFarm } from "@/contexts/FarmContext"
 import { TrialBanner } from "@/components/layout/TrialBanner"
+import { TrialNotice } from "@/components/layout/TrialNotice"
 import { usePwaInstall } from "@/components/pwa/PwaProvider"
 import { APP_NAV, searchAppNav } from "@/lib/appNav"
 import {
@@ -34,9 +35,11 @@ export function AppHeader({ onMenuToggle }: AppHeaderProps) {
   const [searchValue, setSearchValue] = useState("")
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
   const { user, logout, canAccess } = useUserRole()
   const { farm, hasEnterprise } = useFarm()
   const { canInstall, promptInstall } = usePwaInstall()
+  const showTrialBanner = pathname === "/profile"
 
   const visibleNav = useMemo(
     () =>
@@ -181,7 +184,8 @@ export function AppHeader({ onMenuToggle }: AppHeaderProps) {
         </DropdownMenu>
       </div>
     </header>
-    <TrialBanner />
+    {showTrialBanner && <TrialBanner />}
+    <TrialNotice />
     </>
   )
 }

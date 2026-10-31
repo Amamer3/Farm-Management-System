@@ -264,6 +264,9 @@
   },
   "header": { "searchPlaceholder": "搜索...", "closeSearch": "关闭搜索" },
   "trial": {
+    "noticeTitle": "您的 90 天试用",
+    "expiredTitle": "试用已结束",
+    "gotIt": "知道了",
     "expired": "90 天试用已结束。您仍可查看和导出记录。",
     "contactToSubscribe": "联系 Agrocyms",
     "keepWriting": "以订阅并继续写入。",

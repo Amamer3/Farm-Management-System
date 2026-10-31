@@ -264,6 +264,9 @@
   },
   "header": { "searchPlaceholder": "खोजें...", "closeSearch": "खोज बंद करें" },
   "trial": {
+    "noticeTitle": "आपका 90-दिन ट्रायल",
+    "expiredTitle": "ट्रायल समाप्त",
+    "gotIt": "समझ गया",
     "expired": "90-दिन का ट्रायल समाप्त हो गया। आप अभी भी रिकॉर्ड देख और निर्यात कर सकते हैं।",
     "contactToSubscribe": "Agrocyms से संपर्क करें",
     "keepWriting": "सदस्यता लेकर लिखना जारी रखने के लिए।",

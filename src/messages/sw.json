@@ -264,6 +264,9 @@
   },
   "header": { "searchPlaceholder": "Tafuta...", "closeSearch": "Funga utafutaji" },
   "trial": {
+    "noticeTitle": "Majaribio yako ya siku 90",
+    "expiredTitle": "Majaribio yameisha",
+    "gotIt": "Nimeelewa",
     "expired": "Majaribio ya siku 90 yameisha. Bado unaweza kuona na kuhamisha rekodi.",
     "contactToSubscribe": "Wasiliana na Agrocyms",
     "keepWriting": "ili ujiandikishe na uendelee kuandika.",

@@ -304,6 +304,9 @@
   },
   "header": { "searchPlaceholder": "Rechercher...", "closeSearch": "Fermer la recherche" },
   "trial": {
+    "noticeTitle": "Votre essai de 90 jours",
+    "expiredTitle": "Essai terminé",
+    "gotIt": "Compris",
     "expired": "L’essai de 90 jours est terminé. Vous pouvez encore consulter et exporter les registres.",
     "contactToSubscribe": "Contacter Agrocyms",
     "keepWriting": "pour vous abonner et continuer à écrire.",

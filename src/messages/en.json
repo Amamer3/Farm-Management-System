@@ -384,6 +384,9 @@
     "system": "System"
   },
   "trial": {
+    "noticeTitle": "Your 90-day trial",
+    "expiredTitle": "Trial ended",
+    "gotIt": "Got it",
     "expired": "The 90-day trial has ended. You can still view and export records.",
     "contactToSubscribe": "See plans and subscribe",
     "keepWriting": "to keep writing records.",

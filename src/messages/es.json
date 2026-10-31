@@ -343,6 +343,9 @@
   },
   "header": { "searchPlaceholder": "Buscar...", "closeSearch": "Cerrar búsqueda" },
   "trial": {
+    "noticeTitle": "Su prueba de 90 días",
+    "expiredTitle": "Prueba finalizada",
+    "gotIt": "Entendido",
     "expired": "La prueba de 90 días ha terminado. Aún puede ver y exportar registros.",
     "contactToSubscribe": "Contactar con Agrocyms",
     "keepWriting": "para suscribirse y seguir escribiendo.",

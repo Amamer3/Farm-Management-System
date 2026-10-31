@@ -264,6 +264,9 @@
   },
   "header": { "searchPlaceholder": "بحث...", "closeSearch": "إغلاق البحث" },
   "trial": {
+    "noticeTitle": "تجربتك لمدة 90 يومًا",
+    "expiredTitle": "انتهت التجربة",
+    "gotIt": "حسنًا",
     "expired": "انتهت تجربة الـ 90 يومًا. ما زال بإمكانك عرض السجلات وتصديرها.",
     "contactToSubscribe": "تواصل مع Agrocyms",
     "keepWriting": "للاشتراك ومتابعة الكتابة.",

@@ -3,7 +3,7 @@ export const BRAND_TAGLINE = "One Platform. Every Farm. Smarter Agriculture."
 export const HOME_SEO = {
   title: "Farm Management Software for Modern Agriculture | Agrocyms",
   description:
-    "Farm management software for crops and livestock. Agrocyms tracks poultry, cattle, pigs, fields, feed, and team records in one workspace. Start a 30-day trial.",
+    "Farm management software for crops and livestock. Agrocyms tracks poultry, cattle, pigs, fields, feed, and team records in one workspace. Start a 90-day trial.",
   keywords: [
     "farm management software",
     "farm management system",
@@ -102,7 +102,7 @@ export const HOME_STEPS = {
     {
       step: "1",
       title: "Create your account",
-      body: "Register for Agrocyms, set up the farm, and start a 30-day trial with no card required.",
+      body: "Register for Agrocyms, set up the farm, and start a 90-day trial with no card required.",
     },
     {
       step: "2",
@@ -273,12 +273,12 @@ export const SOLUTIONS = {
 export const PRICING = {
   title: "Agrocyms Pricing | Farm Management Software Plans",
   description:
-    "Agrocyms farm management software pricing starts with a 30-day trial and no card required. Compare Starter, Professional, and Enterprise plans for crop and livestock farms.",
+    "Agrocyms farm management software pricing starts with a 90-day trial and no card required. Compare Starter, Professional, and Enterprise plans for crop and livestock farms.",
   keywords: ["farm management software pricing", "Agrocyms plans", "agriculture software subscription", "farm software trial"],
   eyebrow: "Pricing",
   headline: "Choose a Plan for Your Farming Business",
-  lead: "Every new farm gets 30 days of full access, with no card required. After the trial, choose a plan if you want to keep writing records.",
-  note: "New farms start with a 30-day trial of the full workspace. No card is required. When the month ends, records stay readable and exportable until you subscribe. Paid prices, billing intervals, and included features are confirmed when you subscribe — this page does not list placeholder prices.",
+  lead: "Every new farm gets 90 days of full access, with no card required. After the trial, choose a plan if you want to keep writing records.",
+  note: "New farms start with a 90-day trial of the full workspace. No card is required. When the three months end, records stay readable and exportable until you subscribe. Paid prices, billing intervals, and included features are confirmed when you subscribe — this page does not list placeholder prices.",
   plans: [
     {
       name: "Starter",
@@ -300,7 +300,7 @@ export const PRICING = {
     },
   ],
   checklist: [
-    "30 days of full access after farm setup, with no card required.",
+    "90 days of full access after farm setup, with no card required.",
     "After the trial, unpaid farms can view and export records but cannot add or change them.",
     "Subscription price and billing interval, confirmed when you subscribe.",
     "Included features and usage limits for the selected plan.",

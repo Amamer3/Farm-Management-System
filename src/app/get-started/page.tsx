@@ -6,7 +6,7 @@ import { getAppName } from "@/lib/env"
 import { breadcrumbJsonLd, createPageMetadata, howToJsonLd, pageGraphJsonLd, webPageJsonLd } from "@/lib/seo"
 
 const title = "Start a Free Farm Management Software Trial | Agrocyms"
-const description = `Create your ${getAppName()} account, name the farm, and start a 30-day trial of crop and livestock records. No card required.`
+const description = `Create your ${getAppName()} account, name the farm, and start a 90-day trial of crop and livestock records. No card required.`
 
 export const metadata: Metadata = createPageMetadata({
   title,

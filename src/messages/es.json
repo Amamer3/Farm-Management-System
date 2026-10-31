@@ -195,7 +195,7 @@
         "account": {
           "step": "1",
           "title": "Cree su cuenta",
-          "body": "Regístrese en Agrocyms, configure la granja y empiece una prueba de 30 días sin tarjeta."
+          "body": "Regístrese en Agrocyms, configure la granja y empiece una prueba de 90 días sin tarjeta."
         },
         "farm": {
           "step": "2",
@@ -246,15 +246,15 @@
       },
       "free": {
         "question": "¿Agrocyms es gratis?",
-        "answer": "Las granjas nuevas tienen 30 días de acceso completo sin tarjeta. Después del periodo de prueba, el espacio de trabajo sigue siendo legible y exportable hasta que se suscriba. No hay un plan gratuito ilimitado."
+        "answer": "Las granjas nuevas tienen 90 días de acceso completo sin tarjeta. Después del periodo de prueba, el espacio de trabajo sigue siendo legible y exportable hasta que se suscriba. No hay un plan gratuito ilimitado."
       },
       "cost": {
         "question": "¿Cuánto cuesta Agrocyms?",
-        "answer": "Los primeros 30 días están incluidos con la configuración de la granja. Después, los precios dependen de los planes publicados. Visite la página de precios o contacte con Agrocyms."
+        "answer": "Los primeros 90 días están incluidos con la configuración de la granja. Después, los precios dependen de los planes publicados. Visite la página de precios o contacte con Agrocyms."
       },
       "subscribe": {
         "question": "¿Cómo me suscribo?",
-        "answer": "Cree su cuenta de granja y use la prueba de 30 días. Cuando quiera seguir escribiendo registros, contacte con Agrocyms o complete el pago disponible en el producto."
+        "answer": "Cree su cuenta de granja y use la prueba de 90 días. Cuando quiera seguir escribiendo registros, contacte con Agrocyms o complete el pago disponible en el producto."
       },
       "cancel": {
         "question": "¿Puedo cancelar mi suscripción?",
@@ -277,7 +277,7 @@
   "getStarted": {
     "eyebrow": "Empezar",
     "title": "Empiece con Agrocyms",
-    "lead": "Cree su cuenta y empiece una prueba de 30 días del espacio de trabajo completo. No se requiere tarjeta. Después del mes, los registros siguen siendo legibles y exportables hasta que se suscriba.",
+    "lead": "Cree su cuenta y empiece una prueba de 90 días del espacio de trabajo completo. No se requiere tarjeta. Después de los tres meses, los registros siguen siendo legibles y exportables hasta que se suscriba.",
     "heroAlt": "Agricultor usando una tableta en un maizal al atardecer",
     "steps": { "farm": "Granja", "crops": "Cultivos", "details": "Datos de la granja", "account": "Cuenta" },
     "step0Title": "¿A qué se dedica esta granja?",
@@ -343,10 +343,10 @@
   },
   "header": { "searchPlaceholder": "Buscar...", "closeSearch": "Cerrar búsqueda" },
   "trial": {
-    "expired": "La prueba de 30 días ha terminado. Aún puede ver y exportar registros.",
+    "expired": "La prueba de 90 días ha terminado. Aún puede ver y exportar registros.",
     "contactToSubscribe": "Contactar con Agrocyms",
     "keepWriting": "para suscribirse y seguir escribiendo.",
-    "remaining": "Acceso completo durante {days, plural, one {# día} other {# días}} de su prueba de 30 días. No se requiere tarjeta. Después, los registros siguen siendo legibles y exportables hasta que se suscriba."
+    "remaining": "Acceso completo durante {days, plural, one {# día} other {# días}} de su prueba de 90 días. No se requiere tarjeta. Después, los registros siguen siendo legibles y exportables hasta que se suscriba."
   },
   "notifications": {
     "title": "Notificaciones",

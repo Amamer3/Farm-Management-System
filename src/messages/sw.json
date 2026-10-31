@@ -164,7 +164,7 @@
       "title": "Anza kusimamia shamba lako kwa hatua tatu",
       "cta": "Fungua akaunti yako ya Agrocyms",
       "items": {
-        "account": { "step": "1", "title": "Fungua akaunti", "body": "Jisajili kwenye Agrocyms, weka shamba, na uanze majaribio ya siku 30 bila kadi." },
+        "account": { "step": "1", "title": "Fungua akaunti", "body": "Jisajili kwenye Agrocyms, weka shamba, na uanze majaribio ya siku 90 bila kadi." },
         "farm": { "step": "2", "title": "Weka shamba lako", "body": "Ipe shamba jina, chagua shughuli na mazao, na uongeze akaunti ya kwanza ya mmiliki." },
         "operations": { "step": "3", "title": "Simamia shughuli zako", "body": "Tumia nafasi ya kazi kupanga shughuli za kilimo na kuweka rekodi zikiwa zimeunganishwa na shamba hili." }
       }
@@ -186,9 +186,9 @@
       "crops": { "question": "Je, Agrocyms inasaidia kilimo cha mazao?", "answer": "Ndiyo. Unaweza kutaja mazao ya shamba hili wakati wa kuweka ili orodha za mashamba zikae kando ya rekodi za mifugo. Tazama ukurasa wa usimamizi wa mazao kwa rekodi za uzalishaji zinazotumika." },
       "livestock": { "question": "Je, Agrocyms inasaidia mifugo?", "answer": "Ndiyo. Kuku, mbuzi na kondoo, ng’ombe, na nguruwe wana rekodi zao ndani ya akaunti ileile. Tazama ukurasa wa usimamizi wa mifugo kwa uwezo wa programu." },
       "multi": { "question": "Naweza kusimamia shughuli zaidi ya moja?", "answer": "Ndiyo. Kuweka kunaruhusu kuchagua zaidi ya moja. Kurasa za kuku zinabaki tofauti na orodha za ng’ombe au mazao, lakini zinashiriki kuingia kunako. Maeneo na mipaka ya watumiaji inategemea akaunti yako." },
-      "free": { "question": "Je, Agrocyms ni bure?", "answer": "Mashamba mapya yanapata siku 30 za ufikiaji kamili bila kadi. Baada ya majaribio, nafasi ya kazi inabaki kusomwa na kuhamishwa hadi uandikishe. Hakuna mpango bure usio na kikomo." },
-      "cost": { "question": "Agrocyms inagharimu kiasi gani?", "answer": "Siku 30 za kwanza zinajumuishwa na kuweka shamba. Baadaye bei inategemea mipango iliyochapishwa. Tembelea ukurasa wa bei au wasiliana na Agrocyms." },
-      "subscribe": { "question": "Ninawezaje kujiandikisha?", "answer": "Fungua akaunti ya shamba na utumie majaribio ya siku 30. Unapokuwa tayari kuendelea kuandika rekodi, wasiliana na Agrocyms au kamilisha malipo katika bidhaa." },
+      "free": { "question": "Je, Agrocyms ni bure?", "answer": "Mashamba mapya yanapata siku 90 za ufikiaji kamili bila kadi. Baada ya majaribio, nafasi ya kazi inabaki kusomwa na kuhamishwa hadi uandikishe. Hakuna mpango bure usio na kikomo." },
+      "cost": { "question": "Agrocyms inagharimu kiasi gani?", "answer": "Siku 90 za kwanza zinajumuishwa na kuweka shamba. Baadaye bei inategemea mipango iliyochapishwa. Tembelea ukurasa wa bei au wasiliana na Agrocyms." },
+      "subscribe": { "question": "Ninawezaje kujiandikisha?", "answer": "Fungua akaunti ya shamba na utumie majaribio ya siku 90. Unapokuwa tayari kuendelea kuandika rekodi, wasiliana na Agrocyms au kamilisha malipo katika bidhaa." },
       "cancel": { "question": "Naweza kughairi usajili?", "answer": "Kughairi kunategemea masharti yanayoonyeshwa unaponunua. Tazama bili ya akaunti au ukurasa wa mawasiliano." },
       "support": { "question": "Ninawezaje kuwasiliana na msaada?", "answer": "Tumia ukurasa wa mawasiliano kuuliza kuhusu usajili, malipo, au utendaji wa jukwaa." },
       "inventory": { "question": "Je, Agrocyms inafuatilia chakula na dawa?", "answer": "Ndiyo. Hifadhi ya chakula na matumizi ya dawa yako kwenye shamba lile lile la wanyama, hivyo hifadhi si daftari tofauti." },
@@ -198,7 +198,7 @@
   "getStarted": {
     "eyebrow": "Anza",
     "title": "Anza na Agrocyms",
-    "lead": "Fungua akaunti yako na uanze majaribio ya siku 30 ya nafasi kamili ya kazi. Hakuna kadi inayohitajika. Baada ya mwezi, rekodi zinabaki kusomwa na kuhamishwa hadi uandikishe.",
+    "lead": "Fungua akaunti yako na uanze majaribio ya siku 90 ya nafasi kamili ya kazi. Hakuna kadi inayohitajika. Baada ya miezi mitatu, rekodi zinabaki kusomwa na kuhamishwa hadi uandikishe.",
     "heroAlt": "Mkulima anayetumia kompyuta kibao katika shamba la mahindi wakati wa machweo",
     "steps": { "farm": "Shamba", "crops": "Mazao", "details": "Maelezo ya shamba", "account": "Akaunti" },
     "step0Title": "Shamba hili linafanya nini?",
@@ -264,10 +264,10 @@
   },
   "header": { "searchPlaceholder": "Tafuta...", "closeSearch": "Funga utafutaji" },
   "trial": {
-    "expired": "Majaribio ya siku 30 yameisha. Bado unaweza kuona na kuhamisha rekodi.",
+    "expired": "Majaribio ya siku 90 yameisha. Bado unaweza kuona na kuhamisha rekodi.",
     "contactToSubscribe": "Wasiliana na Agrocyms",
     "keepWriting": "ili ujiandikishe na uendelee kuandika.",
-    "remaining": "Ufikiaji kamili kwa {days, plural, one {siku #} other {siku #}} za majaribio yako ya siku 30. Hakuna kadi inayohitajika. Baada ya hapo, rekodi zinabaki kusomwa na kuhamishwa hadi uandikishe."
+    "remaining": "Ufikiaji kamili kwa {days, plural, one {siku #} other {siku #}} za majaribio yako ya siku 90. Hakuna kadi inayohitajika. Baada ya hapo, rekodi zinabaki kusomwa na kuhamishwa hadi uandikishe."
   },
   "notifications": {
     "title": "Arifa",

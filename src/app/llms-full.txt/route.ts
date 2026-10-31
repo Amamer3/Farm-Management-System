@@ -52,7 +52,7 @@ Records: ${item.records.join("; ")}.`
 
 Index: ${absoluteUrl(LLMS_PATH)}
 
-${name} is farm management software for crop and livestock businesses. Farms choose poultry, goats and sheep, cattle, pigs, crops, or a mix during setup. The dashboard then shows records for that mix. New farms receive a 30-day trial of the full workspace with no card required.
+${name} is farm management software for crop and livestock businesses. Farms choose poultry, goats and sheep, cattle, pigs, crops, or a mix during setup. The dashboard then shows records for that mix. New farms receive a 90-day trial of the full workspace with no card required.
 
 ## Product pages
 

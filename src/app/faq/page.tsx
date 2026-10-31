@@ -8,7 +8,7 @@ import { createPageMetadata, faqJsonLd, pageGraphJsonLd, webPageJsonLd } from "@
 
 const title = "Farm Management Software FAQs | Agrocyms"
 const description =
-  "Answers about Agrocyms farm management software: registration, crop and livestock records, the 30-day trial, subscriptions, and team access."
+  "Answers about Agrocyms farm management software: registration, crop and livestock records, the 90-day trial, subscriptions, and team access."
 
 export const metadata: Metadata = createPageMetadata({
   title,

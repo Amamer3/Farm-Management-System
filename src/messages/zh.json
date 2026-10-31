@@ -164,7 +164,7 @@
       "title": "三步开始管理您的农场",
       "cta": "创建您的 Agrocyms 账户",
       "items": {
-        "account": { "step": "1", "title": "创建账户", "body": "注册 Agrocyms，设置农场，开始 30 天试用，无需银行卡。" },
+        "account": { "step": "1", "title": "创建账户", "body": "注册 Agrocyms，设置农场，开始 90 天试用，无需银行卡。" },
         "farm": { "step": "2", "title": "设置农场", "body": "为农场命名，选择经营项目和作物，并添加第一个所有者账户。" },
         "operations": { "step": "3", "title": "管理运营", "body": "使用工作区组织农业活动，并将记录归属到本农场。" }
       }
@@ -186,9 +186,9 @@
       "crops": { "question": "Agrocyms 支持作物种植吗？", "answer": "支持。您可在设置时命名本农场种植的作物，使田块列表与畜牧记录并列。请参阅作物管理页了解当前支持的生产记录。" },
       "livestock": { "question": "Agrocyms 支持畜牧吗？", "answer": "支持。家禽、山羊绵羊、牛和猪在同一农场账户中各有记录。请参阅畜牧管理页了解应用能力。" },
       "multi": { "question": "我可以管理多个经营项目吗？", "answer": "可以。设置时可选多个项目。家禽页面与牛或作物列表分开，但共用同一登录。额外地点和用户上限取决于您的账户。" },
-      "free": { "question": "Agrocyms 免费吗？", "answer": "新农场可获得 30 天完整访问，无需银行卡。试用结束后，工作区在订阅前仍可阅读和导出。没有无限免费套餐。" },
-      "cost": { "question": "Agrocyms 多少钱？", "answer": "前 30 天包含在农场设置中。之后价格取决于已公布的套餐。请查看价格页或联系 Agrocyms。" },
-      "subscribe": { "question": "如何订阅？", "answer": "创建农场账户并使用 30 天试用。当您准备继续写入记录时，联系 Agrocyms 或完成产品中的支付流程。" },
+      "free": { "question": "Agrocyms 免费吗？", "answer": "新农场可获得 90 天完整访问，无需银行卡。试用结束后，工作区在订阅前仍可阅读和导出。没有无限免费套餐。" },
+      "cost": { "question": "Agrocyms 多少钱？", "answer": "前 90 天包含在农场设置中。之后价格取决于已公布的套餐。请查看价格页或联系 Agrocyms。" },
+      "subscribe": { "question": "如何订阅？", "answer": "创建农场账户并使用 90 天试用。当您准备继续写入记录时，联系 Agrocyms 或完成产品中的支付流程。" },
       "cancel": { "question": "可以取消订阅吗？", "answer": "取消须遵守购买时显示的订阅条款。请查看账户账单区或联系页。" },
       "support": { "question": "如何联系支持？", "answer": "使用联系页咨询注册、订阅或平台功能。" },
       "inventory": { "question": "Agrocyms 跟踪饲料和药品吗？", "answer": "跟踪。饲料库存和药品使用与所属动物在同一农场，库存不是另一本笔记本。" },
@@ -198,7 +198,7 @@
   "getStarted": {
     "eyebrow": "开始使用",
     "title": "开始使用 Agrocyms",
-    "lead": "创建账户并开始完整工作区的 30 天试用。无需银行卡。一个月后，记录在订阅前仍可阅读和导出。",
+    "lead": "创建账户并开始完整工作区的 90 天试用。无需银行卡。三个月后，记录在订阅前仍可阅读和导出。",
     "heroAlt": "农民在日落时分的玉米地里使用平板电脑",
     "steps": { "farm": "农场", "crops": "作物", "details": "农场详情", "account": "账户" },
     "step0Title": "这座农场经营什么？",
@@ -264,10 +264,10 @@
   },
   "header": { "searchPlaceholder": "搜索...", "closeSearch": "关闭搜索" },
   "trial": {
-    "expired": "30 天试用已结束。您仍可查看和导出记录。",
+    "expired": "90 天试用已结束。您仍可查看和导出记录。",
     "contactToSubscribe": "联系 Agrocyms",
     "keepWriting": "以订阅并继续写入。",
-    "remaining": "30 天试用还剩 {days, plural, other {# 天}} 完整访问。无需银行卡。之后记录在订阅前仍可阅读和导出。"
+    "remaining": "90 天试用还剩 {days, plural, other {# 天}} 完整访问。无需银行卡。之后记录在订阅前仍可阅读和导出。"
   },
   "notifications": {
     "title": "通知",

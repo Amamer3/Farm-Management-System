@@ -241,17 +241,17 @@ export const FAQS = [
   {
     question: "Is Agrocyms free?",
     answer:
-      "New farms get 30 days of full access with no card required. After the trial, the workspace stays readable and exportable until you subscribe. There is no unlimited free plan.",
+      "New farms get 90 days of full access with no card required. After the trial, the workspace stays readable and exportable until you subscribe. There is no unlimited free plan.",
   },
   {
     question: "How much does Agrocyms cost?",
     answer:
-      "The first 30 days are included with farm setup. After that, subscription prices depend on the published plans. Visit the pricing page or contact Agrocyms for current prices, billing intervals, and included features.",
+      "The first 90 days are included with farm setup. After that, subscription prices depend on the published plans. Visit the pricing page or contact Agrocyms for current prices, billing intervals, and included features.",
   },
   {
     question: "How do I subscribe?",
     answer:
-      "Create your farm account and use the 30-day trial. When you are ready to keep writing records, contact Agrocyms or complete the payment process supported in the product.",
+      "Create your farm account and use the 90-day trial. When you are ready to keep writing records, contact Agrocyms or complete the payment process supported in the product.",
   },
   {
     question: "Can I cancel my subscription?",

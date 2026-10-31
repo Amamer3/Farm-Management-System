@@ -58,7 +58,7 @@ export default function TermsPage() {
           <article>
             <h2 className="text-xl font-bold text-[#121815]">Trial and subscriptions</h2>
             <p className="mt-2 text-sm leading-relaxed">
-              New farm accounts include 30 days of full access from setup, with no card required. When the trial ends, you can still sign in, view records, and export them. Adding or changing farm records requires an active subscription. Contact {name} to subscribe. You own the data you entered; an unpaid trial does not delete it.
+              New farm accounts include 90 days of full access from setup, with no card required. When the trial ends, you can still sign in, view records, and export them. Adding or changing farm records requires an active subscription. Contact {name} to subscribe. You own the data you entered; an unpaid trial does not delete it.
             </p>
           </article>
           <article>

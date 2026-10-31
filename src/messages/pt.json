@@ -164,7 +164,7 @@
       "title": "Comece a gerenciar sua fazenda em três passos",
       "cta": "Crie sua conta Agrocyms",
       "items": {
-        "account": { "step": "1", "title": "Crie sua conta", "body": "Cadastre-se na Agrocyms, configure a fazenda e inicie um teste de 30 dias sem cartão." },
+        "account": { "step": "1", "title": "Crie sua conta", "body": "Cadastre-se na Agrocyms, configure a fazenda e inicie um teste de 90 dias sem cartão." },
         "farm": { "step": "2", "title": "Configure sua fazenda", "body": "Nomeie a fazenda, escolha atividades e culturas e adicione a primeira conta de proprietário." },
         "operations": { "step": "3", "title": "Gerencie suas operações", "body": "Use o espaço de trabalho para organizar as atividades e manter os registros ligados a esta fazenda." }
       }
@@ -186,9 +186,9 @@
       "crops": { "question": "A Agrocyms oferece suporte a culturas?", "answer": "Sim. Você pode nomear as culturas desta fazenda na configuração para que as listas de campo fiquem ao lado dos registros pecuários. Veja a página de gestão de culturas para os registros de produção suportados." },
       "livestock": { "question": "A Agrocyms oferece suporte à pecuária?", "answer": "Sim. Aves, cabras e ovelhas, bovinos e suínos têm seus próprios registros na mesma conta. Consulte a página de gestão pecuária para as capacidades do aplicativo." },
       "multi": { "question": "Posso gerenciar mais de uma atividade?", "answer": "Sim. A configuração permite escolher mais de uma. As páginas de avicultura ficam separadas das de bovinos ou culturas, mas compartilham o mesmo login. Locais e limites de usuários dependem da sua conta." },
-      "free": { "question": "A Agrocyms é gratuita?", "answer": "Novas fazendas têm 30 dias de acesso completo sem cartão. Após o teste, o espaço permanece legível e exportável até a assinatura. Não há plano gratuito ilimitado." },
-      "cost": { "question": "Quanto custa a Agrocyms?", "answer": "Os primeiros 30 dias estão incluídos na configuração da fazenda. Depois, os preços dependem dos planos publicados. Visite a página de preços ou contate a Agrocyms." },
-      "subscribe": { "question": "Como assino?", "answer": "Crie sua conta de fazenda e use o teste de 30 dias. Quando quiser continuar gravando registros, contate a Agrocyms ou conclua o pagamento disponível no produto." },
+      "free": { "question": "A Agrocyms é gratuita?", "answer": "Novas fazendas têm 90 dias de acesso completo sem cartão. Após o teste, o espaço permanece legível e exportável até a assinatura. Não há plano gratuito ilimitado." },
+      "cost": { "question": "Quanto custa a Agrocyms?", "answer": "Os primeiros 90 dias estão incluídos na configuração da fazenda. Depois, os preços dependem dos planos publicados. Visite a página de preços ou contate a Agrocyms." },
+      "subscribe": { "question": "Como assino?", "answer": "Crie sua conta de fazenda e use o teste de 90 dias. Quando quiser continuar gravando registros, contate a Agrocyms ou conclua o pagamento disponível no produto." },
       "cancel": { "question": "Posso cancelar a assinatura?", "answer": "O cancelamento está sujeito aos termos exibidos na compra. Consulte a faturamento da conta ou a página de contato." },
       "support": { "question": "Como contato o suporte?", "answer": "Use a página de contato para dúvidas sobre cadastro, assinaturas ou funcionamento da plataforma." },
       "inventory": { "question": "A Agrocyms controla ração e medicamentos?", "answer": "Sim. O estoque de ração e o uso de medicamentos ficam na mesma fazenda dos animais a que pertencem, então o inventário não é um caderno separado." },
@@ -198,7 +198,7 @@
   "getStarted": {
     "eyebrow": "Começar",
     "title": "Comece com a Agrocyms",
-    "lead": "Crie sua conta e inicie um teste de 30 dias do espaço de trabalho completo. Não é necessário cartão. Após o mês, os registros permanecem legíveis e exportáveis até a assinatura.",
+    "lead": "Crie sua conta e inicie um teste de 90 dias do espaço de trabalho completo. Não é necessário cartão. Após os três meses, os registros permanecem legíveis e exportáveis até a assinatura.",
     "heroAlt": "Agricultor usando um tablet em um campo de milho ao pôr do sol",
     "steps": { "farm": "Fazenda", "crops": "Culturas", "details": "Dados da fazenda", "account": "Conta" },
     "step0Title": "O que esta fazenda faz?",
@@ -264,10 +264,10 @@
   },
   "header": { "searchPlaceholder": "Pesquisar...", "closeSearch": "Fechar pesquisa" },
   "trial": {
-    "expired": "O teste de 30 dias terminou. Você ainda pode ver e exportar registros.",
+    "expired": "O teste de 90 dias terminou. Você ainda pode ver e exportar registros.",
     "contactToSubscribe": "Contatar a Agrocyms",
     "keepWriting": "para assinar e continuar gravando.",
-    "remaining": "Acesso completo por {days, plural, one {# dia} other {# dias}} do seu teste de 30 dias. Nenhum cartão é necessário. Depois, os registros permanecem legíveis e exportáveis até a assinatura."
+    "remaining": "Acesso completo por {days, plural, one {# dia} other {# dias}} do seu teste de 90 dias. Nenhum cartão é necessário. Depois, os registros permanecem legíveis e exportáveis até a assinatura."
   },
   "notifications": {
     "title": "Notificações",

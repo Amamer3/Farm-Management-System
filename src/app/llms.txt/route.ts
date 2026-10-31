@@ -8,7 +8,7 @@ export function GET() {
 
 > ${getAppDescription()}
 
-${name} is farm management software for crop and livestock businesses. Farms choose poultry, goats and sheep, cattle, pigs, crops, or a mix during setup. The dashboard then shows records for that mix. New farms receive a 30-day trial of the full workspace with no card required.
+${name} is farm management software for crop and livestock businesses. Farms choose poultry, goats and sheep, cattle, pigs, crops, or a mix during setup. The dashboard then shows records for that mix. New farms receive a 90-day trial of the full workspace with no card required.
 
 Full product text: ${absoluteUrl(LLMS_FULL_PATH)}
 
@@ -36,7 +36,7 @@ Full product text: ${absoluteUrl(LLMS_FULL_PATH)}
 
 ## Product
 
-${name} tracks bird batches, egg collection, feed and medicine stock, livestock events, crop lists, team logins, reports, and statistics. New farms receive a 30-day trial of the full workspace with no card required. After the trial, records stay readable and exportable until the farm subscribes. Authenticated workspace routes are private and should not be treated as public documentation.
+${name} tracks bird batches, egg collection, feed and medicine stock, livestock events, crop lists, team logins, reports, and statistics. New farms receive a 90-day trial of the full workspace with no card required. After the trial, records stay readable and exportable until the farm subscribes. Authenticated workspace routes are private and should not be treated as public documentation.
 `
 
   return new Response(body, {

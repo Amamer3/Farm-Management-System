@@ -232,7 +232,7 @@ class AuthService {
           const apiMessage = errorData.error?.message || errorData.message
           if (code === "TRIAL_ENDED") {
             const error = new Error(
-              apiMessage || "The 30-day trial has ended. You can still view and export records."
+              apiMessage || "The 90-day trial has ended. You can still view and export records."
             )
             ;(error as any).status = 403
             ;(error as any).code = "TRIAL_ENDED"

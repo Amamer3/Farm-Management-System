@@ -5,7 +5,7 @@ import { LOCALE_COOKIE } from "@/i18n/config"
 import { localeFromCookie, negotiateLocale } from "@/i18n/negotiate"
 import { isSearchCrawler } from "@/lib/crawlers"
 
-const canonicalHost = new URL(PRODUCTION_SITE_URL).host
+const canonicalHost = new URL(PRODUCTION_SITE_URL).host 
 
 function withLocaleCookie(request: NextRequest, response: NextResponse) {
   if (isSearchCrawler(request.headers.get("user-agent"))) {

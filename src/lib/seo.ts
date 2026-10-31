@@ -515,13 +515,13 @@ export function softwareJsonLd(): JsonLd {
     offers: [
       {
         "@type": "Offer",
-        name: "30-day trial",
+        name: "90-day trial",
         price: "0",
         priceCurrency: "USD",
         priceValidUntil: trialEndDate(),
         availability: "https://schema.org/InStock",
         description:
-          "30 days of full farm workspace access with no card required. After the trial, records stay readable and exportable until you subscribe.",
+          "90 days of full farm workspace access with no card required. After the trial, records stay readable and exportable until you subscribe.",
         url: absoluteUrl("/get-started"),
       },
       {
@@ -530,7 +530,7 @@ export function softwareJsonLd(): JsonLd {
         url: absoluteUrl("/pricing"),
         availability: "https://schema.org/OnlineOnly",
         priceCurrency: "USD",
-        description: "Paid plans after the 30-day trial. Price is confirmed when you subscribe.",
+        description: "Paid plans after the 90-day trial. Price is confirmed when you subscribe.",
       },
     ],
     featureList: [
@@ -745,7 +745,7 @@ export function howToJsonLd(): JsonLd {
         "@type": "HowToStep",
         position: 1,
         name: "Create your account",
-        text: "Register for Agrocyms and complete the farm setup process. The first 30 days are a full trial with no card required.",
+        text: "Register for Agrocyms and complete the farm setup process. The first 90 days are a full trial with no card required.",
         url: absoluteUrl("/get-started"),
       },
       {

@@ -10,7 +10,7 @@ export const APP_NAME = "Agrocyms"
 export const APP_TAGLINE = "One Platform. Every Farm. Smarter Agriculture."
 export const APP_TITLE = "Farm Management Software for Modern Agriculture | Agrocyms"
 export const APP_DESCRIPTION =
-  "Farm management software for crops and livestock. Agrocyms tracks poultry, cattle, pigs, fields, feed, and team records in one workspace. Start a 30-day trial."
+  "Farm management software for crops and livestock. Agrocyms tracks poultry, cattle, pigs, fields, feed, and team records in one workspace. Start a 90-day trial."
 export const LOGO_PATH = "/agrocyms-logo.png"
 
 export function getAppName(): string {

@@ -198,7 +198,7 @@ export function parseApiError(error: unknown): AppError {
       return {
         type: ErrorType.AUTHORIZATION,
         message: trialEnded
-          ? (error instanceof Error ? error.message : 'The 30-day trial has ended. You can still view and export records.')
+          ? (error instanceof Error ? error.message : 'The 90-day trial has ended. You can still view and export records.')
           : 'You do not have permission to perform this action.',
         originalError: error,
         statusCode: 403,
